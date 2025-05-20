@@ -44,7 +44,7 @@ export interface RoadmapStep {
 
 export const ROADMAP_STEPS: RoadmapStep[] = [
   { id: 'step1', title: "Gather Information & Documents", description: "Collect all necessary documents related to the deceased, beneficiaries, assets, and liabilities.", details: "This includes death certificates, NRICs, land titles, bank statements, etc. Refer to the Document Checklist for a comprehensive list.", iconName: 'ListChecks' },
-  { id: 'step2', title: "Determine Type of Estate Administration", description: "Ascertain if the estate qualifies as a Small Estate. In Malaysia, this means the total value of the deceased's assets is less than RM5 million. Estates valued at RM5 million or more are typically administered through the High Court.", details: "Small estates, especially those involving land, are often handled by the District Land Administrator. Amanah Raya Berhad (ARB) can administer estates consisting only of movable property up to a certain value (e.g., RM600,000) via a summary process.", iconName: 'HelpCircle' },
+  { id: 'step2', title: "Determine Type of Estate Administration", description: "Ascertain if the estate qualifies as a Small Estate. In Malaysia, this means the total value of the deceased's assets is less than RM5 million. Estates valued at RM5 million or more are typically administered through the High Court.", details: "Small estates, especially those involving land, are often handled by the District Land Administrator or Amanah Raya Berhad (ARB).", iconName: 'HelpCircle' },
   { id: 'step3', title: "Identify Beneficiaries", description: "Confirm all legal heirs according to Malaysian inheritance laws (Faraid for Muslims, Distribution Act for non-Muslims) or as per the Will.", details: "This may involve creating a family tree and verifying relationships.", iconName: 'Users' },
   { id: 'step4', title: "Valuation of Assets", description: "Obtain current market values for all assets in the estate.", details: "This is crucial for the application process and distribution.", iconName: 'Banknote' },
   { id: 'step5', title: "Application Submission", description: "Submit the required application forms (e.g., Form A for Land Office) along with supporting documents.", details: "Applications are typically made to the District Land Administrator for the district where immovable property is located, or Amanah Raya Berhad.", iconName: 'FileText' },
@@ -70,9 +70,9 @@ export const LEGAL_GUIDE_TOPICS: LegalGuideTopic[] = [
     summary: "Learn what qualifies as a small estate and the general process.",
     iconName: 'HelpCircle',
     content: [
-      "A Small Estate (Pusaka Kecil) in Malaysia is defined as an estate where the total value of the assets (including both movable and immovable property) is less than RM5 million. If the total value of the deceased's estate is RM5 million or more, the application to manage or administer the estate must be made to the High Court.",
-      "The Small Estates (Distribution) Act 1955 provides the legal framework for distributing these estates. Typically, the District Land Administrator (Pejabat Tanah Daerah) is responsible for handling small estates, especially when immovable property is involved.",
-      "For estates consisting solely of movable property, Amanah Raya Berhad (ARB) may offer summary administration if the value is up to RM600,000. Otherwise, or if a will specifies another executor, the High Court is the usual venue for estates not qualifying as 'small' or for more complex cases."
+      "A Small Estate (Pusaka Kecil) in Malaysia is generally defined as an estate where the total value of the assets (including both movable and immovable property) is less than RM5 million. If the total value of the deceased's estate is RM5 million or more, the application to manage or administer the estate must be made to the High Court.",
+      "The Small Estates (Distribution) Act 1955 provides the legal framework for distributing these estates. Typically, the District Land Administrator (Pejabat Tanah Daerah / Unit Pembahagian Pusaka Kecil, JKPTG) is responsible for handling small estates, especially when immovable property is involved.",
+      "For estates consisting solely of movable property, Amanah Raya Berhad (ARB) may offer summary administration if the value is up to RM600,000. However, if the value exceeds this or if the beneficiaries prefer, even movable-only estates can be handled by the Land Office or High Court depending on complexity and total value."
     ]
   },
   {
@@ -92,9 +92,9 @@ export const LEGAL_GUIDE_TOPICS: LegalGuideTopic[] = [
     summary: "How ARB can assist in estate administration.",
     iconName: 'Landmark',
     content: [
-      "Amanah Raya Berhad (ARB) can administer estates consisting entirely of movable property (like cash, shares, EPF) up to RM600,000, regardless of whether there is a will or not. This is done through a Declaration or Order via summary administration.",
-      "If a will exists and ARB is appointed as the executor, they can apply for a Grant of Probate from the High Court for estates of any value. If the estate value is below RM5 million and includes immovable property, beneficiaries can still opt for the Land Office route even if ARB is named executor, by mutual agreement.",
-      "ARB is a suitable option if beneficiaries are minors, if there are complex family disputes, or if there's no one willing or able to administer the estate. They can also be appointed by the Land Office or High Court to act as administrator."
+      "Amanah Raya Berhad (ARB) is a public trustee company that can administer estates. For estates consisting entirely of movable property (like cash, shares, EPF) up to RM600,000, ARB can provide summary administration, regardless of whether there is a will or not.",
+      "If a will exists and ARB is appointed as the executor, they can apply for a Grant of Probate from the High Court for estates of any value. If an estate (with or without a will) has a total value of less than RM5 million and includes immovable property, beneficiaries can still opt for the Land Office route for distribution, even if ARB is named executor, by mutual agreement or if ARB declines administration.",
+      "ARB is a suitable option if beneficiaries are minors, if there are complex family disputes, or if there's no one willing or able to administer the estate. They can also be appointed by the Land Office or High Court to act as administrator if needed."
     ]
   },
   {
@@ -120,4 +120,19 @@ export const LEGAL_GUIDE_TOPICS: LegalGuideTopic[] = [
       "After submission and verification, the Land Office will schedule a hearing. All relevant parties (applicant and beneficiaries) are usually required to attend to provide testimony or clarification before a Distribution Order is issued."
     ]
   },
+  {
+    id: 'guide6',
+    title: "Key Government Agencies in Small Estate Administration",
+    summary: "Understand the roles of JPN, Land Office (JKPTG), JPJ, and ARB's interaction.",
+    iconName: 'Landmark', // Using Landmark as it fits well for official bodies
+    content: [
+      "Several government agencies and bodies are involved in the small estate administration process. Understanding their roles can help streamline your interactions:",
+      "1. **Jabatan Pendaftaran Negara (JPN) - National Registration Department:** Primarily responsible for issuing Death Certificates, which are crucial to initiate the estate administration process. They also manage NRICs (MyKad) and birth certificates of individuals.",
+      "2. **Pejabat Tanah Daerah / Unit Pembahagian Pusaka Kecil (JKPTG) - District Land Office / Small Estate Distribution Unit:** This is the main body that handles applications for small estates (Pusaka Kecil) involving immovable property (land, houses). They process Form A applications, conduct hearings, and issue Distribution Orders.",
+      "3. **Jabatan Pengangkutan Jalan (JPJ) - Road Transport Department:** Involved in the transfer of vehicle ownership from the deceased to the beneficiaries after a Distribution Order or Grant of Probate/Letters of Administration is obtained.",
+      "4. **Amanah Raya Berhad (ARB):** While a public trustee company, ARB plays a significant role. They can directly administer estates consisting solely of movable property up to RM600,000. They can also be appointed as executor in a will, or as administrator by the Land Office or High Court in certain situations, especially if beneficiaries are minors or there are no other suitable administrators.",
+      "It's important to note that for small estates (under RM5 million) involving immovable property, the primary jurisdiction lies with the District Land Office/JKPTG, even if ARB is also involved in handling movable assets or is named in a will.",
+      "Always verify the latest procedures directly with the respective agencies or ARB as requirements and processes can be updated."
+    ]
+  }
 ];
