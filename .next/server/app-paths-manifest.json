@@ -3,5 +3,6 @@
   "/help-center/page": "app/help-center/page.js",
   "/legal-financial-hub/page": "app/legal-financial-hub/page.js",
   "/page": "app/page.js",
-  "/roadmap/page": "app/roadmap/page.js"
+  "/roadmap/page": "app/roadmap/page.js",
+  "/settings/page": "app/settings/page.js"
 }
