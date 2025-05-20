@@ -13,7 +13,7 @@ const features = [
     href: "/checklist",
     icon: ListChecks,
     img: "https://placehold.co/600x400.png",
-    imgHint: "documents checklist",
+    imgHint: "document checklist", // Updated
   },
   {
     title: "Roadmap & Timeline",
@@ -21,7 +21,7 @@ const features = [
     href: "/roadmap",
     icon: MapPinned,
     img: "https://placehold.co/600x400.png",
-    imgHint: "map journey timeline",
+    imgHint: "journey timeline", // Updated
   },
   {
     title: "Legal & Financial Hub", // New Hub
@@ -29,7 +29,7 @@ const features = [
     href: "/legal-financial-hub",
     icon: Library,
     img: "https://placehold.co/600x400.png",
-    imgHint: "law library finance",
+    imgHint: "legal finance", // Updated
   },
 ];
 
@@ -63,7 +63,7 @@ export default function HomePage() {
               width={600} 
               height={400} 
               className="rounded-lg shadow-lg"
-              data-ai-hint="legal family consultation" 
+              data-ai-hint="legal consultation" // Updated
             />
           </div>
         </div>
