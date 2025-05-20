@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview Estimates the potential fees for Malaysian small estate administration.
@@ -61,9 +62,9 @@ For each fee category:
 - Add a brief description or any assumptions made. For example, for ARB, specify if the estimate is for summary or full administration.
 
 Output Requirements:
-- `estimatedFees`: An array of objects, each with `category`, `estimatedAmount`, and `description`.
-- `totalEstimatedRange`: A string summarizing the total estimated range of all fees.
-- `disclaimer`: CRITICAL - Always include a strong disclaimer. It should state that these figures are *estimates only* for general guidance, based on typical scenarios for small estates in Malaysia (under MYR 5 million value). Actual fees can vary significantly based on the complexity of the estate, specific tariffs of government bodies or ARB at the time of application, choices made by the administrator (e.g., engaging lawyers), and other unforeseen circumstances. Advise the user to consult directly with the relevant authorities (Land Office, ARB) and/or a legal professional for accurate and up-to-date cost information specific to their situation.
+- \\\`estimatedFees\\\`: An array of objects, each with \\\`category\\\`, \\\`estimatedAmount\\\`, and \\\`description\\\`.
+- \\\`totalEstimatedRange\\\`: A string summarizing the total estimated range of all fees.
+- \\\`disclaimer\\\`: CRITICAL - Always include a strong disclaimer. It should state that these figures are *estimates only* for general guidance, based on typical scenarios for small estates in Malaysia (under MYR 5 million value). Actual fees can vary significantly based on the complexity of the estate, specific tariffs of government bodies or ARB at the time of application, choices made by the administrator (e.g., engaging lawyers), and other unforeseen circumstances. Advise the user to consult directly with the relevant authorities (Land Office, ARB) and/or a legal professional for accurate and up-to-date cost information specific to their situation.
 
 Example for a fee item:
 {
@@ -73,7 +74,7 @@ Example for a fee item:
 }
 
 Focus on providing a realistic but clearly estimated range. Do not give exact figures unless widely known fixed statutory fees.
-`,
+`
 });
 
 const calculateFeesFlow = ai.defineFlow(
