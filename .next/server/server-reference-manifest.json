@@ -6,6 +6,10 @@
           "moduleId": "[project]/.next-internal/server/app/checklist/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/pusaka-chat-flow.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": false
         },
+        "app/legal-financial-hub/page": {
+          "moduleId": "[project]/.next-internal/server/app/legal-financial-hub/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/pusaka-chat-flow.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/calculate-fees-flow.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
         "app/page": {
           "moduleId": "[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/pusaka-chat-flow.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": false
@@ -17,6 +21,7 @@
       },
       "layer": {
         "app/checklist/page": "action-browser",
+        "app/legal-financial-hub/page": "action-browser",
         "app/page": "action-browser",
         "app/roadmap/page": "action-browser"
       }
@@ -30,6 +35,17 @@
       },
       "layer": {
         "app/roadmap/page": "action-browser"
+      }
+    },
+    "40124b2c4699b0b2b9d6b64cf046c7be86e7373a37": {
+      "workers": {
+        "app/legal-financial-hub/page": {
+          "moduleId": "[project]/.next-internal/server/app/legal-financial-hub/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/pusaka-chat-flow.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/calculate-fees-flow.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/legal-financial-hub/page": "action-browser"
       }
     }
   },

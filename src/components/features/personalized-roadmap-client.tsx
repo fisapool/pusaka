@@ -8,11 +8,13 @@ import { z } from 'zod';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import type { RoadmapStep } from '@/lib/constants';
+import { DOCUMENT_CHECKLIST_ITEMS, DOCUMENT_CATEGORIES } from '@/lib/constants'; // Import checklist data
+import { DocumentChecklistClient } from '@/components/features/document-checklist-client'; // Import checklist client
 import { CheckCircle2, ListChecks, HelpCircle, Users, Banknote, FileText, Landmark, BookOpen, Home as HomeIcon, ShieldQuestion, CalendarPlus, Loader2, Lightbulb, AlertTriangle, Clock, MapPinned } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input as UiInput } from '@/components/ui/input'; // Renamed to avoid conflict with Genkit flow input type
+import { Input as UiInput } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { addHours } from 'date-fns';
@@ -208,7 +210,7 @@ export function PersonalizedRoadmapClient({ staticRoadmapSteps }: PersonalizedRo
                 {estimationResult.stepEstimations.map((step, index) => (
                   <AccordionItem value={`estimate-step-${index}`} key={`estimate-step-${index}`}>
                     <AccordionTrigger className="text-left hover:no-underline">
-                      <div className="flex flex-col w-full">
+                       <div className="flex flex-col w-full">
                         <span className="font-medium text-primary">{index + 1}. {step.step}</span>
                         <span className="text-sm text-foreground mt-1">{step.estimatedTimeline}</span>
                       </div>
@@ -250,7 +252,7 @@ export function PersonalizedRoadmapClient({ staticRoadmapSteps }: PersonalizedRo
             <CardTitle>Estate Administration Roadmap</CardTitle>
           </div>
           <CardDescription>
-            Follow this step-by-step guide for administering a small estate. Mark steps as complete and add them to your calendar.
+            Follow this step-by-step guide for administering a small estate. Mark steps as complete and add them to your calendar. The first step includes a comprehensive document checklist.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -289,11 +291,19 @@ export function PersonalizedRoadmapClient({ staticRoadmapSteps }: PersonalizedRo
                     <AccordionContent className="p-4 pt-0 bg-secondary/10">
                       <p className="text-sm text-muted-foreground mb-2">{step.description}</p>
                       {step.details && <p className="text-sm text-foreground whitespace-pre-line mb-4">{step.details}</p>}
+                      
+                      {step.id === 'step1' && (
+                        <div className="mt-4">
+                          <h3 className="text-md font-semibold mb-3 text-foreground">Document Checklist:</h3>
+                          <DocumentChecklistClient items={DOCUMENT_CHECKLIST_ITEMS} categories={DOCUMENT_CATEGORIES} />
+                        </div>
+                      )}
+                      
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={() => handleAddToCalendar(step)}
-                        className="text-sm"
+                        className="text-sm mt-4" // Added mt-4 for spacing if checklist is not present
                       >
                         <CalendarPlus className="mr-2 h-4 w-4 text-primary" />
                         Add to Google Calendar
@@ -311,4 +321,3 @@ export function PersonalizedRoadmapClient({ staticRoadmapSteps }: PersonalizedRo
     </div>
   );
 }
-

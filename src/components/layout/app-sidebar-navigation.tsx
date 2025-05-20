@@ -13,14 +13,14 @@ import {
   SidebarTrigger,
   SidebarSeparator,
 } from '@/components/ui/sidebar';
-import { Home, ListChecks, MapPinned, Settings, LifeBuoy, Library, UserCircle2, LogIn, LogOut, Loader2 } from 'lucide-react'; 
+import { Home, MapPinned, Settings, LifeBuoy, Library, UserCircle2, LogIn, LogOut, Loader2 } from 'lucide-react'; 
 import { useAuth } from '@/contexts/auth-context';
 import { GoogleTranslateButton } from '@/components/features/google-translate-button';
 import { Button } from '@/components/ui/button';
 
 const navItems = [
   { href: '/', label: 'Home', icon: Home },
-  { href: '/checklist', label: 'Document Checklist', icon: ListChecks },
+  // { href: '/checklist', label: 'Document Checklist', icon: ListChecks }, // Removed
   { href: '/roadmap', label: 'Roadmap & Timeline', icon: MapPinned },
   { href: '/legal-financial-hub', label: 'Legal & Financial Hub', icon: Library },
 ];
@@ -46,10 +46,7 @@ export function AppSidebarNavigation() {
           </svg>
           <span className="text-xl font-semibold text-foreground group-data-[collapsible=icon]:hidden">PusakaPro</span>
         </Link>
-        {/* SidebarTrigger is effectively the collapse/expand button icon */}
-        {/* Its visibility is handled by the Sidebar component itself based on context (mobile/desktop) */}
-        {/* The image shows it below the title, always visible in expanded mode. */}
-        <div className="group-data-[collapsible=icon]:hidden"> {/* Hide trigger icon when collapsed to icon-only */}
+        <div className="group-data-[collapsible=icon]:hidden">
           <SidebarTrigger />
         </div>
       </SidebarHeader>
@@ -71,9 +68,8 @@ export function AppSidebarNavigation() {
           ))}
         </SidebarMenu>
       </SidebarContent>
-      <SidebarFooter className="p-2 space-y-1"> {/* Reduced space-y for tighter packing */}
+      <SidebarFooter className="p-2 space-y-1">
          <SidebarMenu>
-            {/* Auth Section */}
             <div className="group-data-[collapsible=icon]:hidden px-2 py-1 text-center">
               {loading ? (
                 <Button variant="outline" className="w-full" disabled>
@@ -97,18 +93,16 @@ export function AppSidebarNavigation() {
               )}
             </div>
             
-            {/* Language Switcher - Visible when sidebar is expanded */}
             <div className="group-data-[collapsible=icon]:hidden px-2 pt-2 pb-1 space-y-1">
-              <SidebarSeparator className="my-1" /> {/* Adjusted margin for separator */}
+              <SidebarSeparator className="my-1" />
               <label htmlFor="google_translate_element_pusakapro" className="block text-sm font-medium text-muted-foreground px-1">Select Language:</label>
-              <div className="px-1"> {/* Add small padding around button if needed */}
+              <div className="px-1">
                  <GoogleTranslateButton />
               </div>
             </div>
             
             <SidebarSeparator className="my-2" />
             
-            {/* Bottom Nav Items */}
             {bottomNavItems.map((item) => (
                <SidebarMenuItem key={item.href}>
                 <SidebarMenuButton

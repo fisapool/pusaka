@@ -3,30 +3,20 @@ import { PageHeader } from '@/components/layout/page-header';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Home as HomeIcon, ListChecks, MapPinned, ArrowRight, Library } from 'lucide-react';
-// Removed Image import as it's no longer used in this simplified version
+import { Home as HomeIcon, MapPinned, ArrowRight, Library } from 'lucide-react';
 
 const features = [
   {
-    title: "Document Checklist",
-    description: "Organize and track all necessary documents for estate administration.",
-    href: "/checklist",
-    icon: ListChecks,
-    // img and imgHint removed
-  },
-  {
     title: "Roadmap & Timeline",
-    description: "Get AI-powered timeline estimates and follow a step-by-step process.",
+    description: "Get AI timeline estimates, follow a step-by-step process, and manage your document checklist.",
     href: "/roadmap",
     icon: MapPinned,
-    // img and imgHint removed
   },
   {
     title: "Legal & Financial Hub",
     description: "Access legal guides, estimate fees, and find legal professionals.",
     href: "/legal-financial-hub",
     icon: Library,
-    // img and imgHint removed
   },
 ];
 
@@ -40,7 +30,6 @@ export default function HomePage() {
       />
 
       <section className="mb-12 p-6 bg-card rounded-lg shadow-md">
-        {/* Removed flex layout and image for this section */}
         <div>
           <h2 className="text-2xl font-semibold text-primary mb-3">Streamline Your Estate Process</h2>
           <p className="text-foreground mb-4">
@@ -57,10 +46,9 @@ export default function HomePage() {
 
       <section>
         <h2 className="text-2xl font-semibold text-center mb-8 text-foreground">Key Features</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6"> {/* Adjusted to lg:grid-cols-2 */}
           {features.map((feature) => (
             <Card key={feature.title} className="flex flex-col overflow-hidden hover:shadow-lg transition-shadow duration-300">
-              {/* Removed image section from the top of the card */}
               <CardHeader>
                 <div className="flex items-center gap-3 mb-2">
                   <feature.icon className="h-7 w-7 text-primary" />
