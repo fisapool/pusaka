@@ -1,0 +1,90 @@
+"use client";
+
+import * as React from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
+import type { DocumentItem } from '@/lib/constants';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+
+interface DocumentChecklistClientProps {
+  items: DocumentItem[];
+  categories: Record<string, string>;
+}
+
+export function DocumentChecklistClient({ items, categories }: DocumentChecklistClientProps) {
+  const [checkedItems, setCheckedItems] = React.useState<Record<string, boolean>>({});
+
+  const handleCheckboxChange = (itemId: string) => {
+    setCheckedItems((prev) => ({
+      ...prev,
+      [itemId]: !prev[itemId],
+    }));
+  };
+
+  const getProgress = (categoryItems: DocumentItem[]) => {
+    if (categoryItems.length === 0) return 0;
+    const completedInCategory = categoryItems.filter(item => checkedItems[item.id]).length;
+    return (completedInCategory / categoryItems.length) * 100;
+  };
+
+  const groupedItems = React.useMemo(() => {
+    return items.reduce((acc, item) => {
+      const category = item.category || 'Uncategorized';
+      if (!acc[category]) {
+        acc[category] = [];
+      }
+      acc[category].push(item);
+      return acc;
+    }, {} as Record<string, DocumentItem[]>);
+  }, [items]);
+
+  return (
+    <Card className="shadow-lg">
+      <CardHeader>
+        <CardTitle>Required Documents</CardTitle>
+        <CardDescription>
+          This checklist helps you gather all necessary paperwork. Keep this list updated as you progress.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Accordion type="multiple" defaultValue={Object.keys(categories)} className="w-full">
+          {Object.entries(groupedItems).map(([category, categoryItems], index) => (
+            <AccordionItem value={category} key={category}>
+              <AccordionTrigger className="text-lg font-medium hover:no-underline">
+                <div className="flex justify-between items-center w-full pr-2">
+                  <span>{category}</span>
+                  <span className="text-sm text-muted-foreground">
+                    {Math.round(getProgress(categoryItems))}% Complete
+                  </span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent>
+                <ul className="space-y-4 p-2">
+                  {categoryItems.map((item) => (
+                    <li key={item.id} className="flex items-start space-x-3 p-3 bg-secondary/30 rounded-md">
+                      <Checkbox
+                        id={item.id}
+                        checked={checkedItems[item.id] || false}
+                        onCheckedChange={() => handleCheckboxChange(item.id)}
+                        className="mt-1 border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
+                        aria-labelledby={`${item.id}-label`}
+                      />
+                      <div className="grid gap-1.5 leading-snug">
+                        <Label htmlFor={item.id} id={`${item.id}-label`} className="font-medium text-foreground cursor-pointer">
+                          <item.icon className="inline-block h-5 w-5 mr-2 text-primary" aria-hidden="true" />
+                          {item.title}
+                        </Label>
+                        <p className="text-sm text-muted-foreground ml-7">{item.description}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </CardContent>
+    </Card>
+  );
+}
