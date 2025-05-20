@@ -13,6 +13,7 @@ import { FileText, Users, Landmark, Banknote, Car, LandPlot, BookOpen, MapPin, E
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/auth-context';
 import { addHours } from 'date-fns';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'; // Added Tooltip components
 
 const iconMap: Record<string, LucideIcon> = {
   FileText,
@@ -261,15 +262,22 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
                           
                           <div className="ml-7 mt-2 space-y-2 sm:flex sm:flex-wrap sm:items-center sm:space-y-0 sm:space-x-2">
                             {item.locationQuery && (
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.locationQuery as string)}`, '_blank', 'noopener,noreferrer')}
-                                className="text-sm"
-                              >
-                                <MapPin className="mr-2 h-4 w-4 text-primary" />
-                                Find Office
-                              </Button>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.locationQuery as string)}`, '_blank', 'noopener,noreferrer')}
+                                    className="text-sm"
+                                  >
+                                    <MapPin className="mr-2 h-4 w-4 text-primary" />
+                                    Find Office
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>Opens Google Maps to search for "{item.locationQuery}".<br />Google Maps may use or request your location<br />to show nearby offices.</p>
+                                </TooltipContent>
+                              </Tooltip>
                             )}
 
                             <Button
