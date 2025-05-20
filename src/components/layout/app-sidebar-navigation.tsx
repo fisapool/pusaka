@@ -13,7 +13,8 @@ import {
   SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
-import { Home, ListChecks, Clock, MapPinned, ScrollText, Settings, LifeBuoy, Calculator, Gavel } from 'lucide-react'; // Added Calculator, Gavel
+import { Home, ListChecks, Clock, MapPinned, ScrollText, Settings, LifeBuoy, Calculator, Gavel, LogIn, LogOut, UserCircle2, Loader2 } from 'lucide-react';
+import { useAuth } from '@/contexts/auth-context';
 
 const navItems = [
   { href: '/', label: 'Home', icon: Home },
@@ -27,6 +28,7 @@ const navItems = [
 
 export function AppSidebarNavigation() {
   const pathname = usePathname();
+  const { user, loading, signInWithGoogle, signOut } = useAuth();
 
   return (
     <>
@@ -61,18 +63,48 @@ export function AppSidebarNavigation() {
           ))}
         </SidebarMenu>
       </SidebarContent>
-      <SidebarFooter className="p-2">
+      <SidebarFooter className="p-2 space-y-2">
          <SidebarMenu>
+            {loading ? (
+              <SidebarMenuItem>
+                <SidebarMenuButton disabled tooltip={{children: "Loading...", className: "group-data-[collapsible=icon]:block hidden"}}>
+                  <Loader2 className="animate-spin" />
+                  <span className="group-data-[collapsible=icon]:hidden">Loading...</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ) : user ? (
+              <>
+                <SidebarMenuItem>
+                   <SidebarMenuButton tooltip={{children: user.email || "User Profile", className: "group-data-[collapsible=icon]:block hidden"}}>
+                    <UserCircle2 />
+                    <span className="truncate group-data-[collapsible=icon]:hidden">{user.displayName || user.email}</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton onClick={signOut} tooltip={{children: "Logout", className: "group-data-[collapsible=icon]:block hidden"}}>
+                    <LogOut />
+                    <span className="group-data-[collapsible=icon]:hidden">Logout</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </>
+            ) : (
+              <SidebarMenuItem>
+                <SidebarMenuButton onClick={signInWithGoogle} tooltip={{children: "Login with Google", className: "group-data-[collapsible=icon]:block hidden"}}>
+                  <LogIn />
+                  <span className="group-data-[collapsible=icon]:hidden">Login with Google</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            )}
             <SidebarMenuItem>
               <SidebarMenuButton tooltip={{children: "Help Center", className: "group-data-[collapsible=icon]:block hidden" }}>
                 <LifeBuoy />
-                <span>Help Center</span>
+                <span className="group-data-[collapsible=icon]:hidden">Help Center</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton tooltip={{children: "Settings", className: "group-data-[collapsible=icon]:block hidden"}}>
                 <Settings />
-                <span>Settings</span>
+                <span className="group-data-[collapsible=icon]:hidden">Settings</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
