@@ -1,3 +1,4 @@
+
 "use client"
 
 import * as React from "react"
@@ -156,14 +157,14 @@ const SidebarProvider = React.forwardRef<
 )
 SidebarProvider.displayName = "SidebarProvider"
 
-const Sidebar = React.forwardRef<
-  HTMLDivElement,
-  React.ComponentProps<"div"> & {
-    side?: "left" | "right"
-    variant?: "sidebar" | "floating" | "inset"
-    collapsible?: "offcanvas" | "icon" | "none"
-  }
->(
+interface SidebarComponentProps extends React.ComponentProps<"div"> {
+  side?: "left" | "right";
+  variant?: "sidebar" | "floating" | "inset";
+  collapsible?: "offcanvas" | "icon" | "none";
+  Rail?: React.ReactNode; // Explicitly define Rail prop
+}
+
+const Sidebar = React.forwardRef<HTMLDivElement, SidebarComponentProps>(
   (
     {
       side = "left",
@@ -171,11 +172,12 @@ const Sidebar = React.forwardRef<
       collapsible = "offcanvas",
       className,
       children,
-      ...props
+      Rail, // Destructure Rail prop
+      ...divProps // Remaining props are standard div attributes
     },
     ref
   ) => {
-    const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
+    const { isMobile, state, openMobile, setOpenMobile } = useSidebar();
 
     if (collapsible === "none") {
       return (
@@ -185,16 +187,16 @@ const Sidebar = React.forwardRef<
             className
           )}
           ref={ref}
-          {...props}
+          {...divProps}
         >
           {children}
         </div>
-      )
+      );
     }
 
     if (isMobile) {
       return (
-        <Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>
+        <Sheet open={openMobile} onOpenChange={setOpenMobile}>
           <SheetContent
             data-sidebar="sidebar"
             data-mobile="true"
@@ -209,7 +211,7 @@ const Sidebar = React.forwardRef<
             <div className="flex h-full w-full flex-col">{children}</div>
           </SheetContent>
         </Sheet>
-      )
+      );
     }
 
     return (
@@ -220,6 +222,8 @@ const Sidebar = React.forwardRef<
         data-collapsible={state === "collapsed" ? collapsible : ""}
         data-variant={variant}
         data-side={side}
+        // Note: className and divProps are applied to the inner fixed div,
+        // consistent with original structure.
       >
         {/* This is what handles the sidebar gap on desktop */}
         <div
@@ -242,9 +246,9 @@ const Sidebar = React.forwardRef<
             variant === "floating" || variant === "inset"
               ? "p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_theme(spacing.4)_+2px)]"
               : "group-data-[collapsible=icon]:w-[--sidebar-width-icon] group-data-[side=left]:border-r group-data-[side=right]:border-l",
-            className
+            className // Apply incoming className here
           )}
-          {...props}
+          {...divProps} // Spread remaining divProps here
         >
           <div
             data-sidebar="sidebar"
@@ -253,11 +257,13 @@ const Sidebar = React.forwardRef<
             {children}
           </div>
         </div>
+        {/* Render the Rail component if provided, as a child of the 'group' div */}
+        {Rail}
       </div>
-    )
+    );
   }
-)
-Sidebar.displayName = "Sidebar"
+);
+Sidebar.displayName = "Sidebar";
 
 const SidebarTrigger = React.forwardRef<
   React.ElementRef<typeof Button>,
