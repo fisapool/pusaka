@@ -2,7 +2,7 @@ import { PageHeader } from '@/components/layout/page-header';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Home as HomeIcon, ListChecks, Clock, MapPinned, ScrollText, ArrowRight } from 'lucide-react';
+import { Home as HomeIcon, ListChecks, Clock, MapPinned, ScrollText, ArrowRight, Calculator } from 'lucide-react'; // Added Calculator
 import Image from 'next/image';
 
 const features = [
@@ -21,6 +21,14 @@ const features = [
     icon: Clock,
     img: "https://placehold.co/600x400.png",
     imgHint: "calendar planning",
+  },
+  {
+    title: "Fees Calculator",
+    description: "Estimate potential administration fees based on estate details.",
+    href: "/fees-calculator",
+    icon: Calculator,
+    img: "https://placehold.co/600x400.png",
+    imgHint: "money calculator",
   },
   {
     title: "Personalized Roadmap",
@@ -56,7 +64,7 @@ export default function HomePage() {
             <p className="text-foreground mb-4">
               PusakaPro is designed to simplify the complexities of small estate administration in Malaysia. 
               We provide tools and information to help you understand the requirements, organize documents, 
-              estimate timelines, and follow a clear roadmap.
+              estimate timelines and fees, and follow a clear roadmap.
             </p>
             <p className="text-foreground">
               Whether you are an heir, an administrator, or simply seeking information, 

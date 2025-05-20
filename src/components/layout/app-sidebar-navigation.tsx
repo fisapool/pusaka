@@ -12,12 +12,13 @@ import {
   SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
-import { Home, ListChecks, Clock, MapPinned, ScrollText, Settings, LifeBuoy } from 'lucide-react'; // Replaced Map with MapPinned
+import { Home, ListChecks, Clock, MapPinned, ScrollText, Settings, LifeBuoy, Calculator } from 'lucide-react'; // Added Calculator
 
 const navItems = [
   { href: '/', label: 'Home', icon: Home },
   { href: '/checklist', label: 'Document Checklist', icon: ListChecks },
   { href: '/timeline-estimator', label: 'Timeline Estimator', icon: Clock },
+  { href: '/fees-calculator', label: 'Fees Calculator', icon: Calculator },
   { href: '/roadmap', label: 'Personalized Roadmap', icon: MapPinned },
   { href: '/guides', label: 'Legal Guides', icon: ScrollText },
 ];
