@@ -9,12 +9,7 @@ import { Button } from '@/components/ui/button';
 import type { DocumentItem } from '@/lib/constants';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import type { LucideIcon } from 'lucide-react';
-// Removed unused icons related to uploads: UploadCloud, XCircle, FileCheck, Loader2, AlertTriangle, LogIn
-import { FileText, Users, Landmark, Banknote, Car, LandPlot, BookOpen, MapPin } from 'lucide-react'; 
-// useAuth, storage, firebase storage functions are no longer needed
-// import { useAuth } from '@/contexts/auth-context';
-// import { storage } from '@/lib/firebase';
-// import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
+import { FileText, Users, Landmark, Banknote, Car, LandPlot, BookOpen, MapPin, Paperclip, X } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 
@@ -28,14 +23,9 @@ const iconMap: Record<string, LucideIcon> = {
   BookOpen,
 };
 
-// UploadedFileState interface is no longer needed as uploads are removed
-// interface UploadedFileState {
-//   name: string;
-//   storagePath?: string; 
-//   isUploading?: boolean;
-//   uploadError?: string | null;
-// }
-
+interface AssociatedFile {
+  name: string;
+}
 
 interface DocumentChecklistClientProps {
   items: DocumentItem[];
@@ -43,18 +33,11 @@ interface DocumentChecklistClientProps {
 }
 
 export function DocumentChecklistClient({ items, categories }: DocumentChecklistClientProps) {
-  // useAuth hook is no longer used
-  // const { user } = useAuth();
-  const { toast } = useToast(); // toast might still be used for other interactions if any
+  const { toast } = useToast();
   const [checkedItems, setCheckedItems] = React.useState<Record<string, boolean>>({});
-  
-  // State for uploaded files is removed
-  // const [uploadedFiles, setUploadedFiles] = React.useState<Record<string, UploadedFileState>>({});
-  
-  // Refs and state for file input are removed
-  // const fileInputRef = React.useRef<HTMLInputElement>(null);
-  // const [currentItemIdForUpload, setCurrentItemIdForUpload] = React.useState<string | null>(null);
-
+  const [associatedFiles, setAssociatedFiles] = React.useState<Record<string, AssociatedFile | null>>({});
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const [currentItemIdForFile, setCurrentItemIdForFile] = React.useState<string | null>(null);
 
   const handleCheckboxChange = (itemId: string) => {
     setCheckedItems((prev) => ({
@@ -80,20 +63,62 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
     }, {} as Record<string, DocumentItem[]>);
   }, [items]);
 
-  // All file handling functions (handleUploadButtonClick, handleFileChange, handleRemoveFile) are removed
-  // as authentication and storage integration are removed.
+  const handleSelectFileClick = (itemId: string) => {
+    setCurrentItemIdForFile(itemId);
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file && currentItemIdForFile) {
+      setAssociatedFiles(prev => ({
+        ...prev,
+        [currentItemIdForFile]: { name: file.name }
+      }));
+      toast({
+        title: "File Associated",
+        description: `${file.name} has been associated with the item. (File not uploaded to server)`,
+      });
+    }
+    // Reset file input to allow selecting the same file again if needed
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+    setCurrentItemIdForFile(null);
+  };
+
+  const handleClearFile = (itemId: string) => {
+    const fileName = associatedFiles[itemId]?.name;
+    setAssociatedFiles(prev => {
+      const newState = { ...prev };
+      delete newState[itemId];
+      return newState;
+    });
+    toast({
+      title: "File Association Cleared",
+      description: `${fileName || 'The file'} is no longer associated with this item.`,
+      variant: "default"
+    });
+  };
 
   return (
     <Card className="shadow-lg">
       <CardHeader>
         <CardTitle>Required Documents</CardTitle>
         <CardDescription>
-          This checklist helps you gather necessary paperwork. 
-          Document upload functionality has been disabled as user authentication is removed.
+          This checklist helps you gather necessary paperwork. You can associate local file names with items for tracking. Files are not uploaded to a server.
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {/* Hidden file input is removed */}
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          style={{ display: 'none' }}
+          aria-hidden="true"
+        />
         <Accordion type="multiple" defaultValue={Object.keys(categories)} className="w-full">
           {Object.entries(groupedItems).map(([category, categoryItems]) => (
             <AccordionItem value={category} key={category}>
@@ -109,8 +134,7 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
                 <ul className="space-y-4 p-2">
                   {categoryItems.map((item) => {
                     const IconComponent = iconMap[item.iconName];
-                    // File state logic is removed
-                    // const fileState = uploadedFiles[item.id]; 
+                    const currentFile = associatedFiles[item.id];
                     return (
                       <li key={item.id} className="flex items-start space-x-3 p-3 bg-secondary/30 rounded-md">
                         <Checkbox
@@ -127,20 +151,46 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
                           </Label>
                           <p className="text-sm text-muted-foreground ml-7">{item.description}</p>
                           
-                          <div className="ml-7 mt-2 space-y-2">
+                          <div className="ml-7 mt-2 space-y-2 sm:flex sm:items-center sm:space-y-0 sm:space-x-2">
                             {item.locationQuery && (
                               <Button
                                 variant="outline"
                                 size="sm"
                                 onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.locationQuery as string)}`, '_blank', 'noopener,noreferrer')}
-                                className="text-sm mr-2"
+                                className="text-sm"
                               >
                                 <MapPin className="mr-2 h-4 w-4 text-primary" />
                                 Find Office
                               </Button>
                             )}
 
-                            {/* All UI related to file upload status, errors, and removal is removed */}
+                            {!currentFile && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleSelectFileClick(item.id)}
+                                className="text-sm"
+                              >
+                                <Paperclip className="mr-2 h-4 w-4 text-primary" />
+                                Select File
+                              </Button>
+                            )}
+
+                            {currentFile && (
+                              <div className="flex items-center space-x-2 p-2 bg-background rounded-md border border-input text-sm">
+                                <FileText className="h-4 w-4 text-muted-foreground shrink-0" />
+                                <span className="truncate text-foreground" title={currentFile.name}>{currentFile.name}</span>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-6 w-6 shrink-0"
+                                  onClick={() => handleClearFile(item.id)}
+                                  aria-label="Clear file association"
+                                >
+                                  <X className="h-4 w-4 text-destructive" />
+                                </Button>
+                              </div>
+                            )}
                           </div>
                         </div>
                       </li>
@@ -152,7 +202,7 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
           ))}
         </Accordion>
          <div className="mt-6 p-3 bg-accent/10 text-accent-foreground/80 border border-accent/20 rounded-md text-xs">
-            <strong>Note:</strong> Document upload functionality is currently disabled. This checklist is for informational purposes.
+            <strong>Note:</strong> File selection is for local tracking only. Documents are not uploaded or saved to any server. This association will be lost if you refresh or leave the page.
           </div>
       </CardContent>
     </Card>
