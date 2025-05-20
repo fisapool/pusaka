@@ -3,11 +3,11 @@
 
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter, SheetClose, SheetDescription } from '@/components/ui/sheet'; // Added SheetDescription
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter, SheetClose, SheetDescription } from '@/components/ui/sheet';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { MessageSquare, Send, User, Bot, Loader2, X } from 'lucide-react';
+import { MessageSquare, Send, User, Bot, Loader2, X, HelpCircle, ListChecks, MapIcon } from 'lucide-react'; // Added HelpCircle, ListChecks, MapIcon
 import { askPusakaChat, type PusakaChatInput, type ChatMessage } from '@/ai/flows/pusaka-chat-flow';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
@@ -18,6 +18,12 @@ interface DisplayMessage {
   content: string;
   timestamp: Date;
 }
+
+const suggestedPrompts = [
+  { id: 'sg1', text: 'What is a small estate?', icon: HelpCircle },
+  { id: 'sg2', text: 'What documents do I need?', icon: ListChecks },
+  { id: 'sg3', text: 'Explain the roadmap steps.', icon: MapIcon },
+];
 
 export function ChatbotClient() {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -33,19 +39,20 @@ export function ChatbotClient() {
     }
   }, [messages]);
   
-  const handleSendMessage = async (e?: React.FormEvent<HTMLFormElement>) => {
-    e?.preventDefault();
-    const trimmedInput = inputValue.trim();
-    if (!trimmedInput || isLoading) return;
+  const handleSendMessage = async (messageContent?: string) => {
+    const contentToSend = typeof messageContent === 'string' ? messageContent : inputValue.trim();
+    if (!contentToSend || isLoading) return;
 
     const newUserMessage: DisplayMessage = {
       id: Date.now().toString() + '-user',
       role: 'user',
-      content: trimmedInput,
+      content: contentToSend,
       timestamp: new Date(),
     };
     setMessages((prevMessages) => [...prevMessages, newUserMessage]);
-    setInputValue('');
+    if (typeof messageContent !== 'string') {
+      setInputValue(''); // Clear input only if it wasn't a suggested prompt
+    }
     setIsLoading(true);
 
     try {
@@ -57,7 +64,7 @@ export function ChatbotClient() {
         }));
 
       const response = await askPusakaChat({
-        message: trimmedInput,
+        message: contentToSend,
         chatHistory: chatHistoryForFlow,
       });
 
@@ -87,6 +94,11 @@ export function ChatbotClient() {
     }
   };
 
+  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    handleSendMessage();
+  };
+
   return (
     <>
       <Button
@@ -102,12 +114,10 @@ export function ChatbotClient() {
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetContent className="w-full max-w-md flex flex-col p-0" side="right">
           <SheetHeader className="p-4 border-b">
-            <div className="flex justify-between items-center">
-              <SheetTitle className="flex items-center gap-2">
-                <Bot className="h-6 w-6 text-primary" />
-                PusakaChat Assistant
-              </SheetTitle>
-            </div>
+            <SheetTitle className="flex items-center gap-2">
+              <Bot className="h-6 w-6 text-primary" />
+              PusakaChat Assistant
+            </SheetTitle>
             <SheetDescription className="text-sm text-muted-foreground pt-1">
               Ask questions about Malaysian small estate administration based on PusakaPro's information.
             </SheetDescription>
@@ -115,6 +125,24 @@ export function ChatbotClient() {
           
           <ScrollArea className="flex-grow p-4 overflow-y-auto" ref={scrollAreaRef}>
             <div className="space-y-4">
+              {messages.length === 0 && !isLoading && (
+                <div className="p-4 space-y-3">
+                  <p className="text-sm text-center text-muted-foreground">
+                    Not sure where to start? Try one of these:
+                  </p>
+                  {suggestedPrompts.map((prompt) => (
+                    <Button
+                      key={prompt.id}
+                      variant="outline"
+                      className="w-full justify-start text-left h-auto py-2"
+                      onClick={() => handleSendMessage(prompt.text)}
+                    >
+                      <prompt.icon className="mr-2 h-4 w-4 text-primary shrink-0" />
+                      {prompt.text}
+                    </Button>
+                  ))}
+                </div>
+              )}
               {messages.map((msg) => (
                 <div
                   key={msg.id}
@@ -154,7 +182,7 @@ export function ChatbotClient() {
                   )}
                 </div>
               ))}
-              {isLoading && (
+              {isLoading && messages.length > 0 && ( // Show loader only if there are messages and it's loading new one
                 <div className="flex justify-start items-end gap-2"> 
                    <Avatar className="h-8 w-8 self-start">
                       <AvatarFallback className="bg-primary text-primary-foreground">
@@ -170,7 +198,7 @@ export function ChatbotClient() {
           </ScrollArea>
 
           <SheetFooter className="p-4 border-t">
-            <form onSubmit={handleSendMessage} className="flex w-full items-center space-x-2">
+            <form onSubmit={handleFormSubmit} className="flex w-full items-center space-x-2">
               <Input
                 type="text"
                 placeholder="Ask about PusakaPro..."

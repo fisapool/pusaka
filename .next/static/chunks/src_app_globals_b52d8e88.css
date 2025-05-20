@@ -795,6 +795,10 @@ body {
   height: 100svh;
 }
 
+.h-auto {
+  height: auto;
+}
+
 .max-h-96 {
   max-height: 24rem;
 }

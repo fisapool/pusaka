@@ -6,6 +6,10 @@
           "moduleId": "[project]/.next-internal/server/app/checklist/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/pusaka-chat-flow.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": false
         },
+        "app/help-center/page": {
+          "moduleId": "[project]/.next-internal/server/app/help-center/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/pusaka-chat-flow.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
         "app/legal-financial-hub/page": {
           "moduleId": "[project]/.next-internal/server/app/legal-financial-hub/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/pusaka-chat-flow.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/calculate-fees-flow.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": false
@@ -21,6 +25,7 @@
       },
       "layer": {
         "app/checklist/page": "action-browser",
+        "app/help-center/page": "action-browser",
         "app/legal-financial-hub/page": "action-browser",
         "app/page": "action-browser",
         "app/roadmap/page": "action-browser"
