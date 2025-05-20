@@ -34,8 +34,8 @@ export function FeesCalculatorClient() {
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      estateValue: '', // Changed from undefined
-      propertyType: '', // Changed from undefined
+      estateValue: '', 
+      propertyType: '', 
       hasWill: false,
       location: '',
       numberOfBeneficiaries: 1,
@@ -83,7 +83,6 @@ export function FeesCalculatorClient() {
                   <FormItem>
                     <FormLabel>Total Estimated Estate Value (MYR)</FormLabel>
                     <FormControl>
-                      {/* Pass an empty string if field.value is null or undefined for controlled input */}
                       <Input type="number" placeholder="e.g., 150000" {...field} value={field.value ?? ''} />
                     </FormControl>
                     <FormDescription>Enter the total approximate value of all assets.</FormDescription>
@@ -98,7 +97,7 @@ export function FeesCalculatorClient() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Property Type</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value ?? ''}> {/* Ensure value is never undefined */}
+                    <Select onValueChange={field.onChange} value={field.value ?? ''}> 
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select property type" />
@@ -159,7 +158,6 @@ export function FeesCalculatorClient() {
                   <FormItem>
                     <FormLabel>Number of Beneficiaries</FormLabel>
                     <FormControl>
-                       {/* Pass an empty string if field.value is null or undefined for controlled input */}
                       <Input type="number" placeholder="e.g., 3" {...field} value={field.value ?? ''} />
                     </FormControl>
                     <FormDescription>How many individuals will inherit from the estate?</FormDescription>
@@ -194,13 +192,13 @@ export function FeesCalculatorClient() {
           </CardHeader>
           <CardContent>
             {calculationResult.estimatedFees && calculationResult.estimatedFees.length > 0 ? (
-              <Accordion type="multiple" className="w-full space-y-2">
+              <Accordion type="multiple" className="w-full space-y-2" defaultValue={calculationResult.estimatedFees.map((_, index) => `fee-${index}`)}>
                 {calculationResult.estimatedFees.map((fee, index) => (
                   <AccordionItem value={`fee-${index}`} key={index} className="border rounded-md overflow-hidden bg-background hover:bg-secondary/20 transition-colors">
                     <AccordionTrigger className="p-4 text-left hover:no-underline">
-                       <div className="flex items-center gap-3">
+                       <div className="flex items-center gap-3 w-full">
                         <Coins className="h-5 w-5 text-primary shrink-0" />
-                        <div className="flex-1">
+                        <div className="flex-1 text-left">
                           <h3 className="font-medium text-foreground">{fee.category}</h3>
                           <p className="text-sm text-primary font-semibold mt-0.5">{fee.estimatedAmount}</p>
                         </div>
@@ -213,7 +211,7 @@ export function FeesCalculatorClient() {
                 ))}
               </Accordion>
             ) : (
-              <p className="text-muted-foreground text-center py-4">No specific fee items were estimated. This might indicate the AI could not determine detailed fees based on the input.</p>
+              <p className="text-muted-foreground text-center py-4">No specific fee items were estimated for the breakdown. Please refer to the total estimate below.</p>
             )}
             
             <div className="mt-6 p-4 bg-primary/10 text-primary-foreground rounded-md">
@@ -229,12 +227,12 @@ export function FeesCalculatorClient() {
               </div>
             </div>
           </CardContent>
-           {calculationResult.estimatedFees.length === 0 && (
+           {calculationResult.estimatedFees && calculationResult.estimatedFees.length === 0 && (
              <CardFooter>
-                <div className="flex flex-col items-center justify-center p-6 text-center bg-muted rounded-md w-full">
-                    <AlertTriangle className="h-12 w-12 text-destructive mb-4" />
-                    <p className="text-lg font-semibold">Limited Estimation</p>
-                    <p className="text-muted-foreground">The AI could not provide a detailed breakdown. Please review the total estimate and disclaimer. Consider refining your input for a more detailed response.</p>
+                <div className="flex flex-col items-center justify-center p-6 text-center bg-muted/50 rounded-md w-full border border-border">
+                    <AlertTriangle className="h-10 w-10 text-destructive mb-3" />
+                    <p className="text-md font-semibold text-foreground">Limited Estimation Detail</p>
+                    <p className="text-sm text-muted-foreground mt-1">The AI could not provide a detailed fee breakdown for your specific input. Please review the total estimated range and disclaimer. Consider refining your input if you need a more detailed response, or consult with a professional.</p>
                 </div>
              </CardFooter>
             )}
@@ -243,3 +241,5 @@ export function FeesCalculatorClient() {
     </div>
   );
 }
+
+    
