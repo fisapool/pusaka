@@ -3,7 +3,7 @@ import { PageHeader } from '@/components/layout/page-header';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Home as HomeIcon, ListChecks, Clock, MapPinned, ScrollText, ArrowRight, Calculator, Gavel } from 'lucide-react'; // Added Calculator, Gavel
+import { Home as HomeIcon, ListChecks, MapPinned, ScrollText, ArrowRight, Calculator, Gavel, Clock } from 'lucide-react'; // Keep Clock if used by any other feature, or remove if not. MapPinned used by Roadmap.
 import Image from 'next/image';
 
 const features = [
@@ -16,12 +16,12 @@ const features = [
     imgHint: "documents checklist",
   },
   {
-    title: "Timeline Estimator",
-    description: "Get an AI-powered estimate for each step of the process based on your details.",
-    href: "/timeline-estimator",
-    icon: Clock,
+    title: "Roadmap & Timeline", // Renamed
+    description: "Get AI-powered timeline estimates and follow a step-by-step process.", // Updated
+    href: "/roadmap", // Kept /roadmap
+    icon: MapPinned, // Kept MapPinned
     img: "https://placehold.co/600x400.png",
-    imgHint: "calendar planning",
+    imgHint: "map journey timeline",
   },
   {
     title: "Fees Calculator",
@@ -31,14 +31,15 @@ const features = [
     img: "https://placehold.co/600x400.png",
     imgHint: "money calculator",
   },
-  {
-    title: "Personalized Roadmap",
-    description: "Step-by-step guidance tailored to the small estate process.",
-    href: "/roadmap",
-    icon: MapPinned,
-    img: "https://placehold.co/600x400.png",
-    imgHint: "map journey",
-  },
+  // Removed Timeline Estimator as a separate feature
+  // {
+  //   title: "Timeline Estimator",
+  //   description: "Get an AI-powered estimate for each step of the process based on your details.",
+  //   href: "/timeline-estimator",
+  //   icon: Clock,
+  //   img: "https://placehold.co/600x400.png",
+  //   imgHint: "calendar planning",
+  // },
   {
     title: "Legal Guides",
     description: "Understand the key legal processes and requirements in Malaysian small estate law.",

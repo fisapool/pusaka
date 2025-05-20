@@ -14,16 +14,16 @@ import {
   SidebarSeparator,
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
-import { Home, ListChecks, Clock, MapPinned, ScrollText, Settings, LifeBuoy, Calculator, Gavel, LogIn, LogOut, UserCircle2, Loader2 } from 'lucide-react';
+import { Home, ListChecks, MapPinned, ScrollText, Settings, LifeBuoy, Calculator, Gavel, LogIn, LogOut, UserCircle2, Loader2 } from 'lucide-react'; // Removed Clock
 import { useAuth } from '@/contexts/auth-context';
 import { GoogleTranslateButton } from '@/components/features/google-translate-button';
 
 const navItems = [
   { href: '/', label: 'Home', icon: Home },
   { href: '/checklist', label: 'Document Checklist', icon: ListChecks },
-  { href: '/timeline-estimator', label: 'Timeline Estimator', icon: Clock },
+  // { href: '/timeline-estimator', label: 'Timeline Estimator', icon: Clock }, // Removed
   { href: '/fees-calculator', label: 'Fees Calculator', icon: Calculator },
-  { href: '/roadmap', label: 'Personalized Roadmap', icon: MapPinned },
+  { href: '/roadmap', label: 'Roadmap & Timeline', icon: MapPinned }, // Renamed label
   { href: '/guides', label: 'Legal Guides', icon: ScrollText },
   { href: '/find-lawyer', label: 'Find a Lawyer', icon: Gavel },
 ];
