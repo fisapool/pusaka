@@ -84,9 +84,7 @@ const calculateFeesFlow = ai.defineFlow(
     outputSchema: CalculateFeesOutputSchema,
   },
   async (input) => {
-    // Ensure estateValue is treated as a number if it's not already.
-    const numericInput = { ...input, estateValue: Number(input.estateValue) };
-    const {output} = await prompt(numericInput);
+    const {output} = await prompt(input); // Pass input directly
 
     // Fallback disclaimer if AI fails to generate one
     const defaultDisclaimer = "The figures provided are estimates for general guidance only and are based on typical scenarios for small estates in Malaysia (under MYR 5 million value). Actual fees can vary significantly depending on the complexity of the estate, current tariffs, and professional services engaged. Please consult with relevant authorities (Land Office, Amanah Raya Berhad) and/or a legal professional for precise cost information related to your specific situation.";
