@@ -26,6 +26,12 @@ const navItems = [
   { href: '/find-lawyer', label: 'Find a Lawyer', icon: Gavel },
 ];
 
+const bottomNavItems = [
+ { href: '/settings', label: 'Settings', icon: Settings },
+ { href: '#', label: 'Help Center', icon: LifeBuoy }, // Example, can be a link to a help page
+];
+
+
 export function AppSidebarNavigation() {
   const pathname = usePathname();
   const { user, loading, signInWithGoogle, signOut } = useAuth();
@@ -41,7 +47,6 @@ export function AppSidebarNavigation() {
           </svg>
           <span className="text-xl font-semibold text-foreground group-data-[collapsible=icon]:hidden">PusakaPro</span>
         </Link>
-        {/* SidebarTrigger is now always visible */}
         <SidebarTrigger />
       </SidebarHeader>
       <SidebarContent>
@@ -94,18 +99,21 @@ export function AppSidebarNavigation() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
             )}
-            <SidebarMenuItem>
-              <SidebarMenuButton tooltip={{children: "Help Center", className: "group-data-[collapsible=icon]:block hidden" }}>
-                <LifeBuoy />
-                <span className="group-data-[collapsible=icon]:hidden">Help Center</span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton tooltip={{children: "Settings", className: "group-data-[collapsible=icon]:block hidden"}}>
-                <Settings />
-                <span className="group-data-[collapsible=icon]:hidden">Settings</span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
+            {/* Moved Settings and Help Center to a separate loop for clarity, or integrate if structure is complex */}
+            {bottomNavItems.map((item) => (
+               <SidebarMenuItem key={item.href}>
+                <SidebarMenuButton
+                  asChild
+                  isActive={pathname === item.href}
+                  tooltip={{ children: item.label, className: "group-data-[collapsible=icon]:block hidden" }}
+                >
+                  <Link href={item.href}>
+                    <item.icon />
+                    <span>{item.label}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
           </SidebarMenu>
       </SidebarFooter>
     </>
