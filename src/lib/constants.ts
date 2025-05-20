@@ -124,7 +124,7 @@ export const LEGAL_GUIDE_TOPICS: LegalGuideTopic[] = [
     id: 'guide6',
     title: "Key Government Agencies in Small Estate Administration",
     summary: "Understand the roles of JPN, Land Office (JKPTG), JPJ, and ARB's interaction.",
-    iconName: 'Landmark', // Using Landmark as it fits well for official bodies
+    iconName: 'Landmark',
     content: [
       "Several government agencies and bodies are involved in the small estate administration process. Understanding their roles can help streamline your interactions:",
       "1. **Jabatan Pendaftaran Negara (JPN) - National Registration Department:** Primarily responsible for issuing Death Certificates, which are crucial to initiate the estate administration process. They also manage NRICs (MyKad) and birth certificates of individuals.",
@@ -133,6 +133,21 @@ export const LEGAL_GUIDE_TOPICS: LegalGuideTopic[] = [
       "4. **Amanah Raya Berhad (ARB):** While a public trustee company, ARB plays a significant role. They can directly administer estates consisting solely of movable property up to RM600,000. They can also be appointed as executor in a will, or as administrator by the Land Office or High Court in certain situations, especially if beneficiaries are minors or there are no other suitable administrators.",
       "It's important to note that for small estates (under RM5 million) involving immovable property, the primary jurisdiction lies with the District Land Office/JKPTG, even if ARB is also involved in handling movable assets or is named in a will.",
       "Always verify the latest procedures directly with the respective agencies or ARB as requirements and processes can be updated."
+    ]
+  },
+  {
+    id: 'guide7',
+    title: "Managing Potential Family Disputes in Estate Administration",
+    summary: "Tips for navigating disagreements among beneficiaries during the estate process.",
+    iconName: 'ShieldQuestion',
+    content: [
+      "Disagreements among beneficiaries are unfortunately common during estate administration. These can arise from misunderstandings, differing expectations, or pre-existing family tensions. Addressing them proactively is key.",
+      "**1. Open Communication:** Encourage open and honest communication among all beneficiaries from the outset. Clearly explain the process, share information transparently, and provide opportunities for everyone to voice their concerns.",
+      "**2. Refer to the Will (if any):** If the deceased left a valid Will (Wasiat), it serves as the primary legal document outlining their wishes for asset distribution. Adhering to the Will can often prevent or resolve disputes.",
+      "**3. Understand Legal Entitlements:** If there is no Will (intestacy), assets are distributed according to legal frameworks: Faraid for Muslims, and the Distribution Act 1958 for non-Muslims. Understanding these legal entitlements can clarify who is due what share, reducing ambiguity.",
+      "**4. Consider Mediation:** If direct discussions are not productive, consider engaging a neutral third-party mediator. A mediator can facilitate conversations, help beneficiaries understand each other's perspectives, and guide them towards a mutually agreeable solution.",
+      "**5. Seek Legal Advice:** If disputes are complex or cannot be resolved through communication or mediation, it is crucial to seek advice from a lawyer specializing in estate law. A lawyer can provide impartial guidance on legal rights and obligations, help interpret the Will or intestacy laws, and represent your interests if necessary. Early legal intervention can often prevent disputes from escalating and ensure the administration process proceeds correctly.",
+      "Remember, the goal is to honor the deceased's wishes (if known) and ensure a fair and lawful distribution of the estate while minimizing conflict."
     ]
   }
 ];

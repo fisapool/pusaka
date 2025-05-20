@@ -348,7 +348,7 @@ const ROADMAP_STEPS = [
         id: 'step2',
         title: "Determine Type of Estate Administration",
         description: "Ascertain if the estate qualifies as a Small Estate. In Malaysia, this means the total value of the deceased's assets is less than RM5 million. Estates valued at RM5 million or more are typically administered through the High Court.",
-        details: "Small estates, especially those involving land, are often handled by the District Land Administrator. Amanah Raya Berhad (ARB) can administer estates consisting only of movable property up to a certain value (e.g., RM600,000) via a summary process.",
+        details: "Small estates, especially those involving land, are often handled by the District Land Administrator or Amanah Raya Berhad (ARB).",
         iconName: 'HelpCircle'
     },
     {
@@ -415,9 +415,9 @@ const LEGAL_GUIDE_TOPICS = [
         summary: "Learn what qualifies as a small estate and the general process.",
         iconName: 'HelpCircle',
         content: [
-            "A Small Estate (Pusaka Kecil) in Malaysia is defined as an estate where the total value of the assets (including both movable and immovable property) is less than RM5 million. If the total value of the deceased's estate is RM5 million or more, the application to manage or administer the estate must be made to the High Court.",
-            "The Small Estates (Distribution) Act 1955 provides the legal framework for distributing these estates. Typically, the District Land Administrator (Pejabat Tanah Daerah) is responsible for handling small estates, especially when immovable property is involved.",
-            "For estates consisting solely of movable property, Amanah Raya Berhad (ARB) may offer summary administration if the value is up to RM600,000. Otherwise, or if a will specifies another executor, the High Court is the usual venue for estates not qualifying as 'small' or for more complex cases."
+            "A Small Estate (Pusaka Kecil) in Malaysia is generally defined as an estate where the total value of the assets (including both movable and immovable property) is less than RM5 million. If the total value of the deceased's estate is RM5 million or more, the application to manage or administer the estate must be made to the High Court.",
+            "The Small Estates (Distribution) Act 1955 provides the legal framework for distributing these estates. Typically, the District Land Administrator (Pejabat Tanah Daerah / Unit Pembahagian Pusaka Kecil, JKPTG) is responsible for handling small estates, especially when immovable property is involved.",
+            "For estates consisting solely of movable property, Amanah Raya Berhad (ARB) may offer summary administration if the value is up to RM600,000. However, if the value exceeds this or if the beneficiaries prefer, even movable-only estates can be handled by the Land Office or High Court depending on complexity and total value."
         ]
     },
     {
@@ -437,9 +437,9 @@ const LEGAL_GUIDE_TOPICS = [
         summary: "How ARB can assist in estate administration.",
         iconName: 'Landmark',
         content: [
-            "Amanah Raya Berhad (ARB) can administer estates consisting entirely of movable property (like cash, shares, EPF) up to RM600,000, regardless of whether there is a will or not. This is done through a Declaration or Order via summary administration.",
-            "If a will exists and ARB is appointed as the executor, they can apply for a Grant of Probate from the High Court for estates of any value. If the estate value is below RM5 million and includes immovable property, beneficiaries can still opt for the Land Office route even if ARB is named executor, by mutual agreement.",
-            "ARB is a suitable option if beneficiaries are minors, if there are complex family disputes, or if there's no one willing or able to administer the estate. They can also be appointed by the Land Office or High Court to act as administrator."
+            "Amanah Raya Berhad (ARB) is a public trustee company that can administer estates. For estates consisting entirely of movable property (like cash, shares, EPF) up to RM600,000, ARB can provide summary administration, regardless of whether there is a will or not.",
+            "If a will exists and ARB is appointed as the executor, they can apply for a Grant of Probate from the High Court for estates of any value. If an estate (with or without a will) has a total value of less than RM5 million and includes immovable property, beneficiaries can still opt for the Land Office route for distribution, even if ARB is named executor, by mutual agreement or if ARB declines administration.",
+            "ARB is a suitable option if beneficiaries are minors, if there are complex family disputes, or if there's no one willing or able to administer the estate. They can also be appointed by the Land Office or High Court to act as administrator if needed."
         ]
     },
     {
@@ -463,6 +463,21 @@ const LEGAL_GUIDE_TOPICS = [
             "This form requires details of the deceased, beneficiaries, a full list of assets (movable and immovable with valuations), and any liabilities.",
             "Supporting documents, as outlined in our Document Checklist (e.g., death certificate, NRICs, land titles, bank statements), must be attached.",
             "After submission and verification, the Land Office will schedule a hearing. All relevant parties (applicant and beneficiaries) are usually required to attend to provide testimony or clarification before a Distribution Order is issued."
+        ]
+    },
+    {
+        id: 'guide6',
+        title: "Key Government Agencies in Small Estate Administration",
+        summary: "Understand the roles of JPN, Land Office (JKPTG), JPJ, and ARB's interaction.",
+        iconName: 'Landmark',
+        content: [
+            "Several government agencies and bodies are involved in the small estate administration process. Understanding their roles can help streamline your interactions:",
+            "1. **Jabatan Pendaftaran Negara (JPN) - National Registration Department:** Primarily responsible for issuing Death Certificates, which are crucial to initiate the estate administration process. They also manage NRICs (MyKad) and birth certificates of individuals.",
+            "2. **Pejabat Tanah Daerah / Unit Pembahagian Pusaka Kecil (JKPTG) - District Land Office / Small Estate Distribution Unit:** This is the main body that handles applications for small estates (Pusaka Kecil) involving immovable property (land, houses). They process Form A applications, conduct hearings, and issue Distribution Orders.",
+            "3. **Jabatan Pengangkutan Jalan (JPJ) - Road Transport Department:** Involved in the transfer of vehicle ownership from the deceased to the beneficiaries after a Distribution Order or Grant of Probate/Letters of Administration is obtained.",
+            "4. **Amanah Raya Berhad (ARB):** While a public trustee company, ARB plays a significant role. They can directly administer estates consisting solely of movable property up to RM600,000. They can also be appointed as executor in a will, or as administrator by the Land Office or High Court in certain situations, especially if beneficiaries are minors or there are no other suitable administrators.",
+            "It's important to note that for small estates (under RM5 million) involving immovable property, the primary jurisdiction lies with the District Land Office/JKPTG, even if ARB is also involved in handling movable assets or is named in a will.",
+            "Always verify the latest procedures directly with the respective agencies or ARB as requirements and processes can be updated."
         ]
     }
 ];
@@ -540,6 +555,7 @@ Be concise, polite, and helpful.
 If a question is outside the scope of the provided PusakaPro information or if you cannot find the answer within the context, clearly state that the information is not available in PusakaPro or that you cannot answer that specific query with the given data.
 Do not invent information or answer questions unrelated to Malaysian small estate administration as covered by the provided context.
 If asked about document locations, mention that users can find relevant offices using the 'Find Office' button in the Document Checklist for certain documents.
+When a user asks about a specific document or process, if the provided PusakaPro context mentions a relevant government agency (e.g., JPN, Pejabat Tanah, JPJ, Amanah Raya Berhad), try to include the agency's name in your response. This helps the user understand which agency they might need to interact with for that particular item or step.
 
 PusakaPro Application Context:
 ${applicationContext}
