@@ -41,9 +41,8 @@ export function AppSidebarNavigation() {
           </svg>
           <span className="text-xl font-semibold text-foreground group-data-[collapsible=icon]:hidden">PusakaPro</span>
         </Link>
-        <div className="md:hidden">
-           <SidebarTrigger />
-        </div>
+        {/* SidebarTrigger is now always visible */}
+        <SidebarTrigger />
       </SidebarHeader>
       <SidebarContent>
         <SidebarMenu>
