@@ -13,7 +13,6 @@ import {z} from 'genkit'; // Use 'genkit' for z as per existing project structur
 import { LEGAL_GUIDE_TOPICS, ROADMAP_STEPS, DOCUMENT_CHECKLIST_ITEMS, DOCUMENT_CATEGORIES } from '@/lib/constants';
 
 // Prepare context data from the application
-// Restore full context:
 const formattedLegalGuides = LEGAL_GUIDE_TOPICS.map(g => `Guide Title: ${g.title}\nSummary: ${g.summary}\nContent: ${g.content.join(' ')}`).join('\n\n---\n\n');
 const formattedRoadmapSteps = ROADMAP_STEPS.map(s => `Roadmap Step: ${s.title}\nDescription: ${s.description}\nDetails: ${s.details || ''}`).join('\n\n---\n\n');
 const formattedDocumentChecklist = DOCUMENT_CHECKLIST_ITEMS.map(d => `Document: ${d.title}\nDescription: ${d.description}\nCategory: ${d.category}${d.locationQuery ? `\nRelevant Office Query: ${d.locationQuery}` : ''}`).join('\n\n---\n\n');
@@ -63,7 +62,7 @@ const pusakaChatFlow = ai.defineFlow(
   async (input) => {
     const systemMessage = `You are PusakaChat, a friendly and helpful AI assistant for the PusakaPro application.
 PusakaPro helps users navigate Malaysian small estate administration.
-Your primary goal is to answer user questions based *only* on the information provided below from the PusakaPro application context.
+Your primary goal is to answer user questions based *only* on the information provided below from the PusakaPro application context. This context includes details on document checklists, roadmap steps, and legal guides relevant to PusakaPro.
 Be concise, polite, and helpful.
 If a question is outside the scope of the provided PusakaPro information or if you cannot find the answer within the context, clearly state that the information is not available in PusakaPro or that you cannot answer that specific query with the given data.
 Do not invent information or answer questions unrelated to Malaysian small estate administration as covered by the provided context.
@@ -97,7 +96,7 @@ ${applicationContext}
           messages: llmMessages,
           system: systemMessage,
         },
-        model: 'googleai/gemini-pro', // Explicitly use gemini-pro
+        model: 'googleai/gemini-pro', 
         config: {
             safetySettings: [
               { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
@@ -131,7 +130,7 @@ ${applicationContext}
       }
 
     } catch (error: any) {
-      console.error("Error in pusakaChatFlow calling ai.generate:", error); // This will log the full error to the Genkit server console.
+      console.error("Error in pusakaChatFlow calling ai.generate:", error); 
       let userFriendlyMessage = "I apologize, but I encountered an error trying to process your request. Please try again later.";
       if (error.message) {
         if (error.message.includes('API key not valid') || error.message.includes('Invalid API key') || error.message.toLowerCase().includes('api key')) {

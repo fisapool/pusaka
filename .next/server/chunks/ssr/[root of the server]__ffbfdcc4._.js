@@ -524,7 +524,6 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist
 ;
 ;
 // Prepare context data from the application
-// Restore full context:
 const formattedLegalGuides = __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$constants$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["LEGAL_GUIDE_TOPICS"].map((g)=>`Guide Title: ${g.title}\nSummary: ${g.summary}\nContent: ${g.content.join(' ')}`).join('\n\n---\n\n');
 const formattedRoadmapSteps = __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$constants$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["ROADMAP_STEPS"].map((s)=>`Roadmap Step: ${s.title}\nDescription: ${s.description}\nDetails: ${s.details || ''}`).join('\n\n---\n\n');
 const formattedDocumentChecklist = __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$constants$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["DOCUMENT_CHECKLIST_ITEMS"].map((d)=>`Document: ${d.title}\nDescription: ${d.description}\nCategory: ${d.category}${d.locationQuery ? `\nRelevant Office Query: ${d.locationQuery}` : ''}`).join('\n\n---\n\n');
@@ -566,7 +565,7 @@ const pusakaChatFlow = __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$ai
 }, async (input)=>{
     const systemMessage = `You are PusakaChat, a friendly and helpful AI assistant for the PusakaPro application.
 PusakaPro helps users navigate Malaysian small estate administration.
-Your primary goal is to answer user questions based *only* on the information provided below from the PusakaPro application context.
+Your primary goal is to answer user questions based *only* on the information provided below from the PusakaPro application context. This context includes details on document checklists, roadmap steps, and legal guides relevant to PusakaPro.
 Be concise, polite, and helpful.
 If a question is outside the scope of the provided PusakaPro information or if you cannot find the answer within the context, clearly state that the information is not available in PusakaPro or that you cannot answer that specific query with the given data.
 Do not invent information or answer questions unrelated to Malaysian small estate administration as covered by the provided context.
@@ -669,7 +668,7 @@ ${applicationContext}
             };
         }
     } catch (error) {
-        console.error("Error in pusakaChatFlow calling ai.generate:", error); // This will log the full error to the Genkit server console.
+        console.error("Error in pusakaChatFlow calling ai.generate:", error);
         let userFriendlyMessage = "I apologize, but I encountered an error trying to process your request. Please try again later.";
         if (error.message) {
             if (error.message.includes('API key not valid') || error.message.includes('Invalid API key') || error.message.toLowerCase().includes('api key')) {
