@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from 'react';
@@ -166,9 +167,9 @@ export function TimelineEstimatorClient() {
                 {estimationResult.stepEstimations.map((step, index) => (
                   <AccordionItem value={`step-${index}`} key={index}>
                     <AccordionTrigger className="text-left hover:no-underline">
-                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full">
-                        <span className="font-medium text-primary flex-1">{index + 1}. {step.step}</span>
-                        <span className="text-sm text-foreground sm:ml-4 mt-1 sm:mt-0 shrink-0">{step.estimatedTimeline}</span>
+                      <div className="flex flex-col w-full"> {/* Changed: Always flex-col */}
+                        <span className="font-medium text-primary">{index + 1}. {step.step}</span>
+                        <span className="text-sm text-foreground mt-1">{step.estimatedTimeline}</span> {/* Changed: Removed sm:ml-4, sm:mt-0 */}
                       </div>
                     </AccordionTrigger>
                     <AccordionContent className="p-4 bg-secondary/30 rounded-md">
