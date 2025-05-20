@@ -524,9 +524,8 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist
 ;
 ;
 // Prepare context data from the application
-// Temporarily reduce context for diagnosis:
-const formattedLegalGuides = ""; // LEGAL_GUIDE_TOPICS.map(g => `Guide Title: ${g.title}\nSummary: ${g.summary}\nContent: ${g.content.join(' ')}`).join('\n\n---\n\n');
-const formattedRoadmapSteps = ""; // ROADMAP_STEPS.map(s => `Roadmap Step: ${s.title}\nDescription: ${s.description}\nDetails: ${s.details || ''}`).join('\n\n---\n\n');
+const formattedLegalGuides = __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$constants$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["LEGAL_GUIDE_TOPICS"].map((g)=>`Guide Title: ${g.title}\nSummary: ${g.summary}\nContent: ${g.content.join(' ')}`).join('\n\n---\n\n');
+const formattedRoadmapSteps = __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$constants$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["ROADMAP_STEPS"].map((s)=>`Roadmap Step: ${s.title}\nDescription: ${s.description}\nDetails: ${s.details || ''}`).join('\n\n---\n\n');
 const formattedDocumentChecklist = __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$constants$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["DOCUMENT_CHECKLIST_ITEMS"].map((d)=>`Document: ${d.title}\nDescription: ${d.description}\nCategory: ${d.category}${d.locationQuery ? `\nRelevant Office Query: ${d.locationQuery}` : ''}`).join('\n\n---\n\n');
 const applicationContext = `
 === PusakaPro Application Information ===
@@ -566,7 +565,7 @@ const pusakaChatFlow = __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$ai
 }, async (input)=>{
     const systemMessage = `You are PusakaChat, a friendly and helpful AI assistant for the PusakaPro application.
 PusakaPro helps users navigate Malaysian small estate administration.
-Your primary goal is to answer user questions based *only* on the information provided below from the PusakaPro application context.
+Your primary goal is to answer user questions based *only* on the information provided below from the PusakaPro application context. This context includes details on document checklists, roadmap steps, and legal guides relevant to PusakaPro.
 Be concise, polite, and helpful.
 If a question is outside the scope of the provided PusakaPro information or if you cannot find the answer within the context, clearly state that the information is not available in PusakaPro or that you cannot answer that specific query with the given data.
 Do not invent information or answer questions unrelated to Malaysian small estate administration as covered by the provided context.
@@ -608,12 +607,15 @@ ${applicationContext}
         ]
     });
     try {
+        // For debugging:
+        // console.log("PusakaChatFlow - System Message Length:", systemMessage.length);
+        // console.log("PusakaChatFlow - LLM Messages to send:", JSON.stringify(llmMessages, null, 2));
         const response = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$ai$2f$genkit$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["ai"].generate({
             prompt: {
                 messages: llmMessages,
                 system: systemMessage
             },
-            // model: 'googleai/gemini-pro' // Default model from genkit.ts will be used
+            model: 'googleai/gemini-pro',
             config: {
                 safetySettings: [
                     {
@@ -679,6 +681,8 @@ ${applicationContext}
                 userFriendlyMessage = "There's an issue with the project's billing configuration for the AI service.";
             } else if (error.message.toLowerCase().includes('model not found')) {
                 userFriendlyMessage = "The configured AI model could not be found. Please check the service configuration.";
+            } else if (error.message.toLowerCase().includes('bad request') || error.cause && error.cause.status === 400) {
+                userFriendlyMessage = "The request to the AI service was malformed. This might be due to very long input or an unexpected format. Please try a shorter or different question.";
             }
         }
         return {

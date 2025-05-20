@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import type { DocumentItem } from '@/lib/constants';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import type { LucideIcon } from 'lucide-react';
-import { FileText, Users, Landmark, Banknote, Car, LandPlot, BookOpen, MapPin, UploadCloud, XCircle, FileCheck, Loader2, AlertTriangle } from 'lucide-react';
+import { FileText, Users, Landmark, Banknote, Car, LandPlot, BookOpen, MapPin, UploadCloud, XCircle, FileCheck, Loader2, AlertTriangle, LogIn } from 'lucide-react'; // Added LogIn
 import { useAuth } from '@/contexts/auth-context';
 import { storage } from '@/lib/firebase';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
@@ -285,8 +285,17 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
                                 className="text-sm"
                                 disabled={!user || (currentItemIdForUpload === item.id && uploadedFiles[item.id]?.isUploading)}
                               >
-                                <UploadCloud className="mr-2 h-4 w-4 text-primary" />
-                                Upload Document
+                                {user ? (
+                                  <>
+                                    <UploadCloud className="mr-2 h-4 w-4 text-primary" />
+                                    <span>Upload Document</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <LogIn className="mr-2 h-4 w-4 text-muted-foreground" />
+                                    <span>Login to Upload</span>
+                                  </>
+                                )}
                               </Button>
                             )}
                           </div>
@@ -306,6 +315,5 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
     </Card>
   );
 }
-
 
     

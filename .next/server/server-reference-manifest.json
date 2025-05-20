@@ -9,11 +9,27 @@
         "app/page": {
           "moduleId": "[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/pusaka-chat-flow.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": false
+        },
+        "app/roadmap/page": {
+          "moduleId": "[project]/.next-internal/server/app/roadmap/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/pusaka-chat-flow.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/estimate-timeline.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
         }
       },
       "layer": {
         "app/checklist/page": "action-browser",
-        "app/page": "action-browser"
+        "app/page": "action-browser",
+        "app/roadmap/page": "action-browser"
+      }
+    },
+    "4080a60d82e693da90288298f90ce3cbe2290d2b47": {
+      "workers": {
+        "app/roadmap/page": {
+          "moduleId": "[project]/.next-internal/server/app/roadmap/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/pusaka-chat-flow.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/estimate-timeline.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/roadmap/page": "action-browser"
       }
     }
   },
