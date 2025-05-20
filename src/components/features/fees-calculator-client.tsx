@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from 'react';
@@ -33,8 +34,8 @@ export function FeesCalculatorClient() {
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      estateValue: undefined, // Use undefined for number inputs to show placeholder
-      propertyType: undefined,
+      estateValue: '', // Changed from undefined
+      propertyType: '', // Changed from undefined
       hasWill: false,
       location: '',
       numberOfBeneficiaries: 1,
@@ -82,7 +83,8 @@ export function FeesCalculatorClient() {
                   <FormItem>
                     <FormLabel>Total Estimated Estate Value (MYR)</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="e.g., 150000" {...field} />
+                      {/* Pass an empty string if field.value is null or undefined for controlled input */}
+                      <Input type="number" placeholder="e.g., 150000" {...field} value={field.value ?? ''} />
                     </FormControl>
                     <FormDescription>Enter the total approximate value of all assets.</FormDescription>
                     <FormMessage />
@@ -96,7 +98,7 @@ export function FeesCalculatorClient() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Property Type</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select onValueChange={field.onChange} value={field.value ?? ''}> {/* Ensure value is never undefined */}
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select property type" />
@@ -157,7 +159,8 @@ export function FeesCalculatorClient() {
                   <FormItem>
                     <FormLabel>Number of Beneficiaries</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="e.g., 3" {...field} />
+                       {/* Pass an empty string if field.value is null or undefined for controlled input */}
+                      <Input type="number" placeholder="e.g., 3" {...field} value={field.value ?? ''} />
                     </FormControl>
                     <FormDescription>How many individuals will inherit from the estate?</FormDescription>
                     <FormMessage />
