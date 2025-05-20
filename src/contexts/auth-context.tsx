@@ -56,15 +56,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
   
-  if (loading && typeof window !== 'undefined' && window.localStorage.getItem('firebase:authUser:' + process.env.NEXT_PUBLIC_FIREBASE_API_KEY + ':[DEFAULT]') ) {
-    // Initial loading phase, especially if Firebase SDK is trying to restore session
-    // Render a minimal loader or null to avoid layout shifts or premature UI rendering
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
-  }
+  // Removed the problematic conditional loader block that caused hydration errors.
+  // The `loading` state is still available in the context for child components to use.
+  // Example:
+  // if (loading) {
+  // // This would be a consistent loader if used, but AppSidebarNavigation handles its own.
+  // return (
+  // <div className="flex items-center justify-center min-h-screen">
+  // <Loader2 className="h-8 w-8 animate-spin text-primary" />
+  // </div>
+  // );
+  // }
 
 
   return (
@@ -81,3 +83,4 @@ export function useAuth() {
   }
   return context;
 }
+
