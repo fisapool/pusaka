@@ -437,6 +437,10 @@ body {
   pointer-events: auto;
 }
 
+.visible {
+  visibility: visible;
+}
+
 .invisible {
   visibility: hidden;
 }
@@ -1195,6 +1199,12 @@ body {
   margin-bottom: calc(2rem * var(--tw-space-y-reverse));
 }
 
+.space-y-3 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(.75rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(.75rem * var(--tw-space-y-reverse));
+}
+
 .self-start {
   align-self: flex-start;
 }
@@ -1589,6 +1599,14 @@ body {
 
 .pt-4 {
   padding-top: 1rem;
+}
+
+.pb-1 {
+  padding-bottom: .25rem;
+}
+
+.pt-2 {
+  padding-top: .5rem;
 }
 
 .text-left {
