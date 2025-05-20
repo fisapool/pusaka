@@ -1693,8 +1693,15 @@ function AuthProvider({ children }) {
             await (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$firebase$2f$node_modules$2f40$firebase$2f$auth$2f$dist$2f$esm2017$2f$index$2d$683d5879$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__d__as__signInWithPopup$3e$__["signInWithPopup"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$firebase$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["auth"], provider);
         // onAuthStateChanged will handle setting the user
         } catch (error) {
-            console.error("Error signing in with Google:", error);
-        // Optionally, show a toast message to the user
+            console.error("Detailed error during signInWithGoogle:", error); // Added more detailed logging
+        // Optionally, show a toast message to the user.
+        // For example, if using a toast system like the one in this app:
+        // import { toast } from '@/hooks/use-toast';
+        // toast({
+        //   title: "Sign-in Error",
+        //   description: (error as Error).message || "Could not sign in with Google. Please check console for details.",
+        //   variant: "destructive",
+        // });
         } finally{
         // setLoading(false); // onAuthStateChanged will set loading to false after user state is updated
         }
@@ -1710,17 +1717,6 @@ function AuthProvider({ children }) {
         // setLoading(false); // onAuthStateChanged will set loading to false
         }
     };
-    // Removed the problematic conditional loader block that caused hydration errors.
-    // The `loading` state is still available in the context for child components to use.
-    // Example:
-    // if (loading) {
-    // // This would be a consistent loader if used, but AppSidebarNavigation handles its own.
-    // return (
-    // <div className="flex items-center justify-center min-h-screen">
-    // <Loader2 className="h-8 w-8 animate-spin text-primary" />
-    // </div>
-    // );
-    // }
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(AuthContext.Provider, {
         value: {
             user,
@@ -1731,7 +1727,7 @@ function AuthProvider({ children }) {
         children: children
     }, void 0, false, {
         fileName: "[project]/src/contexts/auth-context.tsx",
-        lineNumber: 73,
+        lineNumber: 67,
         columnNumber: 5
     }, this);
 }

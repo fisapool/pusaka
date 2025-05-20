@@ -37,8 +37,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await signInWithPopup(auth, provider);
       // onAuthStateChanged will handle setting the user
     } catch (error) {
-      console.error("Error signing in with Google:", error);
-      // Optionally, show a toast message to the user
+      console.error("Detailed error during signInWithGoogle:", error); // Added more detailed logging
+      // Optionally, show a toast message to the user.
+      // For example, if using a toast system like the one in this app:
+      // import { toast } from '@/hooks/use-toast';
+      // toast({
+      //   title: "Sign-in Error",
+      //   description: (error as Error).message || "Could not sign in with Google. Please check console for details.",
+      //   variant: "destructive",
+      // });
     } finally {
       // setLoading(false); // onAuthStateChanged will set loading to false after user state is updated
     }
@@ -56,19 +63,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
   
-  // Removed the problematic conditional loader block that caused hydration errors.
-  // The `loading` state is still available in the context for child components to use.
-  // Example:
-  // if (loading) {
-  // // This would be a consistent loader if used, but AppSidebarNavigation handles its own.
-  // return (
-  // <div className="flex items-center justify-center min-h-screen">
-  // <Loader2 className="h-8 w-8 animate-spin text-primary" />
-  // </div>
-  // );
-  // }
-
-
   return (
     <AuthContext.Provider value={{ user, loading, signInWithGoogle, signOut }}>
       {children}
@@ -83,4 +77,3 @@ export function useAuth() {
   }
   return context;
 }
-
