@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import type { DocumentItem } from '@/lib/constants';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import type { LucideIcon } from 'lucide-react';
-import { FileText, Users, Landmark, Banknote, Car, LandPlot, BookOpen, MapPin, Paperclip, X, Save, RotateCcw } from 'lucide-react';
+import { FileText, Users, Landmark, Banknote, Car, LandPlot, BookOpen, MapPin, Paperclip, X, Save, RotateCcw, ExternalLink } from 'lucide-react'; // Added ExternalLink
 import { useToast } from '@/hooks/use-toast';
 
 const iconMap: Record<string, LucideIcon> = {
@@ -54,15 +54,15 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
       }
       if (savedCheckedItems || savedAssociatedFiles) {
         toast({
-          title: "Progress Loaded",
-          description: "Your previous checklist progress has been loaded from this browser.",
+          title: "Checklist Progress Loaded",
+          description: "Your previous checklist progress has been loaded from this browser's local storage.",
         });
       }
     } catch (error) {
       console.error("Error loading from localStorage:", error);
       toast({
         title: "Loading Error",
-        description: "Could not load saved progress from this browser.",
+        description: "Could not load saved checklist progress from this browser.",
         variant: "destructive",
       });
     }
@@ -107,12 +107,12 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
         [currentItemIdForFile]: { name: file.name }
       }));
       toast({
-        title: "File Associated",
-        description: `${file.name} has been associated with the item. (File not uploaded to server)`,
+        title: "File Associated (Locally)",
+        description: `${file.name} is now associated with this item for local tracking. Remember to save your progress.`,
       });
     }
     if (fileInputRef.current) {
-      fileInputRef.current.value = "";
+      fileInputRef.current.value = ""; // Reset file input
     }
     setCurrentItemIdForFile(null);
   };
@@ -125,8 +125,8 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
       return newState;
     });
     toast({
-      title: "File Association Cleared",
-      description: `${fileName || 'The file'} is no longer associated with this item.`,
+      title: "File Association Cleared (Locally)",
+      description: `${fileName || 'The file'} is no longer associated with this item in your local checklist.`,
       variant: "default"
     });
   };
@@ -136,14 +136,14 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
       localStorage.setItem(CHECKED_ITEMS_STORAGE_KEY, JSON.stringify(checkedItems));
       localStorage.setItem(ASSOCIATED_FILES_STORAGE_KEY, JSON.stringify(associatedFiles));
       toast({
-        title: "Progress Saved",
-        description: "Your checklist progress has been saved in this browser.",
+        title: "Checklist Progress Saved",
+        description: "Your checklist progress (checked items and locally associated file names) has been saved in this browser.",
       });
     } catch (error) {
       console.error("Error saving to localStorage:", error);
       toast({
         title: "Save Error",
-        description: "Could not save progress. Your browser's storage might be full or disabled.",
+        description: "Could not save checklist progress. Your browser's storage might be full or disabled.",
         variant: "destructive",
       });
     }
@@ -156,14 +156,14 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
       setCheckedItems({});
       setAssociatedFiles({});
       toast({
-        title: "Progress Cleared",
+        title: "Saved Checklist Progress Cleared",
         description: "Your saved checklist progress has been cleared from this browser.",
       });
     } catch (error) {
       console.error("Error clearing localStorage:", error);
       toast({
         title: "Clear Error",
-        description: "Could not clear saved progress.",
+        description: "Could not clear saved checklist progress.",
         variant: "destructive",
       });
     }
@@ -172,10 +172,10 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
   return (
     <Card className="shadow-lg">
       <CardHeader>
-        <CardTitle>Required Documents</CardTitle>
+        <CardTitle>Required Documents Checklist</CardTitle>
         <CardDescription>
           This checklist helps you gather necessary paperwork. You can associate local file names with items for tracking. 
-          Use the buttons in the footer to save or clear your progress in this browser. Files are not uploaded to a server.
+          Files are NOT uploaded to any server. Use the buttons in the footer to save or clear your progress in this browser's local storage.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -239,7 +239,7 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
                                 className="text-sm"
                               >
                                 <Paperclip className="mr-2 h-4 w-4 text-primary" />
-                                Select File
+                                Select File (for local tracking)
                               </Button>
                             )}
 
@@ -269,19 +269,33 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
           ))}
         </Accordion>
          <div className="mt-6 p-3 bg-accent/10 text-accent-foreground/80 border border-accent/20 rounded-md text-xs">
-            <strong>Note:</strong> File selection is for local tracking only. Documents are not uploaded or saved to any server. Progress is saved in your browser's local storage and will be lost if storage is cleared or if you use a different browser/device.
+            <strong>Important Note:</strong> File selection here is for your local tracking purposes only. <strong>Documents are NOT uploaded or saved to any server by PusakaPro.</strong>
+            Checklist progress (checked items and associated local file names) can be saved to your browser's local storage using the buttons below. 
+            For secure storage of your actual document files, we recommend you upload them to your personal Google Drive or another cloud storage service of your choice (see "Open Google Drive" button below).
           </div>
       </CardContent>
-      <CardFooter className="flex flex-col sm:flex-row justify-end gap-2 pt-4">
-        <Button onClick={handleSaveProgress} variant="default">
-          <Save className="mr-2 h-4 w-4" />
-          Save Progress
-        </Button>
-        <Button onClick={handleClearSavedProgress} variant="outline">
-          <RotateCcw className="mr-2 h-4 w-4" />
-          Clear Saved Progress
+      <CardFooter className="flex flex-col sm:flex-row justify-between items-center gap-3 pt-4">
+        <div className="flex flex-wrap gap-2">
+          <Button onClick={handleSaveProgress} variant="default">
+            <Save className="mr-2 h-4 w-4" />
+            Save Checklist Progress
+          </Button>
+          <Button onClick={handleClearSavedProgress} variant="outline">
+            <RotateCcw className="mr-2 h-4 w-4" />
+            Clear Checklist Progress
+          </Button>
+        </div>
+        <Button 
+          variant="outline" 
+          onClick={() => window.open('https://drive.google.com', '_blank', 'noopener,noreferrer')}
+          className="mt-2 sm:mt-0"
+        >
+          <ExternalLink className="mr-2 h-4 w-4" />
+          Open Google Drive (for your files)
         </Button>
       </CardFooter>
     </Card>
   );
 }
+
+    
