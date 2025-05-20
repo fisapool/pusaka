@@ -394,9 +394,18 @@ function DocumentChecklistClient({ items, categories }) {
     };
     const handleRemoveFile = async (itemId)=>{
         const fileState = uploadedFiles[itemId];
-        if (!fileState) return;
-        // Optimistically update UI
-        const previousFileState = {
+        if (!fileState || !user) {
+            if (!user) {
+                toast({
+                    title: "Authentication Required",
+                    description: "Please log in to manage documents.",
+                    variant: "destructive"
+                });
+            }
+            return;
+        }
+        // Optimistically update UI by removing the item locally first
+        const previousUploadedFiles = {
             ...uploadedFiles
         };
         setUploadedFiles((prev)=>{
@@ -412,23 +421,23 @@ function DocumentChecklistClient({ items, categories }) {
                 await (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$firebase$2f$storage$2f$dist$2f$node$2d$esm$2f$index$2e$node$2e$esm$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["deleteObject"])(fileRef);
                 toast({
                     title: "File Removed",
-                    description: `${fileState.name} has been removed from storage.`
+                    description: `${fileState.name} has been removed from your secure storage.`
                 });
             } catch (error) {
                 console.error("Error deleting file from storage:", error);
-                // Revert UI if deletion failed
-                setUploadedFiles(previousFileState);
+                // Revert UI to previous state if deletion failed
+                setUploadedFiles(previousUploadedFiles);
                 toast({
                     title: "Removal Failed",
-                    description: `Could not remove ${fileState.name} from storage. It might have already been removed or there was a network issue. Error: ${error.message}`,
+                    description: `Could not remove ${fileState.name} from storage. Error: ${error.message}`,
                     variant: "destructive"
                 });
             }
         } else {
-            // If there's no storagePath, it was likely a local association or upload failed previously
+            // If there's no storagePath, it was likely a local association that failed to upload, or the state was cleared
             toast({
                 title: "File Association Removed",
-                description: `Association for ${fileState.name} has been removed.`
+                description: `Local association for ${fileState.name} has been removed.`
             });
         }
     };
@@ -441,30 +450,30 @@ function DocumentChecklistClient({ items, categories }) {
                         children: "Required Documents"
                     }, void 0, false, {
                         fileName: "[project]/src/components/features/document-checklist-client.tsx",
-                        lineNumber: 184,
+                        lineNumber: 190,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardDescription"], {
                         children: [
-                            "This checklist helps you gather necessary paperwork. Files uploaded are stored securely.",
+                            "This checklist helps you gather necessary paperwork. Files uploaded are stored securely in your personal cloud storage if you are logged in.",
                             !user && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                 className: "font-semibold text-destructive block mt-2",
                                 children: "Please log in to upload and manage documents."
                             }, void 0, false, {
                                 fileName: "[project]/src/components/features/document-checklist-client.tsx",
-                                lineNumber: 187,
+                                lineNumber: 193,
                                 columnNumber: 21
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/features/document-checklist-client.tsx",
-                        lineNumber: 185,
+                        lineNumber: 191,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/features/document-checklist-client.tsx",
-                lineNumber: 183,
+                lineNumber: 189,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -479,7 +488,7 @@ function DocumentChecklistClient({ items, categories }) {
                         disabled: !user
                     }, void 0, false, {
                         fileName: "[project]/src/components/features/document-checklist-client.tsx",
-                        lineNumber: 191,
+                        lineNumber: 197,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$accordion$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Accordion"], {
@@ -498,7 +507,7 @@ function DocumentChecklistClient({ items, categories }) {
                                                     children: category
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/components/features/document-checklist-client.tsx",
-                                                    lineNumber: 203,
+                                                    lineNumber: 209,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -509,18 +518,18 @@ function DocumentChecklistClient({ items, categories }) {
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/components/features/document-checklist-client.tsx",
-                                                    lineNumber: 204,
+                                                    lineNumber: 210,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/components/features/document-checklist-client.tsx",
-                                            lineNumber: 202,
+                                            lineNumber: 208,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/features/document-checklist-client.tsx",
-                                        lineNumber: 201,
+                                        lineNumber: 207,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$accordion$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AccordionContent"], {
@@ -540,7 +549,7 @@ function DocumentChecklistClient({ items, categories }) {
                                                             "aria-labelledby": `${item.id}-label`
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/features/document-checklist-client.tsx",
-                                                            lineNumber: 216,
+                                                            lineNumber: 222,
                                                             columnNumber: 25
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -556,14 +565,14 @@ function DocumentChecklistClient({ items, categories }) {
                                                                             "aria-hidden": "true"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/components/features/document-checklist-client.tsx",
-                                                                            lineNumber: 225,
+                                                                            lineNumber: 231,
                                                                             columnNumber: 47
                                                                         }, this),
                                                                         item.title
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/src/components/features/document-checklist-client.tsx",
-                                                                    lineNumber: 224,
+                                                                    lineNumber: 230,
                                                                     columnNumber: 27
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -571,7 +580,7 @@ function DocumentChecklistClient({ items, categories }) {
                                                                     children: item.description
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/components/features/document-checklist-client.tsx",
-                                                                    lineNumber: 228,
+                                                                    lineNumber: 234,
                                                                     columnNumber: 27
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -587,24 +596,24 @@ function DocumentChecklistClient({ items, categories }) {
                                                                                     className: "mr-2 h-4 w-4 text-primary"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/src/components/features/document-checklist-client.tsx",
-                                                                                    lineNumber: 238,
+                                                                                    lineNumber: 244,
                                                                                     columnNumber: 33
                                                                                 }, this),
                                                                                 "Find Office"
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/src/components/features/document-checklist-client.tsx",
-                                                                            lineNumber: 232,
+                                                                            lineNumber: 238,
                                                                             columnNumber: 31
                                                                         }, this),
                                                                         fileState?.isUploading && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                            className: "flex items-center space-x-2 text-sm text-muted-foreground",
+                                                                            className: "flex items-center space-x-2 text-sm text-muted-foreground p-2 border border-input rounded-md",
                                                                             children: [
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$loader$2d$circle$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Loader2$3e$__["Loader2"], {
-                                                                                    className: "h-4 w-4 animate-spin"
+                                                                                    className: "h-4 w-4 animate-spin text-primary"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/src/components/features/document-checklist-client.tsx",
-                                                                                    lineNumber: 245,
+                                                                                    lineNumber: 251,
                                                                                     columnNumber: 33
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -615,23 +624,23 @@ function DocumentChecklistClient({ items, categories }) {
                                                                                     ]
                                                                                 }, void 0, true, {
                                                                                     fileName: "[project]/src/components/features/document-checklist-client.tsx",
-                                                                                    lineNumber: 246,
+                                                                                    lineNumber: 252,
                                                                                     columnNumber: 33
                                                                                 }, this)
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/src/components/features/document-checklist-client.tsx",
-                                                                            lineNumber: 244,
+                                                                            lineNumber: 250,
                                                                             columnNumber: 31
                                                                         }, this),
                                                                         fileState?.uploadError && !fileState.isUploading && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                            className: "flex items-center space-x-2 text-sm text-destructive p-2 border border-destructive/50 rounded-md",
+                                                                            className: "flex items-center space-x-2 text-sm text-destructive p-2 border border-destructive/50 bg-destructive/10 rounded-md",
                                                                             children: [
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$triangle$2d$alert$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertTriangle$3e$__["AlertTriangle"], {
                                                                                     className: "h-4 w-4"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/src/components/features/document-checklist-client.tsx",
-                                                                                    lineNumber: 252,
+                                                                                    lineNumber: 258,
                                                                                     columnNumber: 33
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -642,43 +651,53 @@ function DocumentChecklistClient({ items, categories }) {
                                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
                                                                                             variant: "link",
                                                                                             size: "sm",
-                                                                                            className: "p-0 h-auto ml-1",
+                                                                                            className: "p-0 h-auto ml-1 text-destructive hover:underline",
                                                                                             onClick: ()=>handleUploadButtonClick(item.id),
+                                                                                            disabled: !user,
                                                                                             children: "Try again?"
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/src/components/features/document-checklist-client.tsx",
-                                                                                            lineNumber: 254,
+                                                                                            lineNumber: 260,
                                                                                             columnNumber: 33
                                                                                         }, this)
                                                                                     ]
                                                                                 }, void 0, true, {
                                                                                     fileName: "[project]/src/components/features/document-checklist-client.tsx",
-                                                                                    lineNumber: 253,
+                                                                                    lineNumber: 259,
                                                                                     columnNumber: 33
                                                                                 }, this)
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/src/components/features/document-checklist-client.tsx",
-                                                                            lineNumber: 251,
+                                                                            lineNumber: 257,
                                                                             columnNumber: 32
                                                                         }, this),
-                                                                        fileState && !fileState.isUploading && !fileState.uploadError && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                            className: "flex items-center space-x-2",
+                                                                        fileState && fileState.storagePath && !fileState.isUploading && !fileState.uploadError && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                            className: "flex items-center justify-between space-x-2 p-2 border border-green-500/50 bg-green-500/10 rounded-md",
                                                                             children: [
-                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$file$2d$check$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__FileCheck$3e$__["FileCheck"], {
-                                                                                    className: "h-5 w-5 text-green-600"
-                                                                                }, void 0, false, {
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                                    className: "flex items-center space-x-2",
+                                                                                    children: [
+                                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$file$2d$check$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__FileCheck$3e$__["FileCheck"], {
+                                                                                            className: "h-5 w-5 text-green-600"
+                                                                                        }, void 0, false, {
+                                                                                            fileName: "[project]/src/components/features/document-checklist-client.tsx",
+                                                                                            lineNumber: 268,
+                                                                                            columnNumber: 35
+                                                                                        }, this),
+                                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                                            className: "text-sm text-foreground truncate",
+                                                                                            title: fileState.name,
+                                                                                            children: fileState.name
+                                                                                        }, void 0, false, {
+                                                                                            fileName: "[project]/src/components/features/document-checklist-client.tsx",
+                                                                                            lineNumber: 269,
+                                                                                            columnNumber: 35
+                                                                                        }, this)
+                                                                                    ]
+                                                                                }, void 0, true, {
                                                                                     fileName: "[project]/src/components/features/document-checklist-client.tsx",
-                                                                                    lineNumber: 261,
-                                                                                    columnNumber: 33
-                                                                                }, this),
-                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                                    className: "text-sm text-foreground truncate",
-                                                                                    title: fileState.name,
-                                                                                    children: fileState.name
-                                                                                }, void 0, false, {
-                                                                                    fileName: "[project]/src/components/features/document-checklist-client.tsx",
-                                                                                    lineNumber: 262,
+                                                                                    lineNumber: 267,
                                                                                     columnNumber: 33
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
@@ -692,7 +711,7 @@ function DocumentChecklistClient({ items, categories }) {
                                                                                             className: "h-4 w-4 text-destructive"
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/src/components/features/document-checklist-client.tsx",
-                                                                                            lineNumber: 266,
+                                                                                            lineNumber: 274,
                                                                                             columnNumber: 35
                                                                                         }, this),
                                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -700,22 +719,22 @@ function DocumentChecklistClient({ items, categories }) {
                                                                                             children: "Remove file"
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/src/components/features/document-checklist-client.tsx",
-                                                                                            lineNumber: 267,
+                                                                                            lineNumber: 275,
                                                                                             columnNumber: 35
                                                                                         }, this)
                                                                                     ]
                                                                                 }, void 0, true, {
                                                                                     fileName: "[project]/src/components/features/document-checklist-client.tsx",
-                                                                                    lineNumber: 265,
+                                                                                    lineNumber: 273,
                                                                                     columnNumber: 33
                                                                                 }, this)
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/src/components/features/document-checklist-client.tsx",
-                                                                            lineNumber: 260,
+                                                                            lineNumber: 266,
                                                                             columnNumber: 31
                                                                         }, this),
-                                                                        !fileState && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
+                                                                        (!fileState || !fileState.storagePath && !fileState.isUploading && !fileState.uploadError) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
                                                                             variant: "outline",
                                                                             size: "sm",
                                                                             onClick: ()=>handleUploadButtonClick(item.id),
@@ -726,54 +745,54 @@ function DocumentChecklistClient({ items, categories }) {
                                                                                     className: "mr-2 h-4 w-4 text-primary"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/src/components/features/document-checklist-client.tsx",
-                                                                                    lineNumber: 280,
+                                                                                    lineNumber: 288,
                                                                                     columnNumber: 33
                                                                                 }, this),
                                                                                 "Upload Document"
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/src/components/features/document-checklist-client.tsx",
-                                                                            lineNumber: 273,
+                                                                            lineNumber: 281,
                                                                             columnNumber: 31
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/src/components/features/document-checklist-client.tsx",
-                                                                    lineNumber: 230,
+                                                                    lineNumber: 236,
                                                                     columnNumber: 27
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/components/features/document-checklist-client.tsx",
-                                                            lineNumber: 223,
+                                                            lineNumber: 229,
                                                             columnNumber: 25
                                                         }, this)
                                                     ]
                                                 }, item.id, true, {
                                                     fileName: "[project]/src/components/features/document-checklist-client.tsx",
-                                                    lineNumber: 215,
+                                                    lineNumber: 221,
                                                     columnNumber: 23
                                                 }, this);
                                             })
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/features/document-checklist-client.tsx",
-                                            lineNumber: 210,
+                                            lineNumber: 216,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/features/document-checklist-client.tsx",
-                                        lineNumber: 209,
+                                        lineNumber: 215,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, category, true, {
                                 fileName: "[project]/src/components/features/document-checklist-client.tsx",
-                                lineNumber: 200,
+                                lineNumber: 206,
                                 columnNumber: 13
                             }, this))
                     }, void 0, false, {
                         fileName: "[project]/src/components/features/document-checklist-client.tsx",
-                        lineNumber: 198,
+                        lineNumber: 204,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -783,26 +802,26 @@ function DocumentChecklistClient({ items, categories }) {
                                 children: "Note on Document Uploads:"
                             }, void 0, false, {
                                 fileName: "[project]/src/components/features/document-checklist-client.tsx",
-                                lineNumber: 295,
+                                lineNumber: 303,
                                 columnNumber: 13
                             }, this),
-                            " Files are uploaded to your personal secure cloud storage if you are logged in. Ensure you have set up Firebase Storage and appropriate security rules in your Firebase project."
+                            " Files are uploaded to your personal secure cloud storage associated with your PusakaPro account if you are logged in. Ensure you have set up Firebase Storage and appropriate security rules in your Firebase project."
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/features/document-checklist-client.tsx",
-                        lineNumber: 294,
+                        lineNumber: 302,
                         columnNumber: 10
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/features/document-checklist-client.tsx",
-                lineNumber: 190,
+                lineNumber: 196,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/features/document-checklist-client.tsx",
-        lineNumber: 182,
+        lineNumber: 188,
         columnNumber: 5
     }, this);
 }
