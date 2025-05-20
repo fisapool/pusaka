@@ -46,17 +46,18 @@ export function PersonalizedRoadmapClient({ steps }: PersonalizedRoadmapClientPr
               const IconComponent = iconMap[step.iconName];
               return (
                 <AccordionItem value={step.id} key={step.id} className="border rounded-md overflow-hidden bg-background hover:bg-secondary/20 transition-colors">
-                  <AccordionTrigger className="p-4 text-left hover:no-underline">
-                    <div className="flex items-center justify-between w-full">
+                  <div className="flex items-center justify-between w-full">
+                    <AccordionTrigger className="flex-1 p-4 text-left hover:no-underline">
                       <div className="flex items-center">
                          {IconComponent && <IconComponent className={`h-6 w-6 mr-3 shrink-0 ${completedSteps[step.id] ? 'text-green-500' : 'text-primary'}`} />}
                         <span className={`font-medium ${completedSteps[step.id] ? 'line-through text-muted-foreground' : 'text-foreground'}`}>
                           {index + 1}. {step.title}
                         </span>
                       </div>
+                    </AccordionTrigger>
+                    <div className="pr-4 pl-2 py-4 flex items-center"> {/* Wrapper for the button to manage spacing */}
                       <button
-                        onClick={(e) => {
-                          e.stopPropagation(); // Prevent accordion toggle
+                        onClick={() => {
                           toggleStepCompletion(step.id);
                         }}
                         aria-label={completedSteps[step.id] ? 'Mark as incomplete' : 'Mark as complete'}
@@ -69,7 +70,7 @@ export function PersonalizedRoadmapClient({ steps }: PersonalizedRoadmapClientPr
                         <CheckCircle2 className={`h-5 w-5 ${completedSteps[step.id] ? 'text-green-600 dark:text-green-300' : 'text-muted-foreground'}`} />
                       </button>
                     </div>
-                  </AccordionTrigger>
+                  </div>
                   <AccordionContent className="p-4 pt-0 bg-secondary/10">
                     <p className="text-sm text-muted-foreground mb-2">{step.description}</p>
                     {step.details && <p className="text-sm text-foreground whitespace-pre-line">{step.details}</p>}
@@ -85,3 +86,4 @@ export function PersonalizedRoadmapClient({ steps }: PersonalizedRoadmapClientPr
     </Card>
   );
 }
+
