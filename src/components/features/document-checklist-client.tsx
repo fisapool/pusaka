@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import type { DocumentItem } from '@/lib/constants';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import type { LucideIcon } from 'lucide-react';
-import { FileText, Users, Landmark, Banknote, Car, LandPlot, BookOpen, MapPin, Paperclip, X, Save, RotateCcw, ExternalLink, LogIn, AlertCircle, Loader2 } from 'lucide-react';
+import { FileText, Users, Landmark, Banknote, Car, LandPlot, BookOpen, MapPin, ExternalLink, Save, RotateCcw, AlertCircle, Loader2, LogIn } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/auth-context';
 
@@ -23,58 +23,41 @@ const iconMap: Record<string, LucideIcon> = {
   BookOpen,
 };
 
-interface AssociatedFile {
-  name: string;
-}
-
 interface DocumentChecklistClientProps {
   items: DocumentItem[];
   categories: Record<string, string>;
 }
 
 const CHECKED_ITEMS_STORAGE_KEY_PREFIX = 'pusakaPro_checkedItems_';
-const ASSOCIATED_FILES_STORAGE_KEY_PREFIX = 'pusakaPro_associatedFiles_';
 
 export function DocumentChecklistClient({ items, categories }: DocumentChecklistClientProps) {
   const { toast } = useToast();
   const { user, loading: authLoading } = useAuth();
 
   const [checkedItems, setCheckedItems] = React.useState<Record<string, boolean>>({});
-  const [associatedFiles, setAssociatedFiles] = React.useState<Record<string, AssociatedFile | null>>({});
-  const fileInputRef = React.useRef<HTMLInputElement>(null);
-  const [currentItemIdForFile, setCurrentItemIdForFile] = React.useState<string | null>(null);
 
   const getStorageKey = (baseKey: string) => user ? `${baseKey}${user.uid}` : null;
 
   React.useEffect(() => {
     if (authLoading || !user) {
       setCheckedItems({});
-      setAssociatedFiles({});
       return;
     }
 
     const checkedItemsKey = getStorageKey(CHECKED_ITEMS_STORAGE_KEY_PREFIX);
-    const associatedFilesKey = getStorageKey(ASSOCIATED_FILES_STORAGE_KEY_PREFIX);
-
-    if (!checkedItemsKey || !associatedFilesKey) return;
+    if (!checkedItemsKey) return;
 
     try {
       const savedCheckedItems = localStorage.getItem(checkedItemsKey);
       if (savedCheckedItems) {
         setCheckedItems(JSON.parse(savedCheckedItems));
-      }
-      const savedAssociatedFiles = localStorage.getItem(associatedFilesKey);
-      if (savedAssociatedFiles) {
-        setAssociatedFiles(JSON.parse(savedAssociatedFiles));
-      }
-      if (savedCheckedItems || savedAssociatedFiles) {
         toast({
           title: "Checklist Progress Loaded",
-          description: "Your previous checklist progress has been loaded from this browser's local storage.",
+          description: "Your previously checked items have been loaded from this browser's local storage.",
         });
       }
     } catch (error) {
-      console.error("Error loading from localStorage:", error);
+      console.error("Error loading checked items from localStorage:", error);
       toast({
         title: "Loading Error",
         description: "Could not load saved checklist progress from this browser.",
@@ -108,64 +91,19 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
     }, {} as Record<string, DocumentItem[]>);
   }, [items]);
 
-  const handleSelectFileClick = (itemId: string) => {
-    if (!user) return;
-    setCurrentItemIdForFile(itemId);
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
-  };
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!user || !currentItemIdForFile) return;
-    const file = event.target.files?.[0];
-    if (file) {
-      setAssociatedFiles(prev => ({
-        ...prev,
-        [currentItemIdForFile]: { name: file.name }
-      }));
-      toast({
-        title: "File Associated (Locally)",
-        description: `"${file.name}" is now associated with this item. Remember to save your progress.`,
-      });
-    }
-    if (fileInputRef.current) {
-      fileInputRef.current.value = ""; 
-    }
-    setCurrentItemIdForFile(null);
-  };
-
-  const handleClearFile = (itemId: string) => {
-    if (!user) return;
-    const fileName = associatedFiles[itemId]?.name;
-    setAssociatedFiles(prev => {
-      const newState = { ...prev };
-      delete newState[itemId];
-      return newState;
-    });
-    toast({
-      title: "File Association Cleared (Locally)",
-      description: `"${fileName || 'The file'}" is no longer associated. Remember to save your progress.`,
-      variant: "default"
-    });
-  };
-
   const handleSaveProgress = () => {
     if (!user) {
       toast({ title: "Login Required", description: "Please log in to save your checklist progress.", variant: "destructive" });
       return;
     }
     const checkedItemsKey = getStorageKey(CHECKED_ITEMS_STORAGE_KEY_PREFIX);
-    const associatedFilesKey = getStorageKey(ASSOCIATED_FILES_STORAGE_KEY_PREFIX);
-
-    if (!checkedItemsKey || !associatedFilesKey) return;
+    if (!checkedItemsKey) return;
 
     try {
       localStorage.setItem(checkedItemsKey, JSON.stringify(checkedItems));
-      localStorage.setItem(associatedFilesKey, JSON.stringify(associatedFiles));
       toast({
         title: "Checklist Progress Saved",
-        description: "Your checklist progress (checked items and locally associated file names) has been saved in this browser.",
+        description: "Your checked items have been saved in this browser.",
       });
     } catch (error) {
       console.error("Error saving to localStorage:", error);
@@ -183,15 +121,11 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
       return;
     }
     const checkedItemsKey = getStorageKey(CHECKED_ITEMS_STORAGE_KEY_PREFIX);
-    const associatedFilesKey = getStorageKey(ASSOCIATED_FILES_STORAGE_KEY_PREFIX);
-
-    if (!checkedItemsKey || !associatedFilesKey) return;
+    if (!checkedItemsKey) return;
     
     try {
       localStorage.removeItem(checkedItemsKey);
-      localStorage.removeItem(associatedFilesKey);
       setCheckedItems({});
-      setAssociatedFiles({});
       toast({
         title: "Saved Checklist Progress Cleared",
         description: "Your saved checklist progress has been cleared from this browser.",
@@ -204,6 +138,10 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
         variant: "destructive",
       });
     }
+  };
+
+  const handleManageInGoogleDrive = () => {
+    window.open('https://drive.google.com', '_blank', 'noopener,noreferrer');
   };
 
   if (authLoading) {
@@ -226,7 +164,7 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
         <CardHeader>
           <CardTitle>Required Documents Checklist</CardTitle>
           <CardDescription>
-            This checklist helps you gather necessary paperwork. File selection is for local tracking only; files are NOT uploaded to any server.
+            Track your progress in gathering documents. Log in to save your checklist. Use the 'Manage in Google Drive' button for each item to upload and organize your actual files in your personal Google Drive account.
           </CardDescription>
         </CardHeader>
         <CardContent className="text-center py-10">
@@ -249,7 +187,7 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
             </div>
              <Button 
                 variant="outline" 
-                onClick={() => window.open('https://drive.google.com', '_blank', 'noopener,noreferrer')}
+                onClick={handleManageInGoogleDrive}
                 className="mt-2 sm:mt-0"
                 disabled
             >
@@ -261,25 +199,16 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
     );
   }
 
-
   return (
     <Card className="shadow-lg">
       <CardHeader>
         <CardTitle>Required Documents Checklist</CardTitle>
         <CardDescription>
-          Associate local file names with items for tracking. 
-          Files are NOT uploaded to any server. Use buttons below to save/clear progress in this browser.
+          Track your progress in gathering documents. Use the 'Manage in Google Drive' button for each item to upload and organize your actual files in your personal Google Drive account.
+          Use buttons below to save/clear progress in this browser.
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <input
-          type="file"
-          ref={fileInputRef}
-          onChange={handleFileChange}
-          style={{ display: 'none' }}
-          aria-hidden="true"
-          disabled={!user}
-        />
         <Accordion type="multiple" defaultValue={Object.keys(categories)} className="w-full">
           {Object.entries(groupedItems).map(([category, categoryItems]) => (
             <AccordionItem value={category} key={category}>
@@ -295,7 +224,6 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
                 <ul className="space-y-4 p-2">
                   {categoryItems.map((item) => {
                     const IconComponent = iconMap[item.iconName];
-                    const currentFile = associatedFiles[item.id];
                     return (
                       <li key={item.id} className="flex items-start space-x-3 p-3 bg-secondary/30 rounded-md">
                         <Checkbox
@@ -327,35 +255,16 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
                               </Button>
                             )}
 
-                            {!currentFile && (
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handleSelectFileClick(item.id)}
-                                className="text-sm"
-                                disabled={!user}
-                              >
-                                <Paperclip className="mr-2 h-4 w-4 text-primary" />
-                                Select File (for local tracking)
-                              </Button>
-                            )}
-
-                            {currentFile && (
-                              <div className="flex items-center space-x-2 p-2 bg-background rounded-md border border-input text-sm">
-                                <FileText className="h-4 w-4 text-muted-foreground shrink-0" />
-                                <span className="truncate text-foreground" title={currentFile.name}>{currentFile.name}</span>
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  className="h-6 w-6 shrink-0"
-                                  onClick={() => handleClearFile(item.id)}
-                                  aria-label="Clear file association"
-                                  disabled={!user}
-                                >
-                                  <X className="h-4 w-4 text-destructive" />
-                                </Button>
-                              </div>
-                            )}
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={handleManageInGoogleDrive}
+                              className="text-sm"
+                              disabled={!user}
+                            >
+                              <ExternalLink className="mr-2 h-4 w-4 text-primary" />
+                              Manage in Google Drive
+                            </Button>
                           </div>
                         </div>
                       </li>
@@ -367,9 +276,8 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
           ))}
         </Accordion>
          <div className="mt-6 p-3 bg-accent/10 text-accent-foreground/80 border border-accent/20 rounded-md text-xs">
-            <strong>Important Note:</strong> File selection here is for your local tracking purposes only. <strong>Documents are NOT uploaded or saved to any server by PusakaPro.</strong>
-            Checklist progress (checked items and associated local file names) can be saved to your browser's local storage using the buttons below. 
-            For secure storage of your actual document files, we recommend you upload them to your personal Google Drive or another cloud storage service of your choice (see "Open Google Drive" button below).
+            <strong>Important Note:</strong> Checklist progress (checked items) can be saved to your browser's local storage using the buttons below. 
+            For secure storage of your actual document files, we recommend you upload them to your personal Google Drive or another cloud storage service of your choice. Use the "Manage in Google Drive" button for each item or the general link below.
           </div>
       </CardContent>
       <CardFooter className="flex flex-col sm:flex-row justify-between items-center gap-3 pt-4">
@@ -385,15 +293,14 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
         </div>
         <Button 
           variant="outline" 
-          onClick={() => window.open('https://drive.google.com', '_blank', 'noopener,noreferrer')}
+          onClick={handleManageInGoogleDrive}
           className="mt-2 sm:mt-0"
           disabled={!user}
         >
           <ExternalLink className="mr-2 h-4 w-4" />
-          Open Google Drive (for your files)
+          Open My Google Drive
         </Button>
       </CardFooter>
     </Card>
   );
 }
-
