@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter, SheetClose } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter, SheetClose, SheetDescription } from '@/components/ui/sheet'; // Added SheetDescription
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -14,7 +14,7 @@ import { cn } from '@/lib/utils';
 
 interface DisplayMessage {
   id: string;
-  role: 'user' | 'bot' | 'error'; // Added 'error' role
+  role: 'user' | 'bot' | 'error';
   content: string;
   timestamp: Date;
 }
@@ -28,7 +28,6 @@ export function ChatbotClient() {
   const scrollAreaRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
-    // Scroll to bottom when new messages are added
     if (scrollAreaRef.current) {
       scrollAreaRef.current.scrollTo({ top: scrollAreaRef.current.scrollHeight, behavior: 'smooth' });
     }
@@ -51,9 +50,9 @@ export function ChatbotClient() {
 
     try {
       const chatHistoryForFlow: ChatMessage[] = messages
-        .slice(-10) // Send last 10 messages as history
+        .slice(-10) 
         .map(msg => ({
-          role: msg.role === 'bot' ? 'model' : 'user', // 'error' roles are not sent in history
+          role: msg.role === 'bot' ? 'model' : 'user', 
           content: msg.content,
         }));
 
@@ -78,7 +77,7 @@ export function ChatbotClient() {
       });
       const errorBotMessage: DisplayMessage = {
         id: Date.now().toString() + '-error',
-        role: 'error', // Use 'error' role
+        role: 'error', 
         content: "I'm having trouble connecting right now. Please try again in a moment.",
         timestamp: new Date(),
       };
@@ -108,8 +107,10 @@ export function ChatbotClient() {
                 <Bot className="h-6 w-6 text-primary" />
                 PusakaChat Assistant
               </SheetTitle>
-              {/* The explicit SheetClose button was here and is now removed */}
             </div>
+            <SheetDescription className="text-sm text-muted-foreground pt-1">
+              Ask questions about Malaysian small estate administration based on PusakaPro's information.
+            </SheetDescription>
           </SheetHeader>
           
           <ScrollArea className="flex-grow p-4 overflow-y-auto" ref={scrollAreaRef}>
@@ -122,7 +123,7 @@ export function ChatbotClient() {
                     msg.role === 'user' ? "justify-end" : "justify-start"
                   )}
                 >
-                  {(msg.role === 'bot' || msg.role === 'error') && ( // Show bot avatar for 'bot' and 'error' roles
+                  {(msg.role === 'bot' || msg.role === 'error') && ( 
                     <Avatar className="h-8 w-8 self-start">
                       <AvatarFallback className="bg-primary text-primary-foreground">
                         <Bot className="h-5 w-5" />
@@ -135,8 +136,8 @@ export function ChatbotClient() {
                       msg.role === 'user'
                         ? "bg-primary text-primary-foreground rounded-br-none"
                         : msg.role === 'error'
-                          ? "bg-destructive text-destructive-foreground rounded-bl-none" // Destructive style for error
-                          : "bg-secondary text-secondary-foreground rounded-bl-none" // Default bot style
+                          ? "bg-destructive text-destructive-foreground rounded-bl-none" 
+                          : "bg-secondary text-secondary-foreground rounded-bl-none" 
                     )}
                   >
                     <p className="whitespace-pre-wrap">{msg.content}</p>
@@ -154,7 +155,7 @@ export function ChatbotClient() {
                 </div>
               ))}
               {isLoading && (
-                <div className="flex justify-start items-end gap-2"> {/* items-end for consistency */}
+                <div className="flex justify-start items-end gap-2"> 
                    <Avatar className="h-8 w-8 self-start">
                       <AvatarFallback className="bg-primary text-primary-foreground">
                         <Bot className="h-5 w-5" />
@@ -178,6 +179,7 @@ export function ChatbotClient() {
                 className="flex-1"
                 disabled={isLoading}
                 autoComplete="off"
+                aria-label="Chat message input"
               />
               <Button type="submit" size="icon" disabled={isLoading || !inputValue.trim()}>
                 {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}

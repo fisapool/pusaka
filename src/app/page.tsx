@@ -13,7 +13,7 @@ const features = [
     href: "/checklist",
     icon: ListChecks,
     img: "https://placehold.co/600x400.png",
-    imgHint: "document checklist", // Updated
+    imgHint: "document checklist",
   },
   {
     title: "Roadmap & Timeline",
@@ -21,15 +21,15 @@ const features = [
     href: "/roadmap",
     icon: MapPinned,
     img: "https://placehold.co/600x400.png",
-    imgHint: "journey timeline", // Updated
+    imgHint: "journey timeline",
   },
   {
-    title: "Legal & Financial Hub", // New Hub
+    title: "Legal & Financial Hub",
     description: "Access legal guides, estimate fees, and find legal professionals.",
     href: "/legal-financial-hub",
     icon: Library,
     img: "https://placehold.co/600x400.png",
-    imgHint: "legal finance", // Updated
+    imgHint: "legal finance",
   },
 ];
 
@@ -62,8 +62,10 @@ export default function HomePage() {
               alt="PusakaPro Illustration" 
               width={600} 
               height={400} 
-              className="rounded-lg shadow-lg"
-              data-ai-hint="legal consultation" // Updated
+              className="rounded-lg shadow-lg object-cover"
+              data-ai-hint="legal consultation"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              priority // Consider adding priority if this is above the fold
             />
           </div>
         </div>
@@ -71,16 +73,17 @@ export default function HomePage() {
 
       <section>
         <h2 className="text-2xl font-semibold text-center mb-8 text-foreground">Key Features</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"> {/* Adjusted grid for 3 items */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((feature) => (
             <Card key={feature.title} className="flex flex-col overflow-hidden hover:shadow-lg transition-shadow duration-300">
               <div className="relative h-48 w-full">
                 <Image 
                   src={feature.img} 
                   alt={feature.title} 
-                  layout="fill" 
-                  objectFit="cover" 
+                  fill
+                  className="object-cover"
                   data-ai-hint={feature.imgHint}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
               </div>
               <CardHeader>
