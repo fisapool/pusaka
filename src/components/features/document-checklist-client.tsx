@@ -1,11 +1,24 @@
+
 "use client";
 
 import * as React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import type { DocumentItem } from '@/lib/constants';
+import type { DocumentItem } from '@/lib/constants'; // DocumentItem.icon will now be iconName: string
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import type { LucideIcon } from 'lucide-react';
+import { FileText, Users, Landmark, Banknote, Car, LandPlot, BookOpen } from 'lucide-react';
+
+const iconMap: Record<string, LucideIcon> = {
+  FileText,
+  Users,
+  Landmark,
+  Banknote,
+  Car,
+  LandPlot,
+  BookOpen,
+};
 
 interface DocumentChecklistClientProps {
   items: DocumentItem[];
@@ -61,24 +74,27 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
               </AccordionTrigger>
               <AccordionContent>
                 <ul className="space-y-4 p-2">
-                  {categoryItems.map((item) => (
-                    <li key={item.id} className="flex items-start space-x-3 p-3 bg-secondary/30 rounded-md">
-                      <Checkbox
-                        id={item.id}
-                        checked={checkedItems[item.id] || false}
-                        onCheckedChange={() => handleCheckboxChange(item.id)}
-                        className="mt-1 border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
-                        aria-labelledby={`${item.id}-label`}
-                      />
-                      <div className="grid gap-1.5 leading-snug">
-                        <Label htmlFor={item.id} id={`${item.id}-label`} className="font-medium text-foreground cursor-pointer">
-                          <item.icon className="inline-block h-5 w-5 mr-2 text-primary" aria-hidden="true" />
-                          {item.title}
-                        </Label>
-                        <p className="text-sm text-muted-foreground ml-7">{item.description}</p>
-                      </div>
-                    </li>
-                  ))}
+                  {categoryItems.map((item) => {
+                    const IconComponent = iconMap[item.iconName];
+                    return (
+                      <li key={item.id} className="flex items-start space-x-3 p-3 bg-secondary/30 rounded-md">
+                        <Checkbox
+                          id={item.id}
+                          checked={checkedItems[item.id] || false}
+                          onCheckedChange={() => handleCheckboxChange(item.id)}
+                          className="mt-1 border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
+                          aria-labelledby={`${item.id}-label`}
+                        />
+                        <div className="grid gap-1.5 leading-snug">
+                          <Label htmlFor={item.id} id={`${item.id}-label`} className="font-medium text-foreground cursor-pointer">
+                            {IconComponent && <IconComponent className="inline-block h-5 w-5 mr-2 text-primary" aria-hidden="true" />}
+                            {item.title}
+                          </Label>
+                          <p className="text-sm text-muted-foreground ml-7">{item.description}</p>
+                        </div>
+                      </li>
+                    );
+                  })}
                 </ul>
               </AccordionContent>
             </AccordionItem>

@@ -5,7 +5,7 @@ export interface DocumentItem {
   id: string;
   title: string;
   description: string;
-  icon: LucideIcon;
+  iconName: string; // Changed from icon: LucideIcon
   category: string;
 }
 
@@ -18,18 +18,18 @@ export const DOCUMENT_CATEGORIES = {
 };
 
 export const DOCUMENT_CHECKLIST_ITEMS: DocumentItem[] = [
-  { id: 'doc1', title: "Death Certificate (Original & Copy)", description: "Official document confirming the deceased's death.", icon: FileText, category: DOCUMENT_CATEGORIES.DECEASED },
-  { id: 'doc2', title: "NRIC/Passport of Deceased (Copy)", description: "Identification document of the deceased.", icon: FileText, category: DOCUMENT_CATEGORIES.DECEASED },
-  { id: 'doc3', title: "NRIC/Passport of All Beneficiaries (Copies)", description: "Identification documents for all heirs.", icon: Users, category: DOCUMENT_CATEGORIES.BENEFICIARIES },
-  { id: 'doc4', title: "Marriage Certificate (If applicable, Copy)", description: "Proof of marriage if the spouse is a beneficiary.", icon: FileText, category: DOCUMENT_CATEGORIES.BENEFICIARIES },
-  { id: 'doc5', title: "Birth Certificates of Children (Copies)", description: "Proof of relation for children beneficiaries.", icon: Users, category: DOCUMENT_CATEGORIES.BENEFICIARIES },
-  { id: 'doc6', title: "Land Title / Sale & Purchase Agreement (Original & Copy)", description: "Documents for any real estate properties.", icon: LandPlot, category: DOCUMENT_CATEGORIES.ASSETS },
-  { id: 'doc7', title: "Bank Account Statements (Latest)", description: "Statements for all bank accounts held by the deceased.", icon: Banknote, category: DOCUMENT_CATEGORIES.ASSETS },
-  { id: 'doc8', title: "Vehicle Ownership Certificate / Card (Original & Copy)", description: "Documents for any vehicles owned.", icon: Car, category: DOCUMENT_CATEGORIES.ASSETS },
-  { id: 'doc9', title: "ASNB/Tabung Haji/EPF Statements (Latest)", description: "Statements for investment accounts.", icon: Landmark, category: DOCUMENT_CATEGORIES.ASSETS },
-  { id: 'doc10', title: "Insurance Policies (If any)", description: "Details of any life insurance policies.", icon: FileText, category: DOCUMENT_CATEGORIES.ASSETS },
-  { id: 'doc11', title: "List of Debts (If any)", description: "Information on any outstanding debts of the deceased.", icon: Banknote, category: DOCUMENT_CATEGORIES.LIABILITIES },
-  { id: 'doc12', title: "Wasiat/Will (If any, Original)", description: "The deceased's will, if one exists.", icon: BookOpen, category: DOCUMENT_CATEGORIES.OTHERS },
+  { id: 'doc1', title: "Death Certificate (Original & Copy)", description: "Official document confirming the deceased's death.", iconName: 'FileText', category: DOCUMENT_CATEGORIES.DECEASED },
+  { id: 'doc2', title: "NRIC/Passport of Deceased (Copy)", description: "Identification document of the deceased.", iconName: 'FileText', category: DOCUMENT_CATEGORIES.DECEASED },
+  { id: 'doc3', title: "NRIC/Passport of All Beneficiaries (Copies)", description: "Identification documents for all heirs.", iconName: 'Users', category: DOCUMENT_CATEGORIES.BENEFICIARIES },
+  { id: 'doc4', title: "Marriage Certificate (If applicable, Copy)", description: "Proof of marriage if the spouse is a beneficiary.", iconName: 'FileText', category: DOCUMENT_CATEGORIES.BENEFICIARIES },
+  { id: 'doc5', title: "Birth Certificates of Children (Copies)", description: "Proof of relation for children beneficiaries.", iconName: 'Users', category: DOCUMENT_CATEGORIES.BENEFICIARIES },
+  { id: 'doc6', title: "Land Title / Sale & Purchase Agreement (Original & Copy)", description: "Documents for any real estate properties.", iconName: 'LandPlot', category: DOCUMENT_CATEGORIES.ASSETS },
+  { id: 'doc7', title: "Bank Account Statements (Latest)", description: "Statements for all bank accounts held by the deceased.", iconName: 'Banknote', category: DOCUMENT_CATEGORIES.ASSETS },
+  { id: 'doc8', title: "Vehicle Ownership Certificate / Card (Original & Copy)", description: "Documents for any vehicles owned.", iconName: 'Car', category: DOCUMENT_CATEGORIES.ASSETS },
+  { id: 'doc9', title: "ASNB/Tabung Haji/EPF Statements (Latest)", description: "Statements for investment accounts.", iconName: 'Landmark', category: DOCUMENT_CATEGORIES.ASSETS },
+  { id: 'doc10', title: "Insurance Policies (If any)", description: "Details of any life insurance policies.", iconName: 'FileText', category: DOCUMENT_CATEGORIES.ASSETS },
+  { id: 'doc11', title: "List of Debts (If any)", description: "Information on any outstanding debts of the deceased.", iconName: 'Banknote', category: DOCUMENT_CATEGORIES.LIABILITIES },
+  { id: 'doc12', title: "Wasiat/Will (If any, Original)", description: "The deceased's will, if one exists.", iconName: 'BookOpen', category: DOCUMENT_CATEGORIES.OTHERS },
 ];
 
 export interface RoadmapStep {
@@ -37,7 +37,7 @@ export interface RoadmapStep {
   title: string;
   description: string;
   details?: string;
-  icon: LucideIcon;
+  icon: LucideIcon; // This will also need to be changed if PersonalizedRoadmapClient is a client component
 }
 
 export const ROADMAP_STEPS: RoadmapStep[] = [
@@ -58,14 +58,14 @@ export interface LegalGuideTopic {
   title: string;
   summary: string;
   content: string[]; // Array of paragraphs for content
-  icon: LucideIcon;
+  icon: LucideIcon; // This will also need to be changed if LegalGuidesClient is a client component
 }
 
 export const LEGAL_GUIDE_TOPICS: LegalGuideTopic[] = [
-  { 
-    id: 'guide1', 
-    title: "Understanding Small Estates in Malaysia", 
-    summary: "Learn what qualifies as a small estate and the general process.", 
+  {
+    id: 'guide1',
+    title: "Understanding Small Estates in Malaysia",
+    summary: "Learn what qualifies as a small estate and the general process.",
     icon: HelpCircle,
     content: [
       "A small estate in Malaysia is generally defined as an estate of a deceased person consisting wholly or partly of immovable property (land/houses) not exceeding RM2 million in total value, without a trust or will for the immovable property. If there is movable property only, any value can be considered for small estate distribution through relevant bodies.",
@@ -73,10 +73,10 @@ export const LEGAL_GUIDE_TOPICS: LegalGuideTopic[] = [
       "For estates with only movable assets, or where a will exists, other avenues like Amanah Raya Berhad or the High Court might be more appropriate."
     ]
   },
-  { 
-    id: 'guide2', 
-    title: "Eligibility for Small Estate Distribution", 
-    summary: "Who can apply and who are the beneficiaries.", 
+  {
+    id: 'guide2',
+    title: "Eligibility for Small Estate Distribution",
+    summary: "Who can apply and who are the beneficiaries.",
     icon: Users,
     content: [
       "Any interested party can apply for small estate distribution, including beneficiaries, creditors, or purchasers of property from the deceased.",
@@ -84,10 +84,10 @@ export const LEGAL_GUIDE_TOPICS: LegalGuideTopic[] = [
       "If a valid will exists, it dictates the beneficiaries for assets covered by the will. However, for small estate procedures concerning land, the land administrator has specific powers."
     ]
   },
-  { 
-    id: 'guide3', 
-    title: "Role of Amanah Raya Berhad (ARB)", 
-    summary: "How ARB can assist in estate administration.", 
+  {
+    id: 'guide3',
+    title: "Role of Amanah Raya Berhad (ARB)",
+    summary: "How ARB can assist in estate administration.",
     icon: Landmark,
     content: [
       "Amanah Raya Berhad (The Public Trustee Corporation) can administer estates, especially those consisting of movable property only, regardless of value, or when appointed as executor in a will.",
@@ -95,10 +95,10 @@ export const LEGAL_GUIDE_TOPICS: LegalGuideTopic[] = [
       "They can be a good option if beneficiaries are minors, incapacitated, or if there are complexities in managing the estate."
     ]
   },
-  { 
-    id: 'guide4', 
-    title: "Intestacy Laws in Malaysia", 
-    summary: "How assets are distributed without a will.", 
+  {
+    id: 'guide4',
+    title: "Intestacy Laws in Malaysia",
+    summary: "How assets are distributed without a will.",
     icon: Scale,
     content: [
       "For Muslims, assets are distributed according to Faraid principles upon death without a Wasiat (Islamic Will). A Wasiat can only dispose of up to 1/3 of the estate to non-Faraid heirs or for charitable purposes; the remaining 2/3 is subject to Faraid.",
@@ -106,10 +106,10 @@ export const LEGAL_GUIDE_TOPICS: LegalGuideTopic[] = [
       "Understanding these laws is crucial for determining rightful heirs when no will is present."
     ]
   },
-  { 
-    id: 'guide5', 
-    title: "The Application Process (Form A)", 
-    summary: "Key steps in applying for small estate distribution.", 
+  {
+    id: 'guide5',
+    title: "The Application Process (Form A)",
+    summary: "Key steps in applying for small estate distribution.",
     icon: FileText,
     content: [
       "The application typically starts with filing 'Borang A' (Form A) at the relevant District Land Office or Small Estates Distribution Unit.",
@@ -119,4 +119,3 @@ export const LEGAL_GUIDE_TOPICS: LegalGuideTopic[] = [
     ]
   },
 ];
-
