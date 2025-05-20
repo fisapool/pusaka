@@ -9,9 +9,9 @@ import { Button } from '@/components/ui/button';
 import type { DocumentItem } from '@/lib/constants';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import type { LucideIcon } from 'lucide-react';
-import { FileText, Users, Landmark, Banknote, Car, LandPlot, BookOpen, MapPin, Paperclip, X, Save, RotateCcw, ExternalLink, LogIn, AlertCircle } from 'lucide-react';
+import { FileText, Users, Landmark, Banknote, Car, LandPlot, BookOpen, MapPin, Paperclip, X, Save, RotateCcw, ExternalLink, LogIn, AlertCircle, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/contexts/auth-context'; // Import useAuth
+import { useAuth } from '@/contexts/auth-context';
 
 const iconMap: Record<string, LucideIcon> = {
   FileText,
@@ -37,7 +37,7 @@ const ASSOCIATED_FILES_STORAGE_KEY_PREFIX = 'pusakaPro_associatedFiles_';
 
 export function DocumentChecklistClient({ items, categories }: DocumentChecklistClientProps) {
   const { toast } = useToast();
-  const { user, loading: authLoading } = useAuth(); // Get user and auth loading state
+  const { user, loading: authLoading } = useAuth();
 
   const [checkedItems, setCheckedItems] = React.useState<Record<string, boolean>>({});
   const [associatedFiles, setAssociatedFiles] = React.useState<Record<string, AssociatedFile | null>>({});
@@ -46,10 +46,8 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
 
   const getStorageKey = (baseKey: string) => user ? `${baseKey}${user.uid}` : null;
 
-  // Load state from localStorage on component mount or when user changes
   React.useEffect(() => {
     if (authLoading || !user) {
-      // Clear local state if user logs out or still loading
       setCheckedItems({});
       setAssociatedFiles({});
       return;
@@ -86,7 +84,7 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
   }, [toast, user, authLoading]);
 
   const handleCheckboxChange = (itemId: string) => {
-    if (!user) return; // Only allow if logged in
+    if (!user) return;
     setCheckedItems((prev) => ({
       ...prev,
       [itemId]: !prev[itemId],
@@ -111,7 +109,7 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
   }, [items]);
 
   const handleSelectFileClick = (itemId: string) => {
-    if (!user) return; // Only allow if logged in
+    if (!user) return;
     setCurrentItemIdForFile(itemId);
     if (fileInputRef.current) {
       fileInputRef.current.click();
@@ -119,26 +117,26 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!user) return; // Only allow if logged in
+    if (!user || !currentItemIdForFile) return;
     const file = event.target.files?.[0];
-    if (file && currentItemIdForFile) {
+    if (file) {
       setAssociatedFiles(prev => ({
         ...prev,
         [currentItemIdForFile]: { name: file.name }
       }));
       toast({
         title: "File Associated (Locally)",
-        description: `${file.name} is now associated with this item for local tracking. Remember to save your progress.`,
+        description: `"${file.name}" is now associated with this item. Remember to save your progress.`,
       });
     }
     if (fileInputRef.current) {
-      fileInputRef.current.value = ""; // Reset file input
+      fileInputRef.current.value = ""; 
     }
     setCurrentItemIdForFile(null);
   };
 
   const handleClearFile = (itemId: string) => {
-    if (!user) return; // Only allow if logged in
+    if (!user) return;
     const fileName = associatedFiles[itemId]?.name;
     setAssociatedFiles(prev => {
       const newState = { ...prev };
@@ -147,7 +145,7 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
     });
     toast({
       title: "File Association Cleared (Locally)",
-      description: `${fileName || 'The file'} is no longer associated with this item in your local checklist.`,
+      description: `"${fileName || 'The file'}" is no longer associated. Remember to save your progress.`,
       variant: "default"
     });
   };
@@ -228,7 +226,7 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
         <CardHeader>
           <CardTitle>Required Documents Checklist</CardTitle>
           <CardDescription>
-            This checklist helps you gather necessary paperwork. Files are NOT uploaded to any server.
+            This checklist helps you gather necessary paperwork. File selection is for local tracking only; files are NOT uploaded to any server.
           </CardDescription>
         </CardHeader>
         <CardContent className="text-center py-10">
@@ -269,8 +267,8 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
       <CardHeader>
         <CardTitle>Required Documents Checklist</CardTitle>
         <CardDescription>
-          This checklist helps you gather necessary paperwork. You can associate local file names with items for tracking. 
-          Files are NOT uploaded to any server. Use the buttons in the footer to save or clear your progress in this browser's local storage.
+          Associate local file names with items for tracking. 
+          Files are NOT uploaded to any server. Use buttons below to save/clear progress in this browser.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -398,3 +396,4 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
     </Card>
   );
 }
+
