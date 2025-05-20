@@ -1445,6 +1445,10 @@ body {
   border-color: #0000;
 }
 
+.border-green-500\/50 {
+  border-color: #22c55e80;
+}
+
 .border-l-transparent {
   border-left-color: #0000;
 }
@@ -1536,6 +1540,14 @@ body {
 
 .bg-transparent {
   background-color: #0000;
+}
+
+.bg-destructive\/10 {
+  background-color: hsl(var(--destructive) / .1);
+}
+
+.bg-green-500\/10 {
+  background-color: #22c55e1a;
 }
 
 .fill-current {

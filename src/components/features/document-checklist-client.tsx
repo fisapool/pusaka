@@ -140,10 +140,16 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
 
   const handleRemoveFile = async (itemId: string) => {
     const fileState = uploadedFiles[itemId];
-    if (!fileState) return;
+    if (!fileState || !user) { // Also check for user, though remove button should be disabled
+        if (!user) {
+            toast({ title: "Authentication Required", description: "Please log in to manage documents.", variant: "destructive" });
+        }
+        return;
+    }
 
-    // Optimistically update UI
-    const previousFileState = { ...uploadedFiles };
+
+    // Optimistically update UI by removing the item locally first
+    const previousUploadedFiles = { ...uploadedFiles };
     setUploadedFiles((prev) => {
       const newState = { ...prev };
       delete newState[itemId];
@@ -156,23 +162,23 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
             await deleteObject(fileRef);
             toast({
                 title: "File Removed",
-                description: `${fileState.name} has been removed from storage.`,
+                description: `${fileState.name} has been removed from your secure storage.`,
             });
         } catch (error: any) {
             console.error("Error deleting file from storage:", error);
-            // Revert UI if deletion failed
-            setUploadedFiles(previousFileState);
+            // Revert UI to previous state if deletion failed
+            setUploadedFiles(previousUploadedFiles);
             toast({
                 title: "Removal Failed",
-                description: `Could not remove ${fileState.name} from storage. It might have already been removed or there was a network issue. Error: ${error.message}`,
+                description: `Could not remove ${fileState.name} from storage. Error: ${error.message}`,
                 variant: "destructive",
             });
         }
     } else {
-        // If there's no storagePath, it was likely a local association or upload failed previously
+        // If there's no storagePath, it was likely a local association that failed to upload, or the state was cleared
         toast({
             title: "File Association Removed",
-            description: `Association for ${fileState.name} has been removed.`,
+            description: `Local association for ${fileState.name} has been removed.`,
         });
     }
   };
@@ -183,7 +189,7 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
       <CardHeader>
         <CardTitle>Required Documents</CardTitle>
         <CardDescription>
-          This checklist helps you gather necessary paperwork. Files uploaded are stored securely.
+          This checklist helps you gather necessary paperwork. Files uploaded are stored securely in your personal cloud storage if you are logged in.
           {!user && <span className="font-semibold text-destructive block mt-2">Please log in to upload and manage documents.</span>}
         </CardDescription>
       </CardHeader>
@@ -241,27 +247,29 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
                             )}
 
                             {fileState?.isUploading && (
-                              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                                <Loader2 className="h-4 w-4 animate-spin" />
+                              <div className="flex items-center space-x-2 text-sm text-muted-foreground p-2 border border-input rounded-md">
+                                <Loader2 className="h-4 w-4 animate-spin text-primary" />
                                 <span>Uploading {fileState.name}...</span>
                               </div>
                             )}
 
                             {fileState?.uploadError && !fileState.isUploading && (
-                               <div className="flex items-center space-x-2 text-sm text-destructive p-2 border border-destructive/50 rounded-md">
+                               <div className="flex items-center space-x-2 text-sm text-destructive p-2 border border-destructive/50 bg-destructive/10 rounded-md">
                                 <AlertTriangle className="h-4 w-4" />
                                 <span>Error: {fileState.uploadError}. 
-                                <Button variant="link" size="sm" className="p-0 h-auto ml-1" onClick={() => handleUploadButtonClick(item.id)}>Try again?</Button>
+                                <Button variant="link" size="sm" className="p-0 h-auto ml-1 text-destructive hover:underline" onClick={() => handleUploadButtonClick(item.id)} disabled={!user}>Try again?</Button>
                                 </span>
                               </div>
                             )}
                             
-                            {fileState && !fileState.isUploading && !fileState.uploadError && (
-                              <div className="flex items-center space-x-2">
-                                <FileCheck className="h-5 w-5 text-green-600" />
-                                <span className="text-sm text-foreground truncate" title={fileState.name}>
-                                  {fileState.name}
-                                </span>
+                            {fileState && fileState.storagePath && !fileState.isUploading && !fileState.uploadError && (
+                              <div className="flex items-center justify-between space-x-2 p-2 border border-green-500/50 bg-green-500/10 rounded-md">
+                                <div className="flex items-center space-x-2">
+                                  <FileCheck className="h-5 w-5 text-green-600" />
+                                  <span className="text-sm text-foreground truncate" title={fileState.name}>
+                                    {fileState.name}
+                                  </span>
+                                </div>
                                 <Button variant="ghost" size="icon" onClick={() => handleRemoveFile(item.id)} className="h-6 w-6" disabled={!user}>
                                   <XCircle className="h-4 w-4 text-destructive" />
                                   <span className="sr-only">Remove file</span>
@@ -269,7 +277,7 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
                               </div>
                             )}
 
-                            {!fileState && (
+                            {(!fileState || (!fileState.storagePath && !fileState.isUploading && !fileState.uploadError)) && (
                               <Button
                                 variant="outline"
                                 size="sm"
@@ -292,9 +300,12 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
           ))}
         </Accordion>
          <div className="mt-6 p-3 bg-accent/10 text-accent-foreground/80 border border-accent/20 rounded-md text-xs">
-            <strong>Note on Document Uploads:</strong> Files are uploaded to your personal secure cloud storage if you are logged in. Ensure you have set up Firebase Storage and appropriate security rules in your Firebase project.
+            <strong>Note on Document Uploads:</strong> Files are uploaded to your personal secure cloud storage associated with your PusakaPro account if you are logged in. Ensure you have set up Firebase Storage and appropriate security rules in your Firebase project.
           </div>
       </CardContent>
     </Card>
   );
 }
+
+
+    
