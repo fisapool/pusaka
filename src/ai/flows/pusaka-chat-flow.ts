@@ -13,8 +13,9 @@ import {z} from 'genkit'; // Use 'genkit' for z as per existing project structur
 import { LEGAL_GUIDE_TOPICS, ROADMAP_STEPS, DOCUMENT_CHECKLIST_ITEMS, DOCUMENT_CATEGORIES } from '@/lib/constants';
 
 // Prepare context data from the application
-const formattedLegalGuides = LEGAL_GUIDE_TOPICS.map(g => `Guide Title: ${g.title}\nSummary: ${g.summary}\nContent: ${g.content.join(' ')}`).join('\n\n---\n\n');
-const formattedRoadmapSteps = ROADMAP_STEPS.map(s => `Roadmap Step: ${s.title}\nDescription: ${s.description}\nDetails: ${s.details || ''}`).join('\n\n---\n\n');
+// Temporarily reduce context for diagnosis:
+const formattedLegalGuides = ""; // LEGAL_GUIDE_TOPICS.map(g => `Guide Title: ${g.title}\nSummary: ${g.summary}\nContent: ${g.content.join(' ')}`).join('\n\n---\n\n');
+const formattedRoadmapSteps = ""; // ROADMAP_STEPS.map(s => `Roadmap Step: ${s.title}\nDescription: ${s.description}\nDetails: ${s.details || ''}`).join('\n\n---\n\n');
 const formattedDocumentChecklist = DOCUMENT_CHECKLIST_ITEMS.map(d => `Document: ${d.title}\nDescription: ${d.description}\nCategory: ${d.category}${d.locationQuery ? `\nRelevant Office Query: ${d.locationQuery}` : ''}`).join('\n\n---\n\n');
 
 const applicationContext = `
@@ -145,3 +146,5 @@ ${applicationContext}
     }
   }
 );
+
+    
