@@ -8,7 +8,7 @@ import { z } from 'zod';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import type { RoadmapStep } from '@/lib/constants';
-import { CheckCircle2, ListChecks, HelpCircle, Users, Banknote, FileText, Landmark, BookOpen, Home as HomeIcon, ShieldQuestion, CalendarPlus, Loader2, Lightbulb, AlertTriangle, Clock } from 'lucide-react';
+import { CheckCircle2, ListChecks, HelpCircle, Users, Banknote, FileText, Landmark, BookOpen, Home as HomeIcon, ShieldQuestion, CalendarPlus, Loader2, Lightbulb, AlertTriangle, Clock, MapPinned } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -311,3 +311,4 @@ export function PersonalizedRoadmapClient({ staticRoadmapSteps }: PersonalizedRo
     </div>
   );
 }
+
