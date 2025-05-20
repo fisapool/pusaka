@@ -1,8 +1,9 @@
+
 import { PageHeader } from '@/components/layout/page-header';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Home as HomeIcon, ListChecks, Clock, MapPinned, ScrollText, ArrowRight, Calculator } from 'lucide-react'; // Added Calculator
+import { Home as HomeIcon, ListChecks, Clock, MapPinned, ScrollText, ArrowRight, Calculator, Gavel } from 'lucide-react'; // Added Calculator, Gavel
 import Image from 'next/image';
 
 const features = [
@@ -45,6 +46,14 @@ const features = [
     icon: ScrollText,
     img: "https://placehold.co/600x400.png",
     imgHint: "law books",
+  },
+  {
+    title: "Find a Lawyer",
+    description: "Search for legal professionals specializing in estate law near you.",
+    href: "/find-lawyer",
+    icon: Gavel,
+    img: "https://placehold.co/600x400.png",
+    imgHint: "lawyer office",
   },
 ];
 

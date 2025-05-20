@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from 'next/link';
@@ -12,7 +13,7 @@ import {
   SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
-import { Home, ListChecks, Clock, MapPinned, ScrollText, Settings, LifeBuoy, Calculator } from 'lucide-react'; // Added Calculator
+import { Home, ListChecks, Clock, MapPinned, ScrollText, Settings, LifeBuoy, Calculator, Gavel } from 'lucide-react'; // Added Calculator, Gavel
 
 const navItems = [
   { href: '/', label: 'Home', icon: Home },
@@ -21,6 +22,7 @@ const navItems = [
   { href: '/fees-calculator', label: 'Fees Calculator', icon: Calculator },
   { href: '/roadmap', label: 'Personalized Roadmap', icon: MapPinned },
   { href: '/guides', label: 'Legal Guides', icon: ScrollText },
+  { href: '/find-lawyer', label: 'Find a Lawyer', icon: Gavel },
 ];
 
 export function AppSidebarNavigation() {
