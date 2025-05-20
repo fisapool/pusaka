@@ -8,6 +8,7 @@ export interface DocumentItem {
   description: string;
   iconName: string;
   category: string;
+  locationQuery?: string; // Added for Google Maps link
 }
 
 export const DOCUMENT_CATEGORIES = {
@@ -19,14 +20,14 @@ export const DOCUMENT_CATEGORIES = {
 };
 
 export const DOCUMENT_CHECKLIST_ITEMS: DocumentItem[] = [
-  { id: 'doc1', title: "Death Certificate (Original & Copy)", description: "Official document confirming the deceased's death.", iconName: 'FileText', category: DOCUMENT_CATEGORIES.DECEASED },
+  { id: 'doc1', title: "Death Certificate (Original & Copy)", description: "Official document confirming the deceased's death. Usually obtained from JPN.", iconName: 'FileText', category: DOCUMENT_CATEGORIES.DECEASED, locationQuery: "Jabatan Pendaftaran Negara" },
   { id: 'doc2', title: "NRIC/Passport of Deceased (Copy)", description: "Identification document of the deceased.", iconName: 'FileText', category: DOCUMENT_CATEGORIES.DECEASED },
   { id: 'doc3', title: "NRIC/Passport of All Beneficiaries (Copies)", description: "Identification documents for all heirs.", iconName: 'Users', category: DOCUMENT_CATEGORIES.BENEFICIARIES },
   { id: 'doc4', title: "Marriage Certificate (If applicable, Copy)", description: "Proof of marriage if the spouse is a beneficiary.", iconName: 'FileText', category: DOCUMENT_CATEGORIES.BENEFICIARIES },
   { id: 'doc5', title: "Birth Certificates of Children (Copies)", description: "Proof of relation for children beneficiaries.", iconName: 'Users', category: DOCUMENT_CATEGORIES.BENEFICIARIES },
-  { id: 'doc6', title: "Land Title / Sale & Purchase Agreement (Original & Copy)", description: "Documents for any real estate properties.", iconName: 'LandPlot', category: DOCUMENT_CATEGORIES.ASSETS },
+  { id: 'doc6', title: "Land Title / Sale & Purchase Agreement (Original & Copy)", description: "Documents for any real estate properties. Related to Pejabat Tanah.", iconName: 'LandPlot', category: DOCUMENT_CATEGORIES.ASSETS, locationQuery: "Pejabat Tanah dan Galian" },
   { id: 'doc7', title: "Bank Account Statements (Latest)", description: "Statements for all bank accounts held by the deceased.", iconName: 'Banknote', category: DOCUMENT_CATEGORIES.ASSETS },
-  { id: 'doc8', title: "Vehicle Ownership Certificate / Card (Original & Copy)", description: "Documents for any vehicles owned.", iconName: 'Car', category: DOCUMENT_CATEGORIES.ASSETS },
+  { id: 'doc8', title: "Vehicle Ownership Certificate / Card (Original & Copy)", description: "Documents for any vehicles owned. Related to JPJ.", iconName: 'Car', category: DOCUMENT_CATEGORIES.ASSETS, locationQuery: "Jabatan Pengangkutan Jalan" },
   { id: 'doc9', title: "ASNB/Tabung Haji/EPF Statements (Latest)", description: "Statements for investment accounts.", iconName: 'Landmark', category: DOCUMENT_CATEGORIES.ASSETS },
   { id: 'doc10', title: "Insurance Policies (If any)", description: "Details of any life insurance policies.", iconName: 'FileText', category: DOCUMENT_CATEGORIES.ASSETS },
   { id: 'doc11', title: "List of Debts (If any)", description: "Information on any outstanding debts of the deceased.", iconName: 'Banknote', category: DOCUMENT_CATEGORIES.LIABILITIES },
@@ -43,7 +44,7 @@ export interface RoadmapStep {
 
 export const ROADMAP_STEPS: RoadmapStep[] = [
   { id: 'step1', title: "Gather Information & Documents", description: "Collect all necessary documents related to the deceased, beneficiaries, assets, and liabilities.", details: "This includes death certificates, NRICs, land titles, bank statements, etc. Refer to the Document Checklist for a comprehensive list.", iconName: 'ListChecks' },
-  { id: 'step2', title: "Determine Type of Estate Administration", description: "Ascertain if the estate qualifies as a Small Estate. In Malaysia, this generally means the total value of the deceased's assets (both movable and immovable) is less than RM5 million. Estates valued at RM5 million or more are typically administered through the High Court.", details: "Small estates, especially those involving land, are often handled by the District Land Administrator. Amanah Raya Berhad (ARB) can administer estates consisting only of movable property up to a certain value (e.g., RM600,000) via a summary process.", iconName: 'HelpCircle' },
+  { id: 'step2', title: "Determine Type of Estate Administration", description: "Ascertain if the estate qualifies as a Small Estate. In Malaysia, this means the total value of the deceased's assets is less than RM5 million. Estates valued at RM5 million or more are typically administered through the High Court.", details: "Small estates, especially those involving land, are often handled by the District Land Administrator. Amanah Raya Berhad (ARB) can administer estates consisting only of movable property up to a certain value (e.g., RM600,000) via a summary process.", iconName: 'HelpCircle' },
   { id: 'step3', title: "Identify Beneficiaries", description: "Confirm all legal heirs according to Malaysian inheritance laws (Faraid for Muslims, Distribution Act for non-Muslims) or as per the Will.", details: "This may involve creating a family tree and verifying relationships.", iconName: 'Users' },
   { id: 'step4', title: "Valuation of Assets", description: "Obtain current market values for all assets in the estate.", details: "This is crucial for the application process and distribution.", iconName: 'Banknote' },
   { id: 'step5', title: "Application Submission", description: "Submit the required application forms (e.g., Form A for Land Office) along with supporting documents.", details: "Applications are typically made to the District Land Administrator for the district where immovable property is located, or Amanah Raya Berhad.", iconName: 'FileText' },

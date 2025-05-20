@@ -5,10 +5,11 @@ import * as React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import type { DocumentItem } from '@/lib/constants'; // DocumentItem.icon will now be iconName: string
+import { Button } from '@/components/ui/button'; // Added Button
+import type { DocumentItem } from '@/lib/constants';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import type { LucideIcon } from 'lucide-react';
-import { FileText, Users, Landmark, Banknote, Car, LandPlot, BookOpen } from 'lucide-react';
+import { FileText, Users, Landmark, Banknote, Car, LandPlot, BookOpen, MapPin } from 'lucide-react'; // Added MapPin
 
 const iconMap: Record<string, LucideIcon> = {
   FileText,
@@ -85,12 +86,25 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
                           className="mt-1 border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
                           aria-labelledby={`${item.id}-label`}
                         />
-                        <div className="grid gap-1.5 leading-snug">
+                        <div className="grid gap-1.5 leading-snug flex-grow">
                           <Label htmlFor={item.id} id={`${item.id}-label`} className="font-medium text-foreground cursor-pointer">
                             {IconComponent && <IconComponent className="inline-block h-5 w-5 mr-2 text-primary" aria-hidden="true" />}
                             {item.title}
                           </Label>
                           <p className="text-sm text-muted-foreground ml-7">{item.description}</p>
+                          {item.locationQuery && (
+                            <div className="ml-7 mt-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.locationQuery as string)}`, '_blank', 'noopener,noreferrer')}
+                                className="text-sm"
+                              >
+                                <MapPin className="mr-2 h-4 w-4 text-primary" />
+                                Find Office
+                              </Button>
+                            </div>
+                          )}
                         </div>
                       </li>
                     );
