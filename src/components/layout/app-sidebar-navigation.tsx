@@ -14,7 +14,7 @@ import {
   SidebarSeparator,
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
-import { Home, ListChecks, MapPinned, Settings, LifeBuoy, LogIn, LogOut, UserCircle2, Loader2, Library } from 'lucide-react';
+import { Home, ListChecks, MapPinned, Settings, LifeBuoy, LogIn, LogOut, UserCircle2, Loader2, Library, Gavel, Calculator, ScrollText } from 'lucide-react'; // Keep existing icons
 import { useAuth } from '@/contexts/auth-context';
 import { GoogleTranslateButton } from '@/components/features/google-translate-button';
 
@@ -22,7 +22,7 @@ const navItems = [
   { href: '/', label: 'Home', icon: Home },
   { href: '/checklist', label: 'Document Checklist', icon: ListChecks },
   { href: '/roadmap', label: 'Roadmap & Timeline', icon: MapPinned },
-  { href: '/legal-financial-hub', label: 'Legal & Financial Hub', icon: Library }, // New Hub
+  { href: '/legal-financial-hub', label: 'Legal & Financial Hub', icon: Library },
 ];
 
 const bottomNavItems = [
@@ -92,9 +92,9 @@ export function AppSidebarNavigation() {
               </>
             ) : (
               <SidebarMenuItem>
-                <SidebarMenuButton onClick={signInWithGoogle} tooltip={{children: "Login with Google", className: "group-data-[collapsible=icon]:block hidden"}}>
+                <SidebarMenuButton onClick={signInWithGoogle} tooltip={{children: "Continue with Google", className: "group-data-[collapsible=icon]:block hidden"}}>
                   <LogIn />
-                  <span className="group-data-[collapsible=icon]:hidden">Login with Google</span>
+                  <span className="group-data-[collapsible=icon]:hidden">Continue with Google</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             )}
