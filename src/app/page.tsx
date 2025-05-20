@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Home as HomeIcon, ListChecks, MapPinned, ArrowRight, Library } from 'lucide-react';
-import Image from 'next/image';
+// Removed Image import as it's no longer used in this simplified version
 
 const features = [
   {
@@ -12,24 +12,21 @@ const features = [
     description: "Organize and track all necessary documents for estate administration.",
     href: "/checklist",
     icon: ListChecks,
-    img: "https://placehold.co/600x400.png",
-    imgHint: "document checklist",
+    // img and imgHint removed
   },
   {
     title: "Roadmap & Timeline",
     description: "Get AI-powered timeline estimates and follow a step-by-step process.",
     href: "/roadmap",
     icon: MapPinned,
-    img: "https://placehold.co/600x400.png",
-    imgHint: "journey timeline",
+    // img and imgHint removed
   },
   {
     title: "Legal & Financial Hub",
     description: "Access legal guides, estimate fees, and find legal professionals.",
     href: "/legal-financial-hub",
     icon: Library,
-    img: "https://placehold.co/600x400.png",
-    imgHint: "legal finance",
+    // img and imgHint removed
   },
 ];
 
@@ -43,31 +40,18 @@ export default function HomePage() {
       />
 
       <section className="mb-12 p-6 bg-card rounded-lg shadow-md">
-        <div className="flex flex-col md:flex-row items-center">
-          <div className="md:w-2/3 mb-6 md:mb-0 md:pr-8">
-            <h2 className="text-2xl font-semibold text-primary mb-3">Streamline Your Estate Process</h2>
-            <p className="text-foreground mb-4">
-              PusakaPro is designed to simplify the complexities of small estate administration in Malaysia. 
-              We provide tools and information to help you understand the requirements, organize documents, 
-              estimate timelines and fees, and follow a clear roadmap.
-            </p>
-            <p className="text-foreground">
-              Whether you are an heir, an administrator, or simply seeking information, 
-              PusakaPro aims to make this journey more manageable.
-            </p>
-          </div>
-          <div className="md:w-1/3">
-            <Image 
-              src="https://placehold.co/600x400.png" 
-              alt="PusakaPro Illustration" 
-              width={600} 
-              height={400} 
-              className="rounded-lg shadow-lg object-cover"
-              data-ai-hint="legal consultation"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              priority // Consider adding priority if this is above the fold
-            />
-          </div>
+        {/* Removed flex layout and image for this section */}
+        <div>
+          <h2 className="text-2xl font-semibold text-primary mb-3">Streamline Your Estate Process</h2>
+          <p className="text-foreground mb-4">
+            PusakaPro is designed to simplify the complexities of small estate administration in Malaysia. 
+            We provide tools and information to help you understand the requirements, organize documents, 
+            estimate timelines and fees, and follow a clear roadmap.
+          </p>
+          <p className="text-foreground">
+            Whether you are an heir, an administrator, or simply seeking information, 
+            PusakaPro aims to make this journey more manageable.
+          </p>
         </div>
       </section>
 
@@ -76,16 +60,7 @@ export default function HomePage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((feature) => (
             <Card key={feature.title} className="flex flex-col overflow-hidden hover:shadow-lg transition-shadow duration-300">
-              <div className="relative h-48 w-full">
-                <Image 
-                  src={feature.img} 
-                  alt={feature.title} 
-                  fill
-                  className="object-cover"
-                  data-ai-hint={feature.imgHint}
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                />
-              </div>
+              {/* Removed image section from the top of the card */}
               <CardHeader>
                 <div className="flex items-center gap-3 mb-2">
                   <feature.icon className="h-7 w-7 text-primary" />
