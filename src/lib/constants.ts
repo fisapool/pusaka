@@ -5,7 +5,7 @@ export interface DocumentItem {
   id: string;
   title: string;
   description: string;
-  iconName: string; // Changed from icon: LucideIcon
+  iconName: string;
   category: string;
 }
 
@@ -37,20 +37,20 @@ export interface RoadmapStep {
   title: string;
   description: string;
   details?: string;
-  icon: LucideIcon; // This will also need to be changed if PersonalizedRoadmapClient is a client component
+  iconName: string; // Changed from icon: LucideIcon
 }
 
 export const ROADMAP_STEPS: RoadmapStep[] = [
-  { id: 'step1', title: "Gather Information & Documents", description: "Collect all necessary documents related to the deceased, beneficiaries, assets, and liabilities.", details: "This includes death certificates, NRICs, land titles, bank statements, etc. Refer to the Document Checklist for a comprehensive list.", icon: ListChecks },
-  { id: 'step2', title: "Determine Type of Estate Administration", description: "Ascertain if it's a small estate (movable + immovable assets not exceeding RM2 million, without a will for immovable assets, or any amount with a will handled by High Court/Amanah Raya).", details: "Small estates are typically handled by District Land Administrators or Amanah Raya Berhad.", icon: HelpCircle },
-  { id: 'step3', title: "Identify Beneficiaries", description: "Confirm all legal heirs according to Malaysian inheritance laws (Faraid for Muslims, Distribution Act for non-Muslims) or as per the Will.", details: "This may involve creating a family tree and verifying relationships.", icon: Users },
-  { id: 'step4', title: "Valuation of Assets", description: "Obtain current market values for all assets in the estate.", details: "This is crucial for the application process and distribution.", icon: Banknote },
-  { id: 'step5', title: "Application Submission", description: "Submit the required application forms (e.g., Form A for Land Office) along with supporting documents.", details: "Applications are typically made to the District Land Administrator for the district where immovable property is located, or Amanah Raya Berhad.", icon: FileText },
-  { id: 'step6', title: "Attend Hearing (If applicable)", description: "Attend a hearing scheduled by the Land Administrator or relevant authority.", details: "Beneficiaries and applicant may need to be present to provide testimony or clarification.", icon: Landmark },
-  { id: 'step7', title: "Obtain Distribution Order / Grant of Probate / LA", description: "Receive the official order that permits the distribution of the estate.", details: "This could be a Distribution Order, Grant of Probate (if there's a will), or Letters of Administration.", icon: BookOpen },
-  { id: 'step8', title: "Settle Debts and Liabilities", description: "Pay off any outstanding debts of the deceased from the estate assets.", details: "This must be done before distributing assets to beneficiaries.", icon: Banknote },
-  { id: 'step9', title: "Distribute Assets to Beneficiaries", description: "Distribute the remaining assets to the rightful heirs according to the distribution order or will.", details: "Ensure all legal requirements for asset transfer are met (e.g., land transfer, vehicle ownership change).", icon: HomeIcon },
-  { id: 'step10', title: "Finalize Estate Administration", description: "Complete any remaining administrative tasks and close the estate file.", details: "This may include final tax filings or notifications to relevant authorities.", icon: ShieldQuestion },
+  { id: 'step1', title: "Gather Information & Documents", description: "Collect all necessary documents related to the deceased, beneficiaries, assets, and liabilities.", details: "This includes death certificates, NRICs, land titles, bank statements, etc. Refer to the Document Checklist for a comprehensive list.", iconName: 'ListChecks' },
+  { id: 'step2', title: "Determine Type of Estate Administration", description: "Ascertain if it's a small estate (movable + immovable assets not exceeding RM2 million, without a will for immovable assets, or any amount with a will handled by High Court/Amanah Raya).", details: "Small estates are typically handled by District Land Administrators or Amanah Raya Berhad.", iconName: 'HelpCircle' },
+  { id: 'step3', title: "Identify Beneficiaries", description: "Confirm all legal heirs according to Malaysian inheritance laws (Faraid for Muslims, Distribution Act for non-Muslims) or as per the Will.", details: "This may involve creating a family tree and verifying relationships.", iconName: 'Users' },
+  { id: 'step4', title: "Valuation of Assets", description: "Obtain current market values for all assets in the estate.", details: "This is crucial for the application process and distribution.", iconName: 'Banknote' },
+  { id: 'step5', title: "Application Submission", description: "Submit the required application forms (e.g., Form A for Land Office) along with supporting documents.", details: "Applications are typically made to the District Land Administrator for the district where immovable property is located, or Amanah Raya Berhad.", iconName: 'FileText' },
+  { id: 'step6', title: "Attend Hearing (If applicable)", description: "Attend a hearing scheduled by the Land Administrator or relevant authority.", details: "Beneficiaries and applicant may need to be present to provide testimony or clarification.", iconName: 'Landmark' },
+  { id: 'step7', title: "Obtain Distribution Order / Grant of Probate / LA", description: "Receive the official order that permits the distribution of the estate.", details: "This could be a Distribution Order, Grant of Probate (if there's a will), or Letters of Administration.", iconName: 'BookOpen' },
+  { id: 'step8', title: "Settle Debts and Liabilities", description: "Pay off any outstanding debts of the deceased from the estate assets.", details: "This must be done before distributing assets to beneficiaries.", iconName: 'Banknote' },
+  { id: 'step9', title: "Distribute Assets to Beneficiaries", description: "Distribute the remaining assets to the rightful heirs according to the distribution order or will.", details: "Ensure all legal requirements for asset transfer are met (e.g., land transfer, vehicle ownership change).", iconName: 'HomeIcon' },
+  { id: 'step10', title: "Finalize Estate Administration", description: "Complete any remaining administrative tasks and close the estate file.", details: "This may include final tax filings or notifications to relevant authorities.", iconName: 'ShieldQuestion' },
 ];
 
 export interface LegalGuideTopic {
