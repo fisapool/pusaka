@@ -9,9 +9,10 @@ import { Button } from '@/components/ui/button';
 import type { DocumentItem } from '@/lib/constants';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import type { LucideIcon } from 'lucide-react';
-import { FileText, Users, Landmark, Banknote, Car, LandPlot, BookOpen, MapPin, ExternalLink, Save, RotateCcw, AlertCircle, Loader2, LogIn } from 'lucide-react';
+import { FileText, Users, Landmark, Banknote, Car, LandPlot, BookOpen, MapPin, ExternalLink, Save, RotateCcw, AlertCircle, Loader2, LogIn, CalendarPlus } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/auth-context';
+import { addHours } from 'date-fns';
 
 const iconMap: Record<string, LucideIcon> = {
   FileText,
@@ -40,7 +41,7 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
 
   React.useEffect(() => {
     if (authLoading || !user) {
-      setCheckedItems({}); // Clear local state if user logs out or auth is loading
+      setCheckedItems({});
       return;
     }
 
@@ -51,11 +52,6 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
       const savedCheckedItems = localStorage.getItem(checkedItemsKey);
       if (savedCheckedItems) {
         setCheckedItems(JSON.parse(savedCheckedItems));
-        // Optional: toast for loaded progress can be verbose, consider removing or making it less frequent
-        // toast({
-        //   title: "Checklist Progress Loaded",
-        //   description: "Your previously checked items have been loaded.",
-        // });
       }
     } catch (error) {
       console.error("Error loading checked items from localStorage:", error);
@@ -68,7 +64,7 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
   }, [toast, user, authLoading]);
 
   const handleCheckboxChange = (itemId: string) => {
-    if (!user) return; // Should not happen if UI is disabled
+    if (!user) return;
     setCheckedItems((prev) => ({
       ...prev,
       [itemId]: !prev[itemId],
@@ -126,13 +122,12 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
     
     try {
       localStorage.removeItem(checkedItemsKey);
-      setCheckedItems({}); // Reset local state as well
+      setCheckedItems({});
       toast({
         title: "Saved Checklist Progress Cleared",
         description: "Your saved checklist progress has been cleared from this browser.",
       });
-    } catch (error)
-{
+    } catch (error) {
       console.error("Error clearing localStorage:", error);
       toast({
         title: "Clear Error",
@@ -145,6 +140,24 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
   const handleManageInGoogleDrive = () => {
     window.open('https://drive.google.com', '_blank', 'noopener,noreferrer');
   };
+
+  const formatGoogleCalendarDate = (date: Date): string => {
+    return date.toISOString().replace(/-|:|\.\d{3}/g, '');
+  };
+
+  const handleAddToCalendar = (item: DocumentItem) => {
+    const now = new Date();
+    const oneHourLater = addHours(now, 1);
+    const startDateStr = formatGoogleCalendarDate(now);
+    const endDateStr = formatGoogleCalendarDate(oneHourLater);
+    
+    const eventTitle = `PusakaPro Reminder: ${item.title}`;
+    const eventDetails = `Document: ${item.title}\nDescription: ${item.description}\n\nRemember to gather or prepare this document for your small estate administration.`;
+    
+    const calendarUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(eventTitle)}&details=${encodeURIComponent(eventDetails)}&dates=${startDateStr}/${endDateStr}`;
+    window.open(calendarUrl, '_blank', 'noopener,noreferrer');
+  };
+
 
   if (authLoading) {
     return (
@@ -205,7 +218,6 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
     );
   }
 
-  // Logged-in user view
   return (
     <Card className="shadow-lg">
       <CardHeader>
@@ -235,7 +247,7 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
                       <li key={item.id} className="flex items-start space-x-3 p-3 bg-secondary/30 rounded-md">
                         <Checkbox
                           id={item.id}
-                          checked={!!checkedItems[item.id]} // Ensure boolean value
+                          checked={!!checkedItems[item.id]}
                           onCheckedChange={() => handleCheckboxChange(item.id)}
                           className="mt-1 border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
                           aria-labelledby={`${item.id}-label`}
@@ -247,7 +259,7 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
                           </Label>
                           <p className="text-sm text-muted-foreground ml-7">{item.description}</p>
                           
-                          <div className="ml-7 mt-2 space-y-2 sm:flex sm:items-center sm:space-y-0 sm:space-x-2">
+                          <div className="ml-7 mt-2 space-y-2 sm:flex sm:flex-wrap sm:items-center sm:space-y-0 sm:space-x-2">
                             {item.locationQuery && (
                               <Button
                                 variant="outline"
@@ -268,6 +280,15 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
                             >
                               <ExternalLink className="mr-2 h-4 w-4 text-primary" />
                               Manage in Google Drive
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleAddToCalendar(item)}
+                              className="text-sm"
+                            >
+                              <CalendarPlus className="mr-2 h-4 w-4 text-primary" />
+                              Add to Calendar
                             </Button>
                           </div>
                         </div>

@@ -2917,6 +2917,10 @@ body {
     flex-direction: column;
   }
 
+  .sm\:flex-wrap {
+    flex-wrap: wrap;
+  }
+
   .sm\:items-center {
     align-items: center;
   }
