@@ -479,6 +479,21 @@ const LEGAL_GUIDE_TOPICS = [
             "It's important to note that for small estates (under RM5 million) involving immovable property, the primary jurisdiction lies with the District Land Office/JKPTG, even if ARB is also involved in handling movable assets or is named in a will.",
             "Always verify the latest procedures directly with the respective agencies or ARB as requirements and processes can be updated."
         ]
+    },
+    {
+        id: 'guide7',
+        title: "Managing Potential Family Disputes in Estate Administration",
+        summary: "Tips for navigating disagreements among beneficiaries during the estate process.",
+        iconName: 'ShieldQuestion',
+        content: [
+            "Disagreements among beneficiaries are unfortunately common during estate administration. These can arise from misunderstandings, differing expectations, or pre-existing family tensions. Addressing them proactively is key.",
+            "**1. Open Communication:** Encourage open and honest communication among all beneficiaries from the outset. Clearly explain the process, share information transparently, and provide opportunities for everyone to voice their concerns.",
+            "**2. Refer to the Will (if any):** If the deceased left a valid Will (Wasiat), it serves as the primary legal document outlining their wishes for asset distribution. Adhering to the Will can often prevent or resolve disputes.",
+            "**3. Understand Legal Entitlements:** If there is no Will (intestacy), assets are distributed according to legal frameworks: Faraid for Muslims, and the Distribution Act 1958 for non-Muslims. Understanding these legal entitlements can clarify who is due what share, reducing ambiguity.",
+            "**4. Consider Mediation:** If direct discussions are not productive, consider engaging a neutral third-party mediator. A mediator can facilitate conversations, help beneficiaries understand each other's perspectives, and guide them towards a mutually agreeable solution.",
+            "**5. Seek Legal Advice:** If disputes are complex or cannot be resolved through communication or mediation, it is crucial to seek advice from a lawyer specializing in estate law. A lawyer can provide impartial guidance on legal rights and obligations, help interpret the Will or intestacy laws, and represent your interests if necessary. Early legal intervention can often prevent disputes from escalating and ensure the administration process proceeds correctly.",
+            "Remember, the goal is to honor the deceased's wishes (if known) and ensure a fair and lawful distribution of the estate while minimizing conflict."
+        ]
     }
 ];
 }}),
@@ -509,8 +524,9 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist
 ;
 ;
 // Prepare context data from the application
-const formattedLegalGuides = __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$constants$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["LEGAL_GUIDE_TOPICS"].map((g)=>`Guide Title: ${g.title}\nSummary: ${g.summary}\nContent: ${g.content.join(' ')}`).join('\n\n---\n\n');
-const formattedRoadmapSteps = __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$constants$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["ROADMAP_STEPS"].map((s)=>`Roadmap Step: ${s.title}\nDescription: ${s.description}\nDetails: ${s.details || ''}`).join('\n\n---\n\n');
+// Temporarily reduce context for diagnosis:
+const formattedLegalGuides = ""; // LEGAL_GUIDE_TOPICS.map(g => `Guide Title: ${g.title}\nSummary: ${g.summary}\nContent: ${g.content.join(' ')}`).join('\n\n---\n\n');
+const formattedRoadmapSteps = ""; // ROADMAP_STEPS.map(s => `Roadmap Step: ${s.title}\nDescription: ${s.description}\nDetails: ${s.details || ''}`).join('\n\n---\n\n');
 const formattedDocumentChecklist = __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$constants$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["DOCUMENT_CHECKLIST_ITEMS"].map((d)=>`Document: ${d.title}\nDescription: ${d.description}\nCategory: ${d.category}${d.locationQuery ? `\nRelevant Office Query: ${d.locationQuery}` : ''}`).join('\n\n---\n\n');
 const applicationContext = `
 === PusakaPro Application Information ===
@@ -555,7 +571,7 @@ Be concise, polite, and helpful.
 If a question is outside the scope of the provided PusakaPro information or if you cannot find the answer within the context, clearly state that the information is not available in PusakaPro or that you cannot answer that specific query with the given data.
 Do not invent information or answer questions unrelated to Malaysian small estate administration as covered by the provided context.
 If asked about document locations, mention that users can find relevant offices using the 'Find Office' button in the Document Checklist for certain documents.
-When a user asks about a specific document or process, if the provided PusakaPro context mentions a relevant government agency (e.g., JPN, Pejabat Tanah, JPJ, Amanah Raya Berhad), try to include the agency's name in your response. This helps the user understand which agency they might need to interact with for that particular item or step.
+When a user asks about a specific document, process, or issue (like family disputes), if the provided PusakaPro context mentions a relevant government agency (e.g., JPN, Pejabat Tanah, JPJ, Amanah Raya Berhad) or a professional (e.g., lawyer, mediator), try to include this in your response. This helps the user understand which agency or professional they might need to interact with or consult.
 
 PusakaPro Application Context:
 ${applicationContext}

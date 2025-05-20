@@ -13,9 +13,9 @@ import {z} from 'genkit'; // Use 'genkit' for z as per existing project structur
 import { LEGAL_GUIDE_TOPICS, ROADMAP_STEPS, DOCUMENT_CHECKLIST_ITEMS, DOCUMENT_CATEGORIES } from '@/lib/constants';
 
 // Prepare context data from the application
-// Temporarily reduce context for diagnosis:
-const formattedLegalGuides = ""; // LEGAL_GUIDE_TOPICS.map(g => `Guide Title: ${g.title}\nSummary: ${g.summary}\nContent: ${g.content.join(' ')}`).join('\n\n---\n\n');
-const formattedRoadmapSteps = ""; // ROADMAP_STEPS.map(s => `Roadmap Step: ${s.title}\nDescription: ${s.description}\nDetails: ${s.details || ''}`).join('\n\n---\n\n');
+// Restore full context:
+const formattedLegalGuides = LEGAL_GUIDE_TOPICS.map(g => `Guide Title: ${g.title}\nSummary: ${g.summary}\nContent: ${g.content.join(' ')}`).join('\n\n---\n\n');
+const formattedRoadmapSteps = ROADMAP_STEPS.map(s => `Roadmap Step: ${s.title}\nDescription: ${s.description}\nDetails: ${s.details || ''}`).join('\n\n---\n\n');
 const formattedDocumentChecklist = DOCUMENT_CHECKLIST_ITEMS.map(d => `Document: ${d.title}\nDescription: ${d.description}\nCategory: ${d.category}${d.locationQuery ? `\nRelevant Office Query: ${d.locationQuery}` : ''}`).join('\n\n---\n\n');
 
 const applicationContext = `
@@ -88,12 +88,16 @@ ${applicationContext}
     llmMessages.push({ role: 'user', parts: [{ text: input.message }] });
 
     try {
+      // For debugging:
+      // console.log("PusakaChatFlow - System Message Length:", systemMessage.length);
+      // console.log("PusakaChatFlow - LLM Messages to send:", JSON.stringify(llmMessages, null, 2));
+
       const response = await ai.generate({
         prompt: {
           messages: llmMessages,
-          system: systemMessage, // System instruction provided here
+          system: systemMessage,
         },
-        // model: 'googleai/gemini-pro' // Default model from genkit.ts will be used
+        model: 'googleai/gemini-pro', // Explicitly use gemini-pro
         config: {
             safetySettings: [
               { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
@@ -127,7 +131,7 @@ ${applicationContext}
       }
 
     } catch (error: any) {
-      console.error("Error in pusakaChatFlow calling ai.generate:", error);
+      console.error("Error in pusakaChatFlow calling ai.generate:", error); // This will log the full error to the Genkit server console.
       let userFriendlyMessage = "I apologize, but I encountered an error trying to process your request. Please try again later.";
       if (error.message) {
         if (error.message.includes('API key not valid') || error.message.includes('Invalid API key') || error.message.toLowerCase().includes('api key')) {
@@ -140,11 +144,11 @@ ${applicationContext}
             userFriendlyMessage = "There's an issue with the project's billing configuration for the AI service.";
         } else if (error.message.toLowerCase().includes('model not found')) {
             userFriendlyMessage = "The configured AI model could not be found. Please check the service configuration.";
+        } else if (error.message.toLowerCase().includes('bad request') || (error.cause && (error.cause as any).status === 400) ) {
+            userFriendlyMessage = "The request to the AI service was malformed. This might be due to very long input or an unexpected format. Please try a shorter or different question.";
         }
       }
       return { reply: userFriendlyMessage };
     }
   }
 );
-
-    

@@ -1,7 +1,4 @@
 {
   "/checklist/page": "app/checklist/page.js",
-  "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/legal-financial-hub/page": "app/legal-financial-hub/page.js",
-  "/page": "app/page.js",
-  "/roadmap/page": "app/roadmap/page.js"
+  "/page": "app/page.js"
 }
