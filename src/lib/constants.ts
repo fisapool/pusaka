@@ -5,7 +5,7 @@ export interface DocumentItem {
   id: string;
   title: string;
   description: string;
-  iconName: string;
+  iconName: string; // Changed from icon: LucideIcon
   category: string;
 }
 
@@ -37,7 +37,7 @@ export interface RoadmapStep {
   title: string;
   description: string;
   details?: string;
-  iconName: string; // Changed from icon: LucideIcon
+  iconName: string; 
 }
 
 export const ROADMAP_STEPS: RoadmapStep[] = [
@@ -57,8 +57,8 @@ export interface LegalGuideTopic {
   id: string;
   title: string;
   summary: string;
-  content: string[]; // Array of paragraphs for content
-  icon: LucideIcon; // This will also need to be changed if LegalGuidesClient is a client component
+  content: string[]; 
+  iconName: string; // Changed from icon: LucideIcon
 }
 
 export const LEGAL_GUIDE_TOPICS: LegalGuideTopic[] = [
@@ -66,7 +66,7 @@ export const LEGAL_GUIDE_TOPICS: LegalGuideTopic[] = [
     id: 'guide1',
     title: "Understanding Small Estates in Malaysia",
     summary: "Learn what qualifies as a small estate and the general process.",
-    icon: HelpCircle,
+    iconName: 'HelpCircle',
     content: [
       "A small estate in Malaysia is generally defined as an estate of a deceased person consisting wholly or partly of immovable property (land/houses) not exceeding RM2 million in total value, without a trust or will for the immovable property. If there is movable property only, any value can be considered for small estate distribution through relevant bodies.",
       "The Small Estates (Distribution) Act 1955 governs this process. The primary authority handling small estates is the District Land Administrator in the district where the immovable property is located.",
@@ -77,7 +77,7 @@ export const LEGAL_GUIDE_TOPICS: LegalGuideTopic[] = [
     id: 'guide2',
     title: "Eligibility for Small Estate Distribution",
     summary: "Who can apply and who are the beneficiaries.",
-    icon: Users,
+    iconName: 'Users',
     content: [
       "Any interested party can apply for small estate distribution, including beneficiaries, creditors, or purchasers of property from the deceased.",
       "Beneficiaries are determined by Islamic Faraid law for Muslims, and the Distribution Act 1958 for non-Muslims if the deceased died intestate (without a valid will).",
@@ -88,7 +88,7 @@ export const LEGAL_GUIDE_TOPICS: LegalGuideTopic[] = [
     id: 'guide3',
     title: "Role of Amanah Raya Berhad (ARB)",
     summary: "How ARB can assist in estate administration.",
-    icon: Landmark,
+    iconName: 'Landmark',
     content: [
       "Amanah Raya Berhad (The Public Trustee Corporation) can administer estates, especially those consisting of movable property only, regardless of value, or when appointed as executor in a will.",
       "ARB provides services like petitioning for Letters of Administration, acting as administrator or trustee, and distributing assets.",
@@ -99,7 +99,7 @@ export const LEGAL_GUIDE_TOPICS: LegalGuideTopic[] = [
     id: 'guide4',
     title: "Intestacy Laws in Malaysia",
     summary: "How assets are distributed without a will.",
-    icon: Scale,
+    iconName: 'Scale',
     content: [
       "For Muslims, assets are distributed according to Faraid principles upon death without a Wasiat (Islamic Will). A Wasiat can only dispose of up to 1/3 of the estate to non-Faraid heirs or for charitable purposes; the remaining 2/3 is subject to Faraid.",
       "For non-Muslims, the Distribution Act 1958 (as amended) outlines the hierarchy of beneficiaries: spouse, children, parents, siblings, etc.",
@@ -110,7 +110,7 @@ export const LEGAL_GUIDE_TOPICS: LegalGuideTopic[] = [
     id: 'guide5',
     title: "The Application Process (Form A)",
     summary: "Key steps in applying for small estate distribution.",
-    icon: FileText,
+    iconName: 'FileText',
     content: [
       "The application typically starts with filing 'Borang A' (Form A) at the relevant District Land Office or Small Estates Distribution Unit.",
       "This form requires details of the deceased, beneficiaries, assets, and liabilities.",

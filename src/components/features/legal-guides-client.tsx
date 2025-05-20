@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from 'react';
@@ -5,7 +6,16 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import type { LegalGuideTopic } from '@/lib/constants';
 import { Input } from '@/components/ui/input';
-import { Search } from 'lucide-react';
+import { Search, HelpCircle, Users, Landmark, Scale, FileText } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+
+const iconMap: Record<string, LucideIcon> = {
+  HelpCircle,
+  Users,
+  Landmark,
+  Scale,
+  FileText,
+};
 
 interface LegalGuidesClientProps {
   topics: LegalGuideTopic[];
@@ -61,26 +71,29 @@ export function LegalGuidesClient({ topics: initialTopics }: LegalGuidesClientPr
             value={openAccordionItems}
             onValueChange={setOpenAccordionItems}
           >
-            {filteredTopics.map((topic) => (
-              <AccordionItem value={topic.id} key={topic.id} className="border rounded-md overflow-hidden bg-background hover:bg-secondary/20 transition-colors">
-                <AccordionTrigger className="p-4 text-left hover:no-underline">
-                  <div className="flex items-start gap-3">
-                    <topic.icon className="h-6 w-6 text-primary mt-1 shrink-0" />
-                    <div>
-                      <h3 className="font-medium text-foreground">{topic.title}</h3>
-                      <p className="text-sm text-muted-foreground mt-0.5">{topic.summary}</p>
+            {filteredTopics.map((topic) => {
+              const IconComponent = iconMap[topic.iconName];
+              return (
+                <AccordionItem value={topic.id} key={topic.id} className="border rounded-md overflow-hidden bg-background hover:bg-secondary/20 transition-colors">
+                  <AccordionTrigger className="p-4 text-left hover:no-underline">
+                    <div className="flex items-start gap-3">
+                      {IconComponent && <IconComponent className="h-6 w-6 text-primary mt-1 shrink-0" />}
+                      <div>
+                        <h3 className="font-medium text-foreground">{topic.title}</h3>
+                        <p className="text-sm text-muted-foreground mt-0.5">{topic.summary}</p>
+                      </div>
                     </div>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="p-4 pt-0 bg-secondary/10">
-                  <div className="prose prose-sm max-w-none text-foreground dark:prose-invert">
-                    {topic.content.map((paragraph, index) => (
-                      <p key={index}>{paragraph}</p>
-                    ))}
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            ))}
+                  </AccordionTrigger>
+                  <AccordionContent className="p-4 pt-0 bg-secondary/10">
+                    <div className="prose prose-sm max-w-none text-foreground dark:prose-invert">
+                      {topic.content.map((paragraph, index) => (
+                        <p key={index}>{paragraph}</p>
+                      ))}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              );
+            })}
           </Accordion>
         ) : (
           <p className="text-muted-foreground text-center py-8">
