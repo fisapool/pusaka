@@ -2,14 +2,18 @@
 "use client";
 
 import * as React from 'react';
-import { useAuth } from '@/contexts/auth-context';
+// useAuth is no longer used as authentication is removed
+// import { useAuth } from '@/contexts/auth-context';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
-import { UserCircle2, Palette, ShieldAlert, Loader2 } from 'lucide-react';
+// Separator might not be needed if content is minimal
+// import { Separator } from '@/components/ui/separator';
+// Loader2 is no longer needed
+import { UserCircle2, Palette, ShieldAlert } from 'lucide-react'; 
 
 export function SettingsClient() {
-  const { user, loading, signOut } = useAuth();
+  // Auth state (user, loading, signOut) is no longer used
+  // const { user, loading, signOut } = useAuth();
 
   return (
     <div className="space-y-8">
@@ -20,35 +24,13 @@ export function SettingsClient() {
             <CardTitle>User Profile</CardTitle>
           </div>
           <CardDescription>
-            View and manage your profile information.
+            User profile information is unavailable as authentication has been removed.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          {loading && (
-            <div className="flex items-center space-x-2 text-muted-foreground">
-              <Loader2 className="h-5 w-5 animate-spin" />
-              <span>Loading profile...</span>
-            </div>
-          )}
-          {!loading && user && (
-            <>
-              <div>
-                <h3 className="font-medium text-foreground">Display Name</h3>
-                <p className="text-muted-foreground">{user.displayName || 'Not set'}</p>
-              </div>
-              <div>
-                <h3 className="font-medium text-foreground">Email Address</h3>
-                <p className="text-muted-foreground">{user.email}</p>
-              </div>
-              <div>
-                <h3 className="font-medium text-foreground">User ID</h3>
-                <p className="text-xs text-muted-foreground">{user.uid}</p>
-              </div>
-            </>
-          )}
-          {!loading && !user && (
-            <p className="text-muted-foreground">You are not currently logged in. Please log in to see your profile information.</p>
-          )}
+          {/* Loading state is removed */}
+          {/* User information display is removed */}
+          <p className="text-muted-foreground">User authentication is not active in this application.</p>
         </CardContent>
       </Card>
 
@@ -75,14 +57,12 @@ export function SettingsClient() {
             <CardTitle>Account Management</CardTitle>
           </div>
           <CardDescription>
-            Manage your account settings. (Future Feature)
+            Account management features are unavailable as authentication has been removed.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <p className="text-muted-foreground">Options such as deleting your account will be available here.</p>
-          {user && (
-            <Button variant="destructive" disabled>Delete Account (Coming Soon)</Button>
-          )}
+          <p className="text-muted-foreground">Options such as deleting your account are not applicable as user accounts are not active.</p>
+          {/* Delete Account button is removed */}
         </CardContent>
       </Card>
     </div>

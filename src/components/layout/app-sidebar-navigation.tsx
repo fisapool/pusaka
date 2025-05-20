@@ -13,9 +13,10 @@ import {
   SidebarTrigger,
   SidebarSeparator,
 } from '@/components/ui/sidebar';
-import { Button } from '@/components/ui/button';
-import { Home, ListChecks, MapPinned, Settings, LifeBuoy, LogIn, LogOut, UserCircle2, Loader2, Library, Gavel, Calculator, ScrollText } from 'lucide-react'; // Keep existing icons
-import { useAuth } from '@/contexts/auth-context';
+// LogIn, LogOut, UserCircle2, Loader2 icons are no longer needed for auth display
+import { Home, ListChecks, MapPinned, Settings, LifeBuoy, Library } from 'lucide-react'; 
+// useAuth is no longer used for displaying user state
+// import { useAuth } from '@/contexts/auth-context';
 import { GoogleTranslateButton } from '@/components/features/google-translate-button';
 
 const navItems = [
@@ -33,7 +34,8 @@ const bottomNavItems = [
 
 export function AppSidebarNavigation() {
   const pathname = usePathname();
-  const { user, loading, signInWithGoogle, signOut } = useAuth();
+  // Auth state (user, loading, signInWithGoogle, signOut) is no longer used here
+  // const { user, loading, signInWithGoogle, signOut } = useAuth();
 
   return (
     <>
@@ -68,37 +70,8 @@ export function AppSidebarNavigation() {
       </SidebarContent>
       <SidebarFooter className="p-2 space-y-2">
          <SidebarMenu>
-            {loading ? (
-              <SidebarMenuItem>
-                <SidebarMenuButton disabled tooltip={{children: "Loading...", className: "group-data-[collapsible=icon]:block hidden"}}>
-                  <Loader2 className="animate-spin" />
-                  <span className="group-data-[collapsible=icon]:hidden">Loading...</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ) : user ? (
-              <>
-                <SidebarMenuItem>
-                   <SidebarMenuButton tooltip={{children: user.email || "User Profile", className: "group-data-[collapsible=icon]:block hidden"}}>
-                    <UserCircle2 />
-                    <span className="truncate group-data-[collapsible=icon]:hidden">{user.displayName || user.email}</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton onClick={signOut} tooltip={{children: "Logout", className: "group-data-[collapsible=icon]:block hidden"}}>
-                    <LogOut />
-                    <span className="group-data-[collapsible=icon]:hidden">Logout</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              </>
-            ) : (
-              <SidebarMenuItem>
-                <SidebarMenuButton onClick={signInWithGoogle} tooltip={{children: "Continue with Google", className: "group-data-[collapsible=icon]:block hidden"}}>
-                  <LogIn />
-                  <span className="group-data-[collapsible=icon]:hidden">Continue with Google</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            )}
-
+            {/* Authentication related UI (loading, user display, login/logout buttons) is removed */}
+            
             {/* Language Switcher - Visible when sidebar is expanded */}
             <div className="group-data-[collapsible=icon]:hidden">
               <SidebarSeparator className="my-2" />

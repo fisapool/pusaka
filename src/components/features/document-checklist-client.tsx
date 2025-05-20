@@ -9,10 +9,12 @@ import { Button } from '@/components/ui/button';
 import type { DocumentItem } from '@/lib/constants';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import type { LucideIcon } from 'lucide-react';
-import { FileText, Users, Landmark, Banknote, Car, LandPlot, BookOpen, MapPin, UploadCloud, XCircle, FileCheck, Loader2, AlertTriangle, LogIn } from 'lucide-react'; // Added LogIn
-import { useAuth } from '@/contexts/auth-context';
-import { storage } from '@/lib/firebase';
-import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
+// Removed unused icons related to uploads: UploadCloud, XCircle, FileCheck, Loader2, AlertTriangle, LogIn
+import { FileText, Users, Landmark, Banknote, Car, LandPlot, BookOpen, MapPin } from 'lucide-react'; 
+// useAuth, storage, firebase storage functions are no longer needed
+// import { useAuth } from '@/contexts/auth-context';
+// import { storage } from '@/lib/firebase';
+// import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { useToast } from '@/hooks/use-toast';
 
 
@@ -26,13 +28,13 @@ const iconMap: Record<string, LucideIcon> = {
   BookOpen,
 };
 
-interface UploadedFileState {
-  name: string;
-  storagePath?: string; // Full path in Firebase Storage
-  // downloadURL?: string; // Could be added if needed for direct links
-  isUploading?: boolean;
-  uploadError?: string | null;
-}
+// UploadedFileState interface is no longer needed as uploads are removed
+// interface UploadedFileState {
+//   name: string;
+//   storagePath?: string; 
+//   isUploading?: boolean;
+//   uploadError?: string | null;
+// }
 
 
 interface DocumentChecklistClientProps {
@@ -41,15 +43,17 @@ interface DocumentChecklistClientProps {
 }
 
 export function DocumentChecklistClient({ items, categories }: DocumentChecklistClientProps) {
-  const { user } = useAuth();
-  const { toast } = useToast();
+  // useAuth hook is no longer used
+  // const { user } = useAuth();
+  const { toast } = useToast(); // toast might still be used for other interactions if any
   const [checkedItems, setCheckedItems] = React.useState<Record<string, boolean>>({});
   
-  // Store more detailed file state including name, storagePath, and upload status
-  const [uploadedFiles, setUploadedFiles] = React.useState<Record<string, UploadedFileState>>({});
+  // State for uploaded files is removed
+  // const [uploadedFiles, setUploadedFiles] = React.useState<Record<string, UploadedFileState>>({});
   
-  const fileInputRef = React.useRef<HTMLInputElement>(null);
-  const [currentItemIdForUpload, setCurrentItemIdForUpload] = React.useState<string | null>(null);
+  // Refs and state for file input are removed
+  // const fileInputRef = React.useRef<HTMLInputElement>(null);
+  // const [currentItemIdForUpload, setCurrentItemIdForUpload] = React.useState<string | null>(null);
 
 
   const handleCheckboxChange = (itemId: string) => {
@@ -76,131 +80,20 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
     }, {} as Record<string, DocumentItem[]>);
   }, [items]);
 
-  const handleUploadButtonClick = (itemId: string) => {
-    if (!user) {
-      toast({
-        title: "Authentication Required",
-        description: "Please log in to upload documents.",
-        variant: "destructive",
-      });
-      return;
-    }
-    setCurrentItemIdForUpload(itemId);
-    fileInputRef.current?.click();
-  };
-
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!event.target.files || !event.target.files[0] || !currentItemIdForUpload || !user) {
-      if (fileInputRef.current) fileInputRef.current.value = ""; // Reset file input
-      setCurrentItemIdForUpload(null);
-      return;
-    }
-
-    const file = event.target.files[0];
-    const itemId = currentItemIdForUpload;
-
-    setUploadedFiles(prev => ({
-      ...prev,
-      [itemId]: { name: file.name, isUploading: true, uploadError: null },
-    }));
-
-    const storagePath = `user_documents/${user.uid}/${itemId}/${file.name}`;
-    const fileRef = ref(storage, storagePath);
-
-    try {
-      await uploadBytes(fileRef, file);
-      // const downloadURL = await getDownloadURL(fileRef); // Optional: get download URL
-      
-      setUploadedFiles(prev => ({
-        ...prev,
-        [itemId]: { name: file.name, storagePath, isUploading: false, uploadError: null },
-      }));
-      toast({
-        title: "Upload Successful",
-        description: `${file.name} has been uploaded.`,
-      });
-    } catch (error: any) {
-      console.error("Error uploading file:", error);
-      setUploadedFiles(prev => ({
-        ...prev,
-        [itemId]: { name: file.name, isUploading: false, uploadError: error.message || "Upload failed" },
-      }));
-      toast({
-        title: "Upload Failed",
-        description: `Could not upload ${file.name}. Please try again. Error: ${error.message}`,
-        variant: "destructive",
-      });
-    } finally {
-      if (fileInputRef.current) {
-        fileInputRef.current.value = ""; // Reset file input
-      }
-      setCurrentItemIdForUpload(null);
-    }
-  };
-
-  const handleRemoveFile = async (itemId: string) => {
-    const fileState = uploadedFiles[itemId];
-    if (!fileState || !user) { // Also check for user, though remove button should be disabled
-        if (!user) {
-            toast({ title: "Authentication Required", description: "Please log in to manage documents.", variant: "destructive" });
-        }
-        return;
-    }
-
-
-    // Optimistically update UI by removing the item locally first
-    const previousUploadedFiles = { ...uploadedFiles };
-    setUploadedFiles((prev) => {
-      const newState = { ...prev };
-      delete newState[itemId];
-      return newState;
-    });
-
-    if (fileState.storagePath) { // Only try to delete from storage if we have a path
-        try {
-            const fileRef = ref(storage, fileState.storagePath);
-            await deleteObject(fileRef);
-            toast({
-                title: "File Removed",
-                description: `${fileState.name} has been removed from your secure storage.`,
-            });
-        } catch (error: any) {
-            console.error("Error deleting file from storage:", error);
-            // Revert UI to previous state if deletion failed
-            setUploadedFiles(previousUploadedFiles);
-            toast({
-                title: "Removal Failed",
-                description: `Could not remove ${fileState.name} from storage. Error: ${error.message}`,
-                variant: "destructive",
-            });
-        }
-    } else {
-        // If there's no storagePath, it was likely a local association that failed to upload, or the state was cleared
-        toast({
-            title: "File Association Removed",
-            description: `Local association for ${fileState.name} has been removed.`,
-        });
-    }
-  };
-
+  // All file handling functions (handleUploadButtonClick, handleFileChange, handleRemoveFile) are removed
+  // as authentication and storage integration are removed.
 
   return (
     <Card className="shadow-lg">
       <CardHeader>
         <CardTitle>Required Documents</CardTitle>
         <CardDescription>
-          This checklist helps you gather necessary paperwork. Files uploaded are stored securely in your personal cloud storage if you are logged in.
-          {!user && <span className="font-semibold text-destructive block mt-2">Please log in to upload and manage documents.</span>}
+          This checklist helps you gather necessary paperwork. 
+          Document upload functionality has been disabled as user authentication is removed.
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <input
-          type="file"
-          ref={fileInputRef}
-          style={{ display: 'none' }}
-          onChange={handleFileChange}
-          disabled={!user}
-        />
+        {/* Hidden file input is removed */}
         <Accordion type="multiple" defaultValue={Object.keys(categories)} className="w-full">
           {Object.entries(groupedItems).map(([category, categoryItems]) => (
             <AccordionItem value={category} key={category}>
@@ -216,7 +109,8 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
                 <ul className="space-y-4 p-2">
                   {categoryItems.map((item) => {
                     const IconComponent = iconMap[item.iconName];
-                    const fileState = uploadedFiles[item.id];
+                    // File state logic is removed
+                    // const fileState = uploadedFiles[item.id]; 
                     return (
                       <li key={item.id} className="flex items-start space-x-3 p-3 bg-secondary/30 rounded-md">
                         <Checkbox
@@ -246,58 +140,7 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
                               </Button>
                             )}
 
-                            {fileState?.isUploading && (
-                              <div className="flex items-center space-x-2 text-sm text-muted-foreground p-2 border border-input rounded-md">
-                                <Loader2 className="h-4 w-4 animate-spin text-primary" />
-                                <span>Uploading {fileState.name}...</span>
-                              </div>
-                            )}
-
-                            {fileState?.uploadError && !fileState.isUploading && (
-                               <div className="flex items-center space-x-2 text-sm text-destructive p-2 border border-destructive/50 bg-destructive/10 rounded-md">
-                                <AlertTriangle className="h-4 w-4" />
-                                <span>Error: {fileState.uploadError}. 
-                                <Button variant="link" size="sm" className="p-0 h-auto ml-1 text-destructive hover:underline" onClick={() => handleUploadButtonClick(item.id)} disabled={!user}>Try again?</Button>
-                                </span>
-                              </div>
-                            )}
-                            
-                            {fileState && fileState.storagePath && !fileState.isUploading && !fileState.uploadError && (
-                              <div className="flex items-center justify-between space-x-2 p-2 border border-green-500/50 bg-green-500/10 rounded-md">
-                                <div className="flex items-center space-x-2">
-                                  <FileCheck className="h-5 w-5 text-green-600" />
-                                  <span className="text-sm text-foreground truncate" title={fileState.name}>
-                                    {fileState.name}
-                                  </span>
-                                </div>
-                                <Button variant="ghost" size="icon" onClick={() => handleRemoveFile(item.id)} className="h-6 w-6" disabled={!user}>
-                                  <XCircle className="h-4 w-4 text-destructive" />
-                                  <span className="sr-only">Remove file</span>
-                                </Button>
-                              </div>
-                            )}
-
-                            {(!fileState || (!fileState.storagePath && !fileState.isUploading && !fileState.uploadError)) && (
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handleUploadButtonClick(item.id)}
-                                className="text-sm"
-                                disabled={!user || (currentItemIdForUpload === item.id && uploadedFiles[item.id]?.isUploading)}
-                              >
-                                {user ? (
-                                  <>
-                                    <UploadCloud className="mr-2 h-4 w-4 text-primary" />
-                                    <span>Upload Document</span>
-                                  </>
-                                ) : (
-                                  <>
-                                    <LogIn className="mr-2 h-4 w-4 text-muted-foreground" />
-                                    <span>Login to Upload</span>
-                                  </>
-                                )}
-                              </Button>
-                            )}
+                            {/* All UI related to file upload status, errors, and removal is removed */}
                           </div>
                         </div>
                       </li>
@@ -309,11 +152,9 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
           ))}
         </Accordion>
          <div className="mt-6 p-3 bg-accent/10 text-accent-foreground/80 border border-accent/20 rounded-md text-xs">
-            <strong>Note on Document Uploads:</strong> Files are uploaded to your personal secure cloud storage associated with your PusakaPro account if you are logged in. Ensure you have set up Firebase Storage and appropriate security rules in your Firebase project.
+            <strong>Note:</strong> Document upload functionality is currently disabled. This checklist is for informational purposes.
           </div>
       </CardContent>
     </Card>
   );
 }
-
-    
