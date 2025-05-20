@@ -14,7 +14,7 @@ import { cn } from '@/lib/utils';
 
 interface DisplayMessage {
   id: string;
-  role: 'user' | 'bot';
+  role: 'user' | 'bot' | 'error'; // Added 'error' role
   content: string;
   timestamp: Date;
 }
@@ -53,7 +53,7 @@ export function ChatbotClient() {
       const chatHistoryForFlow: ChatMessage[] = messages
         .slice(-10) // Send last 10 messages as history
         .map(msg => ({
-          role: msg.role === 'bot' ? 'model' : 'user',
+          role: msg.role === 'bot' ? 'model' : 'user', // 'error' roles are not sent in history
           content: msg.content,
         }));
 
@@ -78,7 +78,7 @@ export function ChatbotClient() {
       });
       const errorBotMessage: DisplayMessage = {
         id: Date.now().toString() + '-error',
-        role: 'bot',
+        role: 'error', // Use 'error' role
         content: "I'm having trouble connecting right now. Please try again in a moment.",
         timestamp: new Date(),
       };
@@ -127,7 +127,7 @@ export function ChatbotClient() {
                     msg.role === 'user' ? "justify-end" : "justify-start"
                   )}
                 >
-                  {msg.role === 'bot' && (
+                  {(msg.role === 'bot' || msg.role === 'error') && ( // Show bot avatar for 'bot' and 'error' roles
                     <Avatar className="h-8 w-8 self-start">
                       <AvatarFallback className="bg-primary text-primary-foreground">
                         <Bot className="h-5 w-5" />
@@ -139,7 +139,9 @@ export function ChatbotClient() {
                       "max-w-[75%] rounded-lg px-3 py-2 text-sm shadow",
                       msg.role === 'user'
                         ? "bg-primary text-primary-foreground rounded-br-none"
-                        : "bg-secondary text-secondary-foreground rounded-bl-none"
+                        : msg.role === 'error'
+                          ? "bg-destructive text-destructive-foreground rounded-bl-none" // Destructive style for error
+                          : "bg-secondary text-secondary-foreground rounded-bl-none" // Default bot style
                     )}
                   >
                     <p className="whitespace-pre-wrap">{msg.content}</p>
@@ -157,7 +159,7 @@ export function ChatbotClient() {
                 </div>
               ))}
               {isLoading && (
-                <div className="flex justify-start items-center gap-2">
+                <div className="flex justify-start items-end gap-2"> {/* items-end for consistency */}
                    <Avatar className="h-8 w-8 self-start">
                       <AvatarFallback className="bg-primary text-primary-foreground">
                         <Bot className="h-5 w-5" />
