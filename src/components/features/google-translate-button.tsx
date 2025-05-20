@@ -31,7 +31,7 @@ export function GoogleTranslateButton() {
             // @ts-ignore // Accessing InlineLayout.SIMPLE from the loaded Google script
             layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
             // You can include specific languages if needed:
-            // includedLanguages: 'en,ms,zh-CN,ta', 
+            // includedLanguages: 'en,ms,zh-CN,ta',
           },
           uniqueDivId // The ID of the div where the widget will be rendered
         );
@@ -44,7 +44,12 @@ export function GoogleTranslateButton() {
       delete window[uniqueCallbackName]; // Remove the global callback
       const widgetDiv = document.getElementById(uniqueDivId);
       if (widgetDiv) {
-        widgetDiv.innerHTML = ''; // Clear the content of the widget div
+        // Attempt to clear Google's own elements if possible
+        while (widgetDiv.firstChild) {
+          widgetDiv.removeChild(widgetDiv.firstChild);
+        }
+         // Fallback if Google's widget is more complex or replaces the div
+        widgetDiv.innerHTML = '';
       }
       // Note: Removing the script tag itself can be complex as Google might load other scripts.
       // Clearing the div and callback is a primary step for SPA cleanup.
@@ -53,8 +58,11 @@ export function GoogleTranslateButton() {
 
   return (
     <>
-      <div id={uniqueDivId} style={{ minHeight: '36px', width: '100%' }}>
-        {/* This div will be populated by the Google Translate widget */}
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '38px' }}>
+        <div id={uniqueDivId} style={{ display: 'inline-block' }}>
+          {/* This div will be populated by the Google Translate widget */}
+          {/* Its width will be determined by the widget itself */}
+        </div>
       </div>
       <Script
         id="google-translate-script" // Unique ID for the script tag
