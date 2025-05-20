@@ -13,11 +13,10 @@ import {
   SidebarTrigger,
   SidebarSeparator,
 } from '@/components/ui/sidebar';
-// LogIn, LogOut, UserCircle2, Loader2 icons are no longer needed for auth display
-import { Home, ListChecks, MapPinned, Settings, LifeBuoy, Library } from 'lucide-react'; 
-// useAuth is no longer used for displaying user state
-// import { useAuth } from '@/contexts/auth-context';
+import { Home, ListChecks, MapPinned, Settings, LifeBuoy, Library, UserCircle2, LogIn, LogOut, Loader2 } from 'lucide-react'; 
+import { useAuth } from '@/contexts/auth-context';
 import { GoogleTranslateButton } from '@/components/features/google-translate-button';
+import { Button } from '@/components/ui/button';
 
 const navItems = [
   { href: '/', label: 'Home', icon: Home },
@@ -34,8 +33,7 @@ const bottomNavItems = [
 
 export function AppSidebarNavigation() {
   const pathname = usePathname();
-  // Auth state (user, loading, signInWithGoogle, signOut) is no longer used here
-  // const { user, loading, signInWithGoogle, signOut } = useAuth();
+  const { user, loading, signInWithGoogle, signOut } = useAuth();
 
   return (
     <>
@@ -70,7 +68,28 @@ export function AppSidebarNavigation() {
       </SidebarContent>
       <SidebarFooter className="p-2 space-y-2">
          <SidebarMenu>
-            {/* Authentication related UI (loading, user display, login/logout buttons) is removed */}
+            <div className="group-data-[collapsible=icon]:hidden px-2 py-1 text-center">
+              {loading ? (
+                <Button variant="outline" className="w-full" disabled>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Loading...
+                </Button>
+              ) : user ? (
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <UserCircle2 className="h-5 w-5 text-primary" />
+                    <span className="truncate">{user.email || 'User'}</span>
+                  </div>
+                  <Button variant="outline" className="w-full" onClick={signOut}>
+                    <LogOut className="mr-2 h-4 w-4" /> Logout
+                  </Button>
+                </div>
+              ) : (
+                <Button variant="default" className="w-full" onClick={signInWithGoogle}>
+                  <LogIn className="mr-2 h-4 w-4" /> Continue with Google
+                </Button>
+              )}
+            </div>
             
             {/* Language Switcher - Visible when sidebar is expanded */}
             <div className="group-data-[collapsible=icon]:hidden">

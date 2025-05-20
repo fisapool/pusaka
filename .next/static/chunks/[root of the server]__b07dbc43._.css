@@ -911,6 +911,10 @@ body {
   height: 100svh;
 }
 
+.h-32 {
+  height: 8rem;
+}
+
 .max-h-96 {
   max-height: 24rem;
 }
@@ -1646,6 +1650,11 @@ body {
   padding-bottom: 2rem;
 }
 
+.py-10 {
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
+}
+
 .pb-3 {
   padding-bottom: .75rem;
 }
@@ -2199,6 +2208,10 @@ body {
 
 .hover\:bg-sidebar-accent:hover {
   background-color: hsl(var(--sidebar-accent));
+}
+
+.hover\:bg-destructive\/10:hover {
+  background-color: hsl(var(--destructive) / .1);
 }
 
 .hover\:text-accent-foreground:hover {

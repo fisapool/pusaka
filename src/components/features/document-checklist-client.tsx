@@ -9,8 +9,9 @@ import { Button } from '@/components/ui/button';
 import type { DocumentItem } from '@/lib/constants';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import type { LucideIcon } from 'lucide-react';
-import { FileText, Users, Landmark, Banknote, Car, LandPlot, BookOpen, MapPin, Paperclip, X, Save, RotateCcw, ExternalLink } from 'lucide-react'; // Added ExternalLink
+import { FileText, Users, Landmark, Banknote, Car, LandPlot, BookOpen, MapPin, Paperclip, X, Save, RotateCcw, ExternalLink, LogIn, AlertCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/auth-context'; // Import useAuth
 
 const iconMap: Record<string, LucideIcon> = {
   FileText,
@@ -31,24 +32,40 @@ interface DocumentChecklistClientProps {
   categories: Record<string, string>;
 }
 
-const CHECKED_ITEMS_STORAGE_KEY = 'pusakaPro_checkedItems';
-const ASSOCIATED_FILES_STORAGE_KEY = 'pusakaPro_associatedFiles';
+const CHECKED_ITEMS_STORAGE_KEY_PREFIX = 'pusakaPro_checkedItems_';
+const ASSOCIATED_FILES_STORAGE_KEY_PREFIX = 'pusakaPro_associatedFiles_';
 
 export function DocumentChecklistClient({ items, categories }: DocumentChecklistClientProps) {
   const { toast } = useToast();
+  const { user, loading: authLoading } = useAuth(); // Get user and auth loading state
+
   const [checkedItems, setCheckedItems] = React.useState<Record<string, boolean>>({});
   const [associatedFiles, setAssociatedFiles] = React.useState<Record<string, AssociatedFile | null>>({});
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const [currentItemIdForFile, setCurrentItemIdForFile] = React.useState<string | null>(null);
 
-  // Load state from localStorage on component mount
+  const getStorageKey = (baseKey: string) => user ? `${baseKey}${user.uid}` : null;
+
+  // Load state from localStorage on component mount or when user changes
   React.useEffect(() => {
+    if (authLoading || !user) {
+      // Clear local state if user logs out or still loading
+      setCheckedItems({});
+      setAssociatedFiles({});
+      return;
+    }
+
+    const checkedItemsKey = getStorageKey(CHECKED_ITEMS_STORAGE_KEY_PREFIX);
+    const associatedFilesKey = getStorageKey(ASSOCIATED_FILES_STORAGE_KEY_PREFIX);
+
+    if (!checkedItemsKey || !associatedFilesKey) return;
+
     try {
-      const savedCheckedItems = localStorage.getItem(CHECKED_ITEMS_STORAGE_KEY);
+      const savedCheckedItems = localStorage.getItem(checkedItemsKey);
       if (savedCheckedItems) {
         setCheckedItems(JSON.parse(savedCheckedItems));
       }
-      const savedAssociatedFiles = localStorage.getItem(ASSOCIATED_FILES_STORAGE_KEY);
+      const savedAssociatedFiles = localStorage.getItem(associatedFilesKey);
       if (savedAssociatedFiles) {
         setAssociatedFiles(JSON.parse(savedAssociatedFiles));
       }
@@ -66,9 +83,10 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
         variant: "destructive",
       });
     }
-  }, [toast]);
+  }, [toast, user, authLoading]);
 
   const handleCheckboxChange = (itemId: string) => {
+    if (!user) return; // Only allow if logged in
     setCheckedItems((prev) => ({
       ...prev,
       [itemId]: !prev[itemId],
@@ -93,6 +111,7 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
   }, [items]);
 
   const handleSelectFileClick = (itemId: string) => {
+    if (!user) return; // Only allow if logged in
     setCurrentItemIdForFile(itemId);
     if (fileInputRef.current) {
       fileInputRef.current.click();
@@ -100,6 +119,7 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!user) return; // Only allow if logged in
     const file = event.target.files?.[0];
     if (file && currentItemIdForFile) {
       setAssociatedFiles(prev => ({
@@ -118,6 +138,7 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
   };
 
   const handleClearFile = (itemId: string) => {
+    if (!user) return; // Only allow if logged in
     const fileName = associatedFiles[itemId]?.name;
     setAssociatedFiles(prev => {
       const newState = { ...prev };
@@ -132,9 +153,18 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
   };
 
   const handleSaveProgress = () => {
+    if (!user) {
+      toast({ title: "Login Required", description: "Please log in to save your checklist progress.", variant: "destructive" });
+      return;
+    }
+    const checkedItemsKey = getStorageKey(CHECKED_ITEMS_STORAGE_KEY_PREFIX);
+    const associatedFilesKey = getStorageKey(ASSOCIATED_FILES_STORAGE_KEY_PREFIX);
+
+    if (!checkedItemsKey || !associatedFilesKey) return;
+
     try {
-      localStorage.setItem(CHECKED_ITEMS_STORAGE_KEY, JSON.stringify(checkedItems));
-      localStorage.setItem(ASSOCIATED_FILES_STORAGE_KEY, JSON.stringify(associatedFiles));
+      localStorage.setItem(checkedItemsKey, JSON.stringify(checkedItems));
+      localStorage.setItem(associatedFilesKey, JSON.stringify(associatedFiles));
       toast({
         title: "Checklist Progress Saved",
         description: "Your checklist progress (checked items and locally associated file names) has been saved in this browser.",
@@ -150,9 +180,18 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
   };
 
   const handleClearSavedProgress = () => {
+     if (!user) {
+      toast({ title: "Login Required", description: "Please log in to clear your checklist progress.", variant: "destructive" });
+      return;
+    }
+    const checkedItemsKey = getStorageKey(CHECKED_ITEMS_STORAGE_KEY_PREFIX);
+    const associatedFilesKey = getStorageKey(ASSOCIATED_FILES_STORAGE_KEY_PREFIX);
+
+    if (!checkedItemsKey || !associatedFilesKey) return;
+    
     try {
-      localStorage.removeItem(CHECKED_ITEMS_STORAGE_KEY);
-      localStorage.removeItem(ASSOCIATED_FILES_STORAGE_KEY);
+      localStorage.removeItem(checkedItemsKey);
+      localStorage.removeItem(associatedFilesKey);
       setCheckedItems({});
       setAssociatedFiles({});
       toast({
@@ -168,6 +207,62 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
       });
     }
   };
+
+  if (authLoading) {
+    return (
+      <Card className="shadow-lg">
+        <CardHeader>
+          <CardTitle>Required Documents Checklist</CardTitle>
+          <CardDescription>Loading user information...</CardDescription>
+        </CardHeader>
+        <CardContent className="flex justify-center items-center h-32">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (!user) {
+    return (
+      <Card className="shadow-lg">
+        <CardHeader>
+          <CardTitle>Required Documents Checklist</CardTitle>
+          <CardDescription>
+            This checklist helps you gather necessary paperwork. Files are NOT uploaded to any server.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="text-center py-10">
+          <AlertCircle className="mx-auto h-12 w-12 text-primary mb-4" />
+          <p className="text-lg font-medium text-foreground mb-2">Login Required</p>
+          <p className="text-muted-foreground">
+            Please log in to use the document checklist and save your progress.
+          </p>
+        </CardContent>
+         <CardFooter className="flex flex-col sm:flex-row justify-between items-center gap-3 pt-4">
+            <div className="flex flex-wrap gap-2">
+                <Button onClick={handleSaveProgress} variant="default" disabled>
+                    <Save className="mr-2 h-4 w-4" />
+                    Save Checklist Progress
+                </Button>
+                <Button onClick={handleClearSavedProgress} variant="outline" disabled>
+                    <RotateCcw className="mr-2 h-4 w-4" />
+                    Clear Checklist Progress
+                </Button>
+            </div>
+             <Button 
+                variant="outline" 
+                onClick={() => window.open('https://drive.google.com', '_blank', 'noopener,noreferrer')}
+                className="mt-2 sm:mt-0"
+                disabled
+            >
+                <ExternalLink className="mr-2 h-4 w-4" />
+                Open Google Drive (for your files)
+            </Button>
+        </CardFooter>
+      </Card>
+    );
+  }
+
 
   return (
     <Card className="shadow-lg">
@@ -185,6 +280,7 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
           onChange={handleFileChange}
           style={{ display: 'none' }}
           aria-hidden="true"
+          disabled={!user}
         />
         <Accordion type="multiple" defaultValue={Object.keys(categories)} className="w-full">
           {Object.entries(groupedItems).map(([category, categoryItems]) => (
@@ -210,6 +306,7 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
                           onCheckedChange={() => handleCheckboxChange(item.id)}
                           className="mt-1 border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
                           aria-labelledby={`${item.id}-label`}
+                          disabled={!user}
                         />
                         <div className="grid gap-1.5 leading-snug flex-grow">
                           <Label htmlFor={item.id} id={`${item.id}-label`} className="font-medium text-foreground cursor-pointer">
@@ -225,6 +322,7 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
                                 size="sm"
                                 onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.locationQuery as string)}`, '_blank', 'noopener,noreferrer')}
                                 className="text-sm"
+                                disabled={!user}
                               >
                                 <MapPin className="mr-2 h-4 w-4 text-primary" />
                                 Find Office
@@ -237,6 +335,7 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
                                 size="sm"
                                 onClick={() => handleSelectFileClick(item.id)}
                                 className="text-sm"
+                                disabled={!user}
                               >
                                 <Paperclip className="mr-2 h-4 w-4 text-primary" />
                                 Select File (for local tracking)
@@ -253,6 +352,7 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
                                   className="h-6 w-6 shrink-0"
                                   onClick={() => handleClearFile(item.id)}
                                   aria-label="Clear file association"
+                                  disabled={!user}
                                 >
                                   <X className="h-4 w-4 text-destructive" />
                                 </Button>
@@ -276,11 +376,11 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
       </CardContent>
       <CardFooter className="flex flex-col sm:flex-row justify-between items-center gap-3 pt-4">
         <div className="flex flex-wrap gap-2">
-          <Button onClick={handleSaveProgress} variant="default">
+          <Button onClick={handleSaveProgress} variant="default" disabled={!user}>
             <Save className="mr-2 h-4 w-4" />
             Save Checklist Progress
           </Button>
-          <Button onClick={handleClearSavedProgress} variant="outline">
+          <Button onClick={handleClearSavedProgress} variant="outline" disabled={!user}>
             <RotateCcw className="mr-2 h-4 w-4" />
             Clear Checklist Progress
           </Button>
@@ -289,6 +389,7 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
           variant="outline" 
           onClick={() => window.open('https://drive.google.com', '_blank', 'noopener,noreferrer')}
           className="mt-2 sm:mt-0"
+          disabled={!user}
         >
           <ExternalLink className="mr-2 h-4 w-4" />
           Open Google Drive (for your files)
@@ -297,5 +398,3 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
     </Card>
   );
 }
-
-    
