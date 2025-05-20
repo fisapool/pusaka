@@ -1,0 +1,27 @@
+{
+  "node": {
+    "40b4338b2336ee7b3b65e74c0488a9b1642c2121ea": {
+      "workers": {
+        "app/fees-calculator/page": {
+          "moduleId": "[project]/.next-internal/server/app/fees-calculator/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/pusaka-chat-flow.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/calculate-fees-flow.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/fees-calculator/page": "action-browser"
+      }
+    },
+    "40124b2c4699b0b2b9d6b64cf046c7be86e7373a37": {
+      "workers": {
+        "app/fees-calculator/page": {
+          "moduleId": "[project]/.next-internal/server/app/fees-calculator/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/pusaka-chat-flow.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/calculate-fees-flow.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/fees-calculator/page": "action-browser"
+      }
+    }
+  },
+  "edge": {}
+}
