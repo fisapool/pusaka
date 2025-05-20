@@ -3,7 +3,7 @@ import { PageHeader } from '@/components/layout/page-header';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Home as HomeIcon, ListChecks, MapPinned, ScrollText, ArrowRight, Calculator, Gavel, Clock } from 'lucide-react'; // Keep Clock if used by any other feature, or remove if not. MapPinned used by Roadmap.
+import { Home as HomeIcon, ListChecks, MapPinned, ArrowRight, Library } from 'lucide-react';
 import Image from 'next/image';
 
 const features = [
@@ -16,45 +16,20 @@ const features = [
     imgHint: "documents checklist",
   },
   {
-    title: "Roadmap & Timeline", // Renamed
-    description: "Get AI-powered timeline estimates and follow a step-by-step process.", // Updated
-    href: "/roadmap", // Kept /roadmap
-    icon: MapPinned, // Kept MapPinned
+    title: "Roadmap & Timeline",
+    description: "Get AI-powered timeline estimates and follow a step-by-step process.",
+    href: "/roadmap",
+    icon: MapPinned,
     img: "https://placehold.co/600x400.png",
     imgHint: "map journey timeline",
   },
   {
-    title: "Fees Calculator",
-    description: "Estimate potential administration fees based on estate details.",
-    href: "/fees-calculator",
-    icon: Calculator,
+    title: "Legal & Financial Hub", // New Hub
+    description: "Access legal guides, estimate fees, and find legal professionals.",
+    href: "/legal-financial-hub",
+    icon: Library,
     img: "https://placehold.co/600x400.png",
-    imgHint: "money calculator",
-  },
-  // Removed Timeline Estimator as a separate feature
-  // {
-  //   title: "Timeline Estimator",
-  //   description: "Get an AI-powered estimate for each step of the process based on your details.",
-  //   href: "/timeline-estimator",
-  //   icon: Clock,
-  //   img: "https://placehold.co/600x400.png",
-  //   imgHint: "calendar planning",
-  // },
-  {
-    title: "Legal Guides",
-    description: "Understand the key legal processes and requirements in Malaysian small estate law.",
-    href: "/guides",
-    icon: ScrollText,
-    img: "https://placehold.co/600x400.png",
-    imgHint: "law books",
-  },
-  {
-    title: "Find a Lawyer",
-    description: "Search for legal professionals specializing in estate law near you.",
-    href: "/find-lawyer",
-    icon: Gavel,
-    img: "https://placehold.co/600x400.png",
-    imgHint: "lawyer office",
+    imgHint: "law library finance",
   },
 ];
 
@@ -96,7 +71,7 @@ export default function HomePage() {
 
       <section>
         <h2 className="text-2xl font-semibold text-center mb-8 text-foreground">Key Features</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"> {/* Adjusted grid for 3 items */}
           {features.map((feature) => (
             <Card key={feature.title} className="flex flex-col overflow-hidden hover:shadow-lg transition-shadow duration-300">
               <div className="relative h-48 w-full">

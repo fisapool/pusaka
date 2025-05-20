@@ -1,22 +1,9 @@
-import { PageHeader } from '@/components/layout/page-header';
-import { LegalGuidesClient } from '@/components/features/legal-guides-client';
-import { ScrollText } from 'lucide-react';
-import { LEGAL_GUIDE_TOPICS } from '@/lib/constants';
 
-export const metadata = {
-  title: 'Legal Guides | PusakaPro',
-  description: 'Essential legal information and guides on Malaysian small estate administration.',
-};
+// This file is no longer needed as its functionality is merged into /app/legal-financial-hub/page.tsx
+// You can safely delete this file.
+// To ensure no errors, this content will be minimal. If the build system attempts to use it,
+// it should not cause major issues, but it's best to remove the file from your project.
 
-export default function LegalGuidesPage() {
-  return (
-    <div className="container mx-auto">
-      <PageHeader
-        title="Legal Guides"
-        description="Explore these guides to understand the key aspects of Malaysian small estate law and administration processes."
-        icon={ScrollText}
-      />
-      <LegalGuidesClient topics={LEGAL_GUIDE_TOPICS} />
-    </div>
-  );
+export default function DeprecatedLegalGuidesPage() {
+  return null;
 }

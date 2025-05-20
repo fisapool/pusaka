@@ -1,21 +1,9 @@
-import { PageHeader } from '@/components/layout/page-header';
-import { FeesCalculatorClient } from '@/components/features/fees-calculator-client';
-import { Calculator } from 'lucide-react';
 
-export const metadata = {
-  title: 'Fees Calculator | PusakaPro',
-  description: 'Estimate potential fees for Malaysian small estate administration.',
-};
+// This file is no longer needed as its functionality is merged into /app/legal-financial-hub/page.tsx
+// You can safely delete this file.
+// To ensure no errors, this content will be minimal. If the build system attempts to use it,
+// it should not cause major issues, but it's best to remove the file from your project.
 
-export default function FeesCalculatorPage() {
-  return (
-    <div className="container mx-auto">
-      <PageHeader
-        title="Fees Calculator"
-        description="Estimate potential fees involved in the small estate administration process. This tool provides estimates, and actual costs may vary."
-        icon={Calculator}
-      />
-      <FeesCalculatorClient />
-    </div>
-  );
+export default function DeprecatedFeesCalculatorPage() {
+  return null;
 }

@@ -1,22 +1,9 @@
 
-import { PageHeader } from '@/components/layout/page-header';
-import { FindLawyerClient } from '@/components/features/find-lawyer-client';
-import { Gavel } from 'lucide-react';
+// This file is no longer needed as its functionality is merged into /app/legal-financial-hub/page.tsx
+// You can safely delete this file.
+// To ensure no errors, this content will be minimal. If the build system attempts to use it,
+// it should not cause major issues, but it's best to remove the file from your project.
 
-export const metadata = {
-  title: 'Find a Lawyer | PusakaPro',
-  description: 'Search for legal professionals specializing in estate law near your location.',
-};
-
-export default function FindLawyerPage() {
-  return (
-    <div className="container mx-auto">
-      <PageHeader
-        title="Find a Lawyer"
-        description="Enter your location to find lawyers specializing in estate administration and inheritance law."
-        icon={Gavel}
-      />
-      <FindLawyerClient />
-    </div>
-  );
+export default function DeprecatedFindLawyerPage() {
+  return null;
 }
