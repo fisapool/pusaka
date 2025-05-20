@@ -11,10 +11,12 @@ import {
   SidebarMenuButton,
   SidebarFooter,
   SidebarTrigger,
+  SidebarSeparator,
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Home, ListChecks, Clock, MapPinned, ScrollText, Settings, LifeBuoy, Calculator, Gavel, LogIn, LogOut, UserCircle2, Loader2 } from 'lucide-react';
 import { useAuth } from '@/contexts/auth-context';
+import { GoogleTranslateButton } from '@/components/features/google-translate-button';
 
 const navItems = [
   { href: '/', label: 'Home', icon: Home },
@@ -99,7 +101,16 @@ export function AppSidebarNavigation() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
             )}
-            {/* Moved Settings and Help Center to a separate loop for clarity, or integrate if structure is complex */}
+
+            {/* Language Switcher - Visible when sidebar is expanded */}
+            <div className="group-data-[collapsible=icon]:hidden">
+              <SidebarSeparator className="my-2" />
+              <div className="px-2 py-1"> {/* Added padding for the container */}
+                <GoogleTranslateButton />
+              </div>
+              <SidebarSeparator className="my-2" />
+            </div>
+            
             {bottomNavItems.map((item) => (
                <SidebarMenuItem key={item.href}>
                 <SidebarMenuButton
