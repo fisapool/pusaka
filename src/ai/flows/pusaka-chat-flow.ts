@@ -60,7 +60,7 @@ const pusakaChatFlow = ai.defineFlow(
     outputSchema: PusakaChatOutputSchema,
   },
   async (input) => {
-    const systemInstruction = `You are PusakaChat, a friendly and helpful AI assistant for the PusakaPro application.
+    const systemMessage = `You are PusakaChat, a friendly and helpful AI assistant for the PusakaPro application.
 PusakaPro helps users navigate Malaysian small estate administration.
 Your primary goal is to answer user questions based *only* on the information provided below from the PusakaPro application context.
 Be concise, polite, and helpful.
@@ -72,18 +72,13 @@ PusakaPro Application Context:
 ${applicationContext}
 `;
 
-    // Construct messages for the LLM
-    // Genkit v1.x expects prompt.messages to be an array of {role, parts: [{text}]}
     const llmMessages: Array<{ role: 'user' | 'model'; parts: Array<{ text: string }> }> = [];
 
-    // Add system instruction as the first user message (common practice for Gemini)
-    llmMessages.push({ role: 'user', parts: [{ text: systemInstruction }] });
+    // Initial "priming" message from the model to acknowledge its role.
     llmMessages.push({ role: 'model', parts: [{ text: "Okay, I understand. I'm PusakaChat, ready to help with questions about Malaysian small estate administration based on the PusakaPro app's information. How can I assist you today?" }] });
-
 
     if (input.chatHistory) {
       for (const entry of input.chatHistory) {
-        // Ensure history is not too long to avoid issues, though this is a basic implementation
         if (llmMessages.length > 20) break; // Simple history truncation
         llmMessages.push({ role: entry.role, parts: [{ text: entry.content }] });
       }
@@ -92,10 +87,12 @@ ${applicationContext}
 
     try {
       const response = await ai.generate({
-        prompt: { messages: llmMessages },
-        // model: 'googleai/gemini-pro' // Or your configured default
+        prompt: {
+          messages: llmMessages,
+          system: systemMessage, // System instruction provided here
+        },
+        // model: 'googleai/gemini-pro' // Default model from genkit.ts will be used
         config: {
-            // Example safety settings - adjust as needed
             safetySettings: [
               { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
               { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
@@ -106,15 +103,44 @@ ${applicationContext}
       });
 
       const replyText = response.text;
-      
-      if (!replyText) {
-        return { reply: "I'm sorry, I couldn't generate a response at this moment. Please try again." };
-      }
-      return { reply: replyText };
+      const finishReason = response.candidates?.[0]?.finishReason;
 
-    } catch (error) {
+      if (replyText) {
+        return { reply: replyText };
+      } else {
+        // No text in response, check finishReason
+        if (finishReason === 'SAFETY') {
+          console.warn("PusakaChatFlow: Response blocked due to safety settings.");
+          return { reply: "I'm sorry, I cannot provide a response to that due to safety guidelines. Please try a different question." };
+        } else if (finishReason === 'MAX_TOKENS') {
+          console.warn("PusakaChatFlow: Response truncated due to max tokens.");
+          return { reply: "The response was a bit too long to display fully. Could you ask for a more specific piece of information?" };
+        } else if (finishReason === 'RECITATION') {
+            console.warn("PusakaChatFlow: Response blocked due to recitation policy.");
+            return { reply: "I cannot provide that information due to content policies. Please ask something else." };
+        }
+        // For 'STOP' with no text, or 'OTHER', or if finishReason is undefined
+        console.warn(`PusakaChatFlow: AI generated no reply text. Finish reason: ${finishReason}. Response:`, JSON.stringify(response));
+        return { reply: "I'm sorry, I couldn't generate a specific response for that. Could you try rephrasing or asking something else?" };
+      }
+
+    } catch (error: any) {
       console.error("Error in pusakaChatFlow calling ai.generate:", error);
-      return { reply: "I apologize, but I encountered an error trying to process your request. Please try again later." };
+      let userFriendlyMessage = "I apologize, but I encountered an error trying to process your request. Please try again later.";
+      if (error.message) {
+        if (error.message.includes('API key not valid') || error.message.includes('Invalid API key') || error.message.toLowerCase().includes('api key')) {
+          userFriendlyMessage = "There seems to be an issue with the AI service API configuration. Please ensure it's set up correctly.";
+        } else if (error.message.includes('IAM permission denied') || error.message.includes('PERMISSION_DENIED')) {
+           userFriendlyMessage = "The request was denied due to a permission issue with the AI service. Please check the API setup.";
+        } else if (error.message.includes('Quota exceeded') || (error.cause && (error.cause as any).status === 429) ) {
+           userFriendlyMessage = "I'm experiencing high demand right now. Please try again in a few moments.";
+        } else if (error.message.includes('Billing account') || error.message.includes('billing not enabled')) {
+            userFriendlyMessage = "There's an issue with the project's billing configuration for the AI service.";
+        } else if (error.message.toLowerCase().includes('model not found')) {
+            userFriendlyMessage = "The configured AI model could not be found. Please check the service configuration.";
+        }
+      }
+      return { reply: userFriendlyMessage };
     }
   }
 );
