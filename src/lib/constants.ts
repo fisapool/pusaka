@@ -1,11 +1,12 @@
+
 import type { LucideIcon } from 'lucide-react';
-import { FileText, Users, Landmark, Banknote, Car, Home as HomeIcon, LandPlot, BookOpen, Scale, ShieldQuestion, HelpCircle, ListChecks } from 'lucide-react';
+import { FileText, Users, Landmark, Banknote, Car, Home as HomeIcon, LandPlot, BookOpen, Scale, ShieldQuestion, HelpCircle, ListChecks, MapPinned, Clock, ScrollText } from 'lucide-react';
 
 export interface DocumentItem {
   id: string;
   title: string;
   description: string;
-  iconName: string; // Changed from icon: LucideIcon
+  iconName: string;
   category: string;
 }
 
@@ -37,12 +38,12 @@ export interface RoadmapStep {
   title: string;
   description: string;
   details?: string;
-  iconName: string; 
+  iconName: string;
 }
 
 export const ROADMAP_STEPS: RoadmapStep[] = [
   { id: 'step1', title: "Gather Information & Documents", description: "Collect all necessary documents related to the deceased, beneficiaries, assets, and liabilities.", details: "This includes death certificates, NRICs, land titles, bank statements, etc. Refer to the Document Checklist for a comprehensive list.", iconName: 'ListChecks' },
-  { id: 'step2', title: "Determine Type of Estate Administration", description: "Ascertain if it's a small estate (movable + immovable assets not exceeding RM2 million, without a will for immovable assets, or any amount with a will handled by High Court/Amanah Raya).", details: "Small estates are typically handled by District Land Administrators or Amanah Raya Berhad.", iconName: 'HelpCircle' },
+  { id: 'step2', title: "Determine Type of Estate Administration", description: "Ascertain if it's a small estate. A small estate involves property (land/houses) not exceeding RM2 million in total value, without a trust or will for the immovable property. If there is movable property only, any value can be considered for small estate distribution through relevant bodies.", details: "Small estates are typically handled by District Land Administrators or Amanah Raya Berhad.", iconName: 'HelpCircle' },
   { id: 'step3', title: "Identify Beneficiaries", description: "Confirm all legal heirs according to Malaysian inheritance laws (Faraid for Muslims, Distribution Act for non-Muslims) or as per the Will.", details: "This may involve creating a family tree and verifying relationships.", iconName: 'Users' },
   { id: 'step4', title: "Valuation of Assets", description: "Obtain current market values for all assets in the estate.", details: "This is crucial for the application process and distribution.", iconName: 'Banknote' },
   { id: 'step5', title: "Application Submission", description: "Submit the required application forms (e.g., Form A for Land Office) along with supporting documents.", details: "Applications are typically made to the District Land Administrator for the district where immovable property is located, or Amanah Raya Berhad.", iconName: 'FileText' },
@@ -57,8 +58,8 @@ export interface LegalGuideTopic {
   id: string;
   title: string;
   summary: string;
-  content: string[]; 
-  iconName: string; // Changed from icon: LucideIcon
+  content: string[];
+  iconName: string;
 }
 
 export const LEGAL_GUIDE_TOPICS: LegalGuideTopic[] = [
@@ -69,7 +70,7 @@ export const LEGAL_GUIDE_TOPICS: LegalGuideTopic[] = [
     iconName: 'HelpCircle',
     content: [
       "A small estate in Malaysia is generally defined as an estate of a deceased person consisting wholly or partly of immovable property (land/houses) not exceeding RM2 million in total value, without a trust or will for the immovable property. If there is movable property only, any value can be considered for small estate distribution through relevant bodies.",
-      "The Small Estates (Distribution) Act 1955 governs this process. The primary authority handling small estates is the District Land Administrator in the district where the immovable property is located.",
+      "The Small Estates (Distribution) Act 1955 governs this process. The primary authority handling small estates is the District Land Administrator (Pejabat Tanah Daerah) in the district where the immovable property is located.",
       "For estates with only movable assets, or where a will exists, other avenues like Amanah Raya Berhad or the High Court might be more appropriate."
     ]
   },
@@ -79,7 +80,7 @@ export const LEGAL_GUIDE_TOPICS: LegalGuideTopic[] = [
     summary: "Who can apply and who are the beneficiaries.",
     iconName: 'Users',
     content: [
-      "Any interested party can apply for small estate distribution, including beneficiaries, creditors, or purchasers of property from the deceased.",
+      "Any interested party can apply for small estate distribution, including beneficiaries (e.g., spouse, children, parents, siblings), creditors, or purchasers of property from the deceased.",
       "Beneficiaries are determined by Islamic Faraid law for Muslims, and the Distribution Act 1958 for non-Muslims if the deceased died intestate (without a valid will).",
       "If a valid will exists, it dictates the beneficiaries for assets covered by the will. However, for small estate procedures concerning land, the land administrator has specific powers."
     ]
@@ -90,9 +91,9 @@ export const LEGAL_GUIDE_TOPICS: LegalGuideTopic[] = [
     summary: "How ARB can assist in estate administration.",
     iconName: 'Landmark',
     content: [
-      "Amanah Raya Berhad (The Public Trustee Corporation) can administer estates, especially those consisting of movable property only, regardless of value, or when appointed as executor in a will.",
-      "ARB provides services like petitioning for Letters of Administration, acting as administrator or trustee, and distributing assets.",
-      "They can be a good option if beneficiaries are minors, incapacitated, or if there are complexities in managing the estate."
+      "Amanah Raya Berhad (ARB) can administer estates consisting entirely of movable property (like cash, shares, EPF) up to RM600,000, regardless of whether there is a will or not. This is done through a Declaration or Order.",
+      "If a will exists and ARB is appointed as the executor, they can apply for a Grant of Probate from the High Court for estates of any value. If the estate value is below RM2 million and includes immovable property, beneficiaries can still opt for the Land Office route even if ARB is named executor, by mutual agreement.",
+      "ARB is a suitable option if beneficiaries are minors, if there are complex family disputes, or if there's no one willing or able to administer the estate. They can also be appointed by the Land Office or High Court to act as administrator."
     ]
   },
   {
@@ -101,21 +102,23 @@ export const LEGAL_GUIDE_TOPICS: LegalGuideTopic[] = [
     summary: "How assets are distributed without a will.",
     iconName: 'Scale',
     content: [
-      "For Muslims, assets are distributed according to Faraid principles upon death without a Wasiat (Islamic Will). A Wasiat can only dispose of up to 1/3 of the estate to non-Faraid heirs or for charitable purposes; the remaining 2/3 is subject to Faraid.",
-      "For non-Muslims, the Distribution Act 1958 (as amended) outlines the hierarchy of beneficiaries: spouse, children, parents, siblings, etc.",
+      "For Muslims, assets are distributed according to Faraid principles upon death without a Wasiat (Islamic Will). A Wasiat can typically dispose of up to 1/3 of the estate to non-Faraid heirs or for charitable purposes; the remaining 2/3 is subject to Faraid.",
+      "For non-Muslims, the Distribution Act 1958 (as amended) outlines the hierarchy of beneficiaries: spouse, children, parents, siblings, etc., and their respective shares if the deceased died intestate (without a valid will).",
       "Understanding these laws is crucial for determining rightful heirs when no will is present."
     ]
   },
   {
     id: 'guide5',
     title: "The Application Process (Form A)",
-    summary: "Key steps in applying for small estate distribution.",
+    summary: "Key steps in applying for small estate distribution via Land Office.",
     iconName: 'FileText',
     content: [
-      "The application typically starts with filing 'Borang A' (Form A) at the relevant District Land Office or Small Estates Distribution Unit.",
-      "This form requires details of the deceased, beneficiaries, assets, and liabilities.",
-      "Supporting documents, as listed in our Document Checklist, must be attached.",
-      "After submission, the Land Office will schedule a hearing. All relevant parties are usually required to attend."
+      "When applying for small estate distribution under the Small Estates (Distribution) Act 1955, the process typically starts with filing 'Borang A' (Form A) at the relevant District Land Office or Small Estates Distribution Unit (Unit Pembahagian Pusaka Kecil, JKPTG).",
+      "This form requires details of the deceased, beneficiaries, a full list of assets (movable and immovable with valuations), and any liabilities.",
+      "Supporting documents, as outlined in our Document Checklist (e.g., death certificate, NRICs, land titles, bank statements), must be attached.",
+      "After submission and verification, the Land Office will schedule a hearing. All relevant parties (applicant and beneficiaries) are usually required to attend to provide testimony or clarification before a Distribution Order is issued."
     ]
   },
 ];
+
+    
