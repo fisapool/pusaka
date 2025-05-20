@@ -32,7 +32,7 @@ const CHECKED_ITEMS_STORAGE_KEY_PREFIX = 'pusakaPro_checkedItems_';
 
 export function DocumentChecklistClient({ items, categories }: DocumentChecklistClientProps) {
   const { toast } = useToast();
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, signInWithGoogle } = useAuth();
 
   const [checkedItems, setCheckedItems] = React.useState<Record<string, boolean>>({});
 
@@ -40,7 +40,7 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
 
   React.useEffect(() => {
     if (authLoading || !user) {
-      setCheckedItems({});
+      setCheckedItems({}); // Clear local state if user logs out or auth is loading
       return;
     }
 
@@ -51,23 +51,24 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
       const savedCheckedItems = localStorage.getItem(checkedItemsKey);
       if (savedCheckedItems) {
         setCheckedItems(JSON.parse(savedCheckedItems));
-        toast({
-          title: "Checklist Progress Loaded",
-          description: "Your previously checked items have been loaded from this browser's local storage.",
-        });
+        // Optional: toast for loaded progress can be verbose, consider removing or making it less frequent
+        // toast({
+        //   title: "Checklist Progress Loaded",
+        //   description: "Your previously checked items have been loaded.",
+        // });
       }
     } catch (error) {
       console.error("Error loading checked items from localStorage:", error);
       toast({
         title: "Loading Error",
-        description: "Could not load saved checklist progress from this browser.",
+        description: "Could not load saved checklist progress.",
         variant: "destructive",
       });
     }
   }, [toast, user, authLoading]);
 
   const handleCheckboxChange = (itemId: string) => {
-    if (!user) return;
+    if (!user) return; // Should not happen if UI is disabled
     setCheckedItems((prev) => ({
       ...prev,
       [itemId]: !prev[itemId],
@@ -75,7 +76,7 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
   };
 
   const getProgress = (categoryItems: DocumentItem[]) => {
-    if (categoryItems.length === 0) return 0;
+    if (categoryItems.length === 0 || !user) return 0;
     const completedInCategory = categoryItems.filter(item => checkedItems[item.id]).length;
     return (completedInCategory / categoryItems.length) * 100;
   };
@@ -125,12 +126,13 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
     
     try {
       localStorage.removeItem(checkedItemsKey);
-      setCheckedItems({});
+      setCheckedItems({}); // Reset local state as well
       toast({
         title: "Saved Checklist Progress Cleared",
         description: "Your saved checklist progress has been cleared from this browser.",
       });
-    } catch (error) {
+    } catch (error)
+{
       console.error("Error clearing localStorage:", error);
       toast({
         title: "Clear Error",
@@ -139,7 +141,7 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
       });
     }
   };
-
+  
   const handleManageInGoogleDrive = () => {
     window.open('https://drive.google.com', '_blank', 'noopener,noreferrer');
   };
@@ -164,15 +166,19 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
         <CardHeader>
           <CardTitle>Required Documents Checklist</CardTitle>
           <CardDescription>
-            Track your progress in gathering documents. Log in to save your checklist. Use the 'Manage in Google Drive' button for each item to upload and organize your actual files in your personal Google Drive account.
+            Track your progress in gathering documents. Log in to use the checklist and save your progress.
+            Use the 'Manage in Google Drive' button for each item to upload and organize your actual files in your personal Google Drive account.
           </CardDescription>
         </CardHeader>
         <CardContent className="text-center py-10">
           <AlertCircle className="mx-auto h-12 w-12 text-primary mb-4" />
           <p className="text-lg font-medium text-foreground mb-2">Login Required</p>
-          <p className="text-muted-foreground">
-            Please log in to use the document checklist and save your progress.
+          <p className="text-muted-foreground mb-6">
+            Please log in to use the document checklist features.
           </p>
+          <Button onClick={signInWithGoogle} variant="default" size="lg">
+            <LogIn className="mr-2 h-5 w-5" /> Continue with Google
+          </Button>
         </CardContent>
          <CardFooter className="flex flex-col sm:flex-row justify-between items-center gap-3 pt-4">
             <div className="flex flex-wrap gap-2">
@@ -199,13 +205,14 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
     );
   }
 
+  // Logged-in user view
   return (
     <Card className="shadow-lg">
       <CardHeader>
         <CardTitle>Required Documents Checklist</CardTitle>
         <CardDescription>
           Track your progress in gathering documents. Use the 'Manage in Google Drive' button for each item to upload and organize your actual files in your personal Google Drive account.
-          Use buttons below to save/clear progress in this browser.
+          Use buttons below to save/clear progress in this browser (specific to your logged-in account on this device).
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -228,11 +235,10 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
                       <li key={item.id} className="flex items-start space-x-3 p-3 bg-secondary/30 rounded-md">
                         <Checkbox
                           id={item.id}
-                          checked={checkedItems[item.id] || false}
+                          checked={!!checkedItems[item.id]} // Ensure boolean value
                           onCheckedChange={() => handleCheckboxChange(item.id)}
                           className="mt-1 border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
                           aria-labelledby={`${item.id}-label`}
-                          disabled={!user}
                         />
                         <div className="grid gap-1.5 leading-snug flex-grow">
                           <Label htmlFor={item.id} id={`${item.id}-label`} className="font-medium text-foreground cursor-pointer">
@@ -248,7 +254,6 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
                                 size="sm"
                                 onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.locationQuery as string)}`, '_blank', 'noopener,noreferrer')}
                                 className="text-sm"
-                                disabled={!user}
                               >
                                 <MapPin className="mr-2 h-4 w-4 text-primary" />
                                 Find Office
@@ -260,7 +265,6 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
                               size="sm"
                               onClick={handleManageInGoogleDrive}
                               className="text-sm"
-                              disabled={!user}
                             >
                               <ExternalLink className="mr-2 h-4 w-4 text-primary" />
                               Manage in Google Drive
@@ -276,17 +280,17 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
           ))}
         </Accordion>
          <div className="mt-6 p-3 bg-accent/10 text-accent-foreground/80 border border-accent/20 rounded-md text-xs">
-            <strong>Important Note:</strong> Checklist progress (checked items) can be saved to your browser's local storage using the buttons below. 
-            For secure storage of your actual document files, we recommend you upload them to your personal Google Drive or another cloud storage service of your choice. Use the "Manage in Google Drive" button for each item or the general link below.
+            <strong>Important Note:</strong> Checklist progress (checked items) can be saved to your browser's local storage using the buttons below. This saved progress is specific to your logged-in account on this device.
+            For secure storage of your actual document files, we recommend you upload them to your personal Google Drive or another cloud storage service of your choice using the "Manage in Google Drive" buttons.
           </div>
       </CardContent>
       <CardFooter className="flex flex-col sm:flex-row justify-between items-center gap-3 pt-4">
         <div className="flex flex-wrap gap-2">
-          <Button onClick={handleSaveProgress} variant="default" disabled={!user}>
+          <Button onClick={handleSaveProgress} variant="default">
             <Save className="mr-2 h-4 w-4" />
             Save Checklist Progress
           </Button>
-          <Button onClick={handleClearSavedProgress} variant="outline" disabled={!user}>
+          <Button onClick={handleClearSavedProgress} variant="outline">
             <RotateCcw className="mr-2 h-4 w-4" />
             Clear Checklist Progress
           </Button>
@@ -295,7 +299,6 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
           variant="outline" 
           onClick={handleManageInGoogleDrive}
           className="mt-2 sm:mt-0"
-          disabled={!user}
         >
           <ExternalLink className="mr-2 h-4 w-4" />
           Open My Google Drive
