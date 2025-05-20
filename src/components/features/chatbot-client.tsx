@@ -108,12 +108,7 @@ export function ChatbotClient() {
                 <Bot className="h-6 w-6 text-primary" />
                 PusakaChat Assistant
               </SheetTitle>
-              <SheetClose asChild>
-                <Button variant="ghost" size="icon">
-                  <X className="h-5 w-5" />
-                  <span className="sr-only">Close chat</span>
-                </Button>
-              </SheetClose>
+              {/* The explicit SheetClose button was here and is now removed */}
             </div>
           </SheetHeader>
           
