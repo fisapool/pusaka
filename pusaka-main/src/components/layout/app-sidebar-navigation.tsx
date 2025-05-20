@@ -1,0 +1,129 @@
+
+"use client";
+
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import {
+  SidebarHeader,
+  SidebarContent,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
+  SidebarFooter,
+  SidebarTrigger,
+  SidebarSeparator,
+} from '@/components/ui/sidebar';
+import { Button } from '@/components/ui/button';
+import { Home, ListChecks, MapPinned, Settings, LifeBuoy, LogIn, LogOut, UserCircle2, Loader2, Library, Gavel, Calculator, ScrollText } from 'lucide-react'; // Keep existing icons
+import { useAuth } from '@/contexts/auth-context';
+import { GoogleTranslateButton } from '@/components/features/google-translate-button';
+
+const navItems = [
+  { href: '/', label: 'Home', icon: Home },
+  { href: '/checklist', label: 'Document Checklist', icon: ListChecks },
+  { href: '/roadmap', label: 'Roadmap & Timeline', icon: MapPinned },
+  { href: '/legal-financial-hub', label: 'Legal & Financial Hub', icon: Library },
+];
+
+const bottomNavItems = [
+ { href: '/settings', label: 'Settings', icon: Settings },
+ { href: '/help-center', label: 'Help Center', icon: LifeBuoy },
+];
+
+
+export function AppSidebarNavigation() {
+  const pathname = usePathname();
+  const { user, loading, signInWithGoogle, signOut } = useAuth();
+
+  return (
+    <>
+      <SidebarHeader className="flex items-center justify-between p-3">
+        <Link href="/" className="flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-7 w-7 text-primary">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+            <path d="M2 17l10 5 10-5"></path>
+            <path d="M2 12l10 5 10-5"></path>
+          </svg>
+          <span className="text-xl font-semibold text-foreground group-data-[collapsible=icon]:hidden">PusakaPro</span>
+        </Link>
+        <SidebarTrigger />
+      </SidebarHeader>
+      <SidebarContent>
+        <SidebarMenu>
+          {navItems.map((item) => (
+            <SidebarMenuItem key={item.href}>
+              <SidebarMenuButton
+                asChild
+                isActive={pathname === item.href}
+                tooltip={{ children: item.label, className: "group-data-[collapsible=icon]:block hidden" }}
+              >
+                <Link href={item.href}>
+                  <item.icon />
+                  <span>{item.label}</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
+        </SidebarMenu>
+      </SidebarContent>
+      <SidebarFooter className="p-2 space-y-2">
+         <SidebarMenu>
+            {loading ? (
+              <SidebarMenuItem>
+                <SidebarMenuButton disabled tooltip={{children: "Loading...", className: "group-data-[collapsible=icon]:block hidden"}}>
+                  <Loader2 className="animate-spin" />
+                  <span className="group-data-[collapsible=icon]:hidden">Loading...</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ) : user ? (
+              <>
+                <SidebarMenuItem>
+                   <SidebarMenuButton tooltip={{children: user.email || "User Profile", className: "group-data-[collapsible=icon]:block hidden"}}>
+                    <UserCircle2 />
+                    <span className="truncate group-data-[collapsible=icon]:hidden">{user.displayName || user.email}</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton onClick={signOut} tooltip={{children: "Logout", className: "group-data-[collapsible=icon]:block hidden"}}>
+                    <LogOut />
+                    <span className="group-data-[collapsible=icon]:hidden">Logout</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </>
+            ) : (
+              <SidebarMenuItem>
+                <SidebarMenuButton onClick={signInWithGoogle} tooltip={{children: "Continue with Google", className: "group-data-[collapsible=icon]:block hidden"}}>
+                  <LogIn />
+                  <span className="group-data-[collapsible=icon]:hidden">Continue with Google</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            )}
+
+            {/* Language Switcher - Visible when sidebar is expanded */}
+            <div className="group-data-[collapsible=icon]:hidden">
+              <SidebarSeparator className="my-2" />
+              <div className="px-2 py-1"> {/* Added padding for the container */}
+                <GoogleTranslateButton />
+              </div>
+              <SidebarSeparator className="my-2" />
+            </div>
+            
+            {bottomNavItems.map((item) => (
+               <SidebarMenuItem key={item.href}>
+                <SidebarMenuButton
+                  asChild
+                  isActive={pathname === item.href}
+                  tooltip={{ children: item.label, className: "group-data-[collapsible=icon]:block hidden" }}
+                >
+                  <Link href={item.href}>
+                    <item.icon />
+                    <span>{item.label}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
+      </SidebarFooter>
+    </>
+  );
+}
