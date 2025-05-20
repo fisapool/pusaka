@@ -2,16 +2,15 @@
 "use client";
 
 import * as React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import type { DocumentItem } from '@/lib/constants';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import type { LucideIcon } from 'lucide-react';
-import { FileText, Users, Landmark, Banknote, Car, LandPlot, BookOpen, MapPin, Paperclip, X } from 'lucide-react';
+import { FileText, Users, Landmark, Banknote, Car, LandPlot, BookOpen, MapPin, Paperclip, X, Save, RotateCcw } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-
 
 const iconMap: Record<string, LucideIcon> = {
   FileText,
@@ -32,12 +31,42 @@ interface DocumentChecklistClientProps {
   categories: Record<string, string>;
 }
 
+const CHECKED_ITEMS_STORAGE_KEY = 'pusakaPro_checkedItems';
+const ASSOCIATED_FILES_STORAGE_KEY = 'pusakaPro_associatedFiles';
+
 export function DocumentChecklistClient({ items, categories }: DocumentChecklistClientProps) {
   const { toast } = useToast();
   const [checkedItems, setCheckedItems] = React.useState<Record<string, boolean>>({});
   const [associatedFiles, setAssociatedFiles] = React.useState<Record<string, AssociatedFile | null>>({});
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const [currentItemIdForFile, setCurrentItemIdForFile] = React.useState<string | null>(null);
+
+  // Load state from localStorage on component mount
+  React.useEffect(() => {
+    try {
+      const savedCheckedItems = localStorage.getItem(CHECKED_ITEMS_STORAGE_KEY);
+      if (savedCheckedItems) {
+        setCheckedItems(JSON.parse(savedCheckedItems));
+      }
+      const savedAssociatedFiles = localStorage.getItem(ASSOCIATED_FILES_STORAGE_KEY);
+      if (savedAssociatedFiles) {
+        setAssociatedFiles(JSON.parse(savedAssociatedFiles));
+      }
+      if (savedCheckedItems || savedAssociatedFiles) {
+        toast({
+          title: "Progress Loaded",
+          description: "Your previous checklist progress has been loaded from this browser.",
+        });
+      }
+    } catch (error) {
+      console.error("Error loading from localStorage:", error);
+      toast({
+        title: "Loading Error",
+        description: "Could not load saved progress from this browser.",
+        variant: "destructive",
+      });
+    }
+  }, [toast]);
 
   const handleCheckboxChange = (itemId: string) => {
     setCheckedItems((prev) => ({
@@ -82,7 +111,6 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
         description: `${file.name} has been associated with the item. (File not uploaded to server)`,
       });
     }
-    // Reset file input to allow selecting the same file again if needed
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -103,12 +131,51 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
     });
   };
 
+  const handleSaveProgress = () => {
+    try {
+      localStorage.setItem(CHECKED_ITEMS_STORAGE_KEY, JSON.stringify(checkedItems));
+      localStorage.setItem(ASSOCIATED_FILES_STORAGE_KEY, JSON.stringify(associatedFiles));
+      toast({
+        title: "Progress Saved",
+        description: "Your checklist progress has been saved in this browser.",
+      });
+    } catch (error) {
+      console.error("Error saving to localStorage:", error);
+      toast({
+        title: "Save Error",
+        description: "Could not save progress. Your browser's storage might be full or disabled.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleClearSavedProgress = () => {
+    try {
+      localStorage.removeItem(CHECKED_ITEMS_STORAGE_KEY);
+      localStorage.removeItem(ASSOCIATED_FILES_STORAGE_KEY);
+      setCheckedItems({});
+      setAssociatedFiles({});
+      toast({
+        title: "Progress Cleared",
+        description: "Your saved checklist progress has been cleared from this browser.",
+      });
+    } catch (error) {
+      console.error("Error clearing localStorage:", error);
+      toast({
+        title: "Clear Error",
+        description: "Could not clear saved progress.",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <Card className="shadow-lg">
       <CardHeader>
         <CardTitle>Required Documents</CardTitle>
         <CardDescription>
-          This checklist helps you gather necessary paperwork. You can associate local file names with items for tracking. Files are not uploaded to a server.
+          This checklist helps you gather necessary paperwork. You can associate local file names with items for tracking. 
+          Use the buttons in the footer to save or clear your progress in this browser. Files are not uploaded to a server.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -202,9 +269,19 @@ export function DocumentChecklistClient({ items, categories }: DocumentChecklist
           ))}
         </Accordion>
          <div className="mt-6 p-3 bg-accent/10 text-accent-foreground/80 border border-accent/20 rounded-md text-xs">
-            <strong>Note:</strong> File selection is for local tracking only. Documents are not uploaded or saved to any server. This association will be lost if you refresh or leave the page.
+            <strong>Note:</strong> File selection is for local tracking only. Documents are not uploaded or saved to any server. Progress is saved in your browser's local storage and will be lost if storage is cleared or if you use a different browser/device.
           </div>
       </CardContent>
+      <CardFooter className="flex flex-col sm:flex-row justify-end gap-2 pt-4">
+        <Button onClick={handleSaveProgress} variant="default">
+          <Save className="mr-2 h-4 w-4" />
+          Save Progress
+        </Button>
+        <Button onClick={handleClearSavedProgress} variant="outline">
+          <RotateCcw className="mr-2 h-4 w-4" />
+          Clear Saved Progress
+        </Button>
+      </CardFooter>
     </Card>
   );
 }
