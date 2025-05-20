@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
-import { FileText, Users, Landmark, Banknote, Car, Home as HomeIcon, LandPlot, BookOpen, Scale, ShieldQuestion, HelpCircle } from 'lucide-react';
+import { FileText, Users, Landmark, Banknote, Car, Home as HomeIcon, LandPlot, BookOpen, Scale, ShieldQuestion, HelpCircle, ListChecks } from 'lucide-react';
 
 export interface DocumentItem {
   id: string;
@@ -119,3 +119,4 @@ export const LEGAL_GUIDE_TOPICS: LegalGuideTopic[] = [
     ]
   },
 ];
+
