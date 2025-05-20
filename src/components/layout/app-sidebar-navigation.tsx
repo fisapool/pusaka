@@ -30,7 +30,7 @@ const navItems = [
 
 const bottomNavItems = [
  { href: '/settings', label: 'Settings', icon: Settings },
- { href: '#', label: 'Help Center', icon: LifeBuoy }, // Example, can be a link to a help page
+ { href: '/help-center', label: 'Help Center', icon: LifeBuoy },
 ];
 
 
