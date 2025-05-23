@@ -124,7 +124,7 @@ ${applicationContext}
       // Log the full error object to the server console for detailed debugging
       console.error("Error in pusakaChatFlow calling ai.generate. Full error object:", JSON.stringify(error, Object.getOwnPropertyNames(error)));
       
-      let userFriendlyMessage = "I apologize, but I encountered an error trying to process your request. Please try again later.";
+      let userFriendlyMessage = "I apologize, but I encountered an error trying to process your request. Please check the server logs for more specific details and try again later.";
       if (error.message) {
         if (error.message.includes('API key not valid') || error.message.includes('Invalid API key') || error.message.toLowerCase().includes('api key')) {
           userFriendlyMessage = "There seems to be an issue with the AI service API configuration. Please ensure it's set up correctly.";
