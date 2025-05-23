@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview A chatbot flow for PusakaPro to assist users.
@@ -7,9 +8,9 @@
  * - PusakaChatOutput - The return type for the askPusakaChat function.
  */
 
-import { ai } from 'ai/genkit';
+import { ai } from '@/ai/genkit';
 import { z } from 'genkit'; // Use 'genkit' for z as per existing project structure
-import { LEGAL_GUIDE_TOPICS, ROADMAP_STEPS, DOCUMENT_CHECKLIST_ITEMS, DOCUMENT_CATEGORIES } from 'lib/constants';
+import { LEGAL_GUIDE_TOPICS, ROADMAP_STEPS, DOCUMENT_CHECKLIST_ITEMS } from '@/lib/constants';
 
 // Prepare context data from the application
 const formattedLegalGuides = LEGAL_GUIDE_TOPICS.map((g: { title: string; summary: string; content: string[] }) => `Guide Title: ${g.title}\nSummary: ${g.summary}\nContent: ${g.content.join(' ')}`).join('\n\n---\n\n');
@@ -68,32 +69,28 @@ Do not invent information or answer questions unrelated to Malaysian small estat
 If asked about document locations, mention that users can find relevant offices using the 'Find Office' button in the Document Checklist for certain documents.
 When a user asks about a specific document, process, or issue (like family disputes), if the provided PusakaPro context mentions a relevant government agency (e.g., JPN, Pejabat Tanah, JPJ, Amanah Raya Berhad) or a professional (e.g., lawyer, mediator), try to include this in your response. This helps the user understand which agency or professional they might need to interact with or consult.
 
-PusakaPro Application Context:
+PusakaPro Application Context (Knowledge Base - Document Checklists, Roadmap Steps, Legal Guides):
 ${applicationContext}
 `;
 
-    const llmMessages: Array<{ role: 'user' | 'model'; content: Array<{ text: string }> }> = [];
+    const llmMessages: Array<{ role: 'user' | 'model'; parts: Array<{ text: string }> }> = [];
 
     // Initial "priming" message from the model to acknowledge its role.
-    llmMessages.push({ role: 'model', content: [{ text: "Okay, I understand. I'm PusakaChat, ready to help with questions about Malaysian small estate administration based on the PusakaPro app's information. How can I assist you today?" }] });
+    llmMessages.push({ role: 'model', parts: [{ text: "Okay, I understand. I'm PusakaChat, ready to help with questions about Malaysian small estate administration based on the PusakaPro app's information. How can I assist you today?" }] });
 
     if (input.chatHistory) {
       for (const entry of input.chatHistory) {
         if (llmMessages.length > 20) break; // Simple history truncation
-        llmMessages.push({ role: entry.role, content: [{ text: entry.content }] });
+        llmMessages.push({ role: entry.role, parts: [{ text: entry.content }] });
       }
     }
-    llmMessages.push({ role: 'user', content: [{ text: input.message }] });
+    llmMessages.push({ role: 'user', parts: [{ text: input.message }] });
 
     try {
-      // For debugging:
-      // console.log("PusakaChatFlow - System Message Length:", systemMessage.length);
-      // console.log("PusakaChatFlow - LLM Messages to send:", JSON.stringify(llmMessages, null, 2));
-
       const response = await ai.generate({
         messages: llmMessages,
         system: systemMessage,
-        model: 'googleai/gemini-pro', 
+        model: 'googleai/gemini-pro',
         config: {
             safetySettings: [
               { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
@@ -105,17 +102,28 @@ ${applicationContext}
       });
 
       const replyText = response.text;
+      const finishReason = response.candidates?.[0]?.finishReason;
 
       if (replyText) {
         return { reply: replyText };
       } else {
         // No text in response
-        console.warn(`PusakaChatFlow: AI generated no reply text. Response:`, JSON.stringify(response));
-        return { reply: "I'm sorry, I couldn't generate a specific response for that. Could you try rephrasing or asking something else?" };
+        let specificReply = "I'm sorry, I couldn't generate a specific response for that. Could you try rephrasing or asking something else?";
+        if (finishReason === 'SAFETY') {
+          specificReply = "I'm sorry, I cannot provide a response to that due to safety guidelines. Please try a different question.";
+        } else if (finishReason === 'MAX_TOKENS') {
+          specificReply = "The response was a bit too long to display fully. Could you ask for a more specific piece of information?";
+        } else if (finishReason === 'RECITATION') {
+            specificReply = "I cannot provide that information due to content policies. Please ask something else.";
+        }
+        console.warn(`PusakaChatFlow: AI generated no reply text. Finish reason: ${finishReason}. Response:`, JSON.stringify(response));
+        return { reply: specificReply };
       }
 
     } catch (error: any) {
-      console.error("Error in pusakaChatFlow calling ai.generate:", error); 
+      // Log the full error object to the server console for detailed debugging
+      console.error("Error in pusakaChatFlow calling ai.generate. Full error object:", JSON.stringify(error, Object.getOwnPropertyNames(error)));
+      
       let userFriendlyMessage = "I apologize, but I encountered an error trying to process your request. Please try again later.";
       if (error.message) {
         if (error.message.includes('API key not valid') || error.message.includes('Invalid API key') || error.message.toLowerCase().includes('api key')) {
