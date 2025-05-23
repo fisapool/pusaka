@@ -1,18 +1,18 @@
 # PusakaPro
 
-PusakaPro is a Next.js starter project integrated with Firebase Studio, designed to assist users with small estate legal processes in Malaysia.
+PusakaPro is a Next.js starter project designed to assist users with small estate legal processes in Malaysia.
 
 ## Core Features
 
-- Document Checklist: A comprehensive checklist for all required documents.
-- Timeline Estimator: Estimates the duration of each step based on user-specific facts.
-- Personalized Roadmap: Step-by-step guidance tailored to user selections.
-- Legal Guides: Detailed information on Malaysian small estate law processes.
-- Integrated Chatbot: Assists users with queries related to the small estate process.
+- **Roadmap & Timeline**: Get AI-powered timeline estimations, follow a step-by-step guide for Malaysian small estate administration, and manage your document checklist. The checklist is for local progress tracking (saved in your browser if logged in), with links encouraging manual document management in your personal Google Drive.
+- **Legal & Financial Hub**: Access comprehensive legal guides on various aspects of estate law, estimate potential administration fees with an AI-powered calculator, and find links to search for legal professionals via Google Maps.
+- **Integrated Chatbot**: An AI assistant to help users with queries related to the small estate process, drawing information from PusakaPro's legal guides, roadmap, and document checklist.
+- **Help Center**: Find answers to frequently asked questions (FAQs) and support information.
+- **Settings**: View user profile information (if logged in with Google) and manage application preferences (future feature).
 
 ## Getting Started
 
-To get started, take a look at the main page component located at `src/app/page.tsx`.
+To get started, take a look at the main page component located at `src/app/page.tsx` (assuming this README is within the context of the Next.js application root directory also named 'pusaka-main').
 
 ### Prerequisites
 
@@ -21,27 +21,32 @@ To get started, take a look at the main page component located at `src/app/page.
 
 ### Installation
 
-1. Clone the repository:
+1. Clone the repository (if this `pusaka-main` directory is the root of that repository):
    ```
-   git clone https://github.com/fisapool/pusaka.git
+   git clone https://github.com/fisapool/pusaka.git 
+   cd pusaka 
    ```
-2. Navigate to the project directory:
-   ```
-   cd pusaka-main/pusaka-main
-   ```
-3. Install dependencies:
+   (Adjust the `cd` command if `pusaka-main` is a subdirectory of the cloned repo).
+2. Install dependencies:
    ```
    npm install
    ```
-4. Run the development server:
-   ```
-   npm run dev
-   ```
+3. Set up your `.env` file with Firebase and other necessary API keys.
+4. Run the development servers:
+   * Next.js app:
+     ```
+     npm run dev
+     ```
+   * Genkit AI backend (in a separate terminal):
+     ```
+     npm run genkit:dev
+     ```
 
 ## Usage
 
-- Access the app at `http://localhost:3000` after running the development server.
-- Explore the various features such as the document checklist, timeline estimator, and personalized roadmap.
+- Access the app at `http://localhost:9002` (or your configured port) after running the development servers.
+- Explore the various features such as the Roadmap & Timeline, Legal & Financial Hub, and interact with the Chatbot.
+- Log in with Google to save your document checklist progress locally in your browser.
 
 ## Contributing
 
