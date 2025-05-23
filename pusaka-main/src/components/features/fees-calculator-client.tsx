@@ -34,8 +34,8 @@ export function FeesCalculatorClient() {
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      estateValue: '', 
-      propertyType: '', 
+      estateValue: 0, 
+      propertyType: undefined, 
       hasWill: false,
       location: '',
       numberOfBeneficiaries: 1,

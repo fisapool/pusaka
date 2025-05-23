@@ -3,10 +3,9 @@
 "use client";
 
 import * as React from 'react';
-import type { User } from 'firebase/auth';
+import type { User } from 'firebase/auth'; 
 import { auth } from '@/lib/firebase';
 import { onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut as firebaseSignOut } from 'firebase/auth';
-import { Button } from '@/components/ui/button'; // For potential direct use or styling reference
 import { Loader2 } from 'lucide-react';
 
 interface AuthContextType {
@@ -35,40 +34,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
-      // onAuthStateChanged will handle setting the user
     } catch (error) {
-      console.error("Error signing in with Google:", error);
-      // Optionally, show a toast message to the user
-    } finally {
-      // setLoading(false); // onAuthStateChanged will set loading to false after user state is updated
+      console.error("Detailed error during signInWithGoogle:", error);
+      // Ensure loading is set to false even if there's an error
+      setLoading(false); 
     }
+    // setLoading(false) will be handled by onAuthStateChanged
   };
 
   const signOut = async () => {
     setLoading(true);
     try {
       await firebaseSignOut(auth);
-      // onAuthStateChanged will handle setting user to null
     } catch (error) {
       console.error("Error signing out:", error);
-    } finally {
-       // setLoading(false); // onAuthStateChanged will set loading to false
+      setLoading(false); // Ensure loading is set to false even if there's an error
     }
+    // setLoading(false) will be handled by onAuthStateChanged
   };
   
-  // Removed the problematic conditional loader block that caused hydration errors.
-  // The `loading` state is still available in the context for child components to use.
-  // Example:
-  // if (loading) {
-  // // This would be a consistent loader if used, but AppSidebarNavigation handles its own.
-  // return (
-  // <div className="flex items-center justify-center min-h-screen">
-  // <Loader2 className="h-8 w-8 animate-spin text-primary" />
-  // </div>
-  // );
+  // This specific loading screen logic caused hydration issues and is generally not needed here
+  // as individual components can show their own loading states.
+  // if (loading && typeof window !== 'undefined') { 
+  //   return (
+  //     <div className="flex items-center justify-center min-h-screen">
+  //       <Loader2 className="h-8 w-8 animate-spin text-primary" />
+  //     </div>
+  //   );
   // }
-
-
+  
   return (
     <AuthContext.Provider value={{ user, loading, signInWithGoogle, signOut }}>
       {children}
@@ -83,4 +77,3 @@ export function useAuth() {
   }
   return context;
 }
-

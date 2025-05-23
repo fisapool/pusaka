@@ -19,6 +19,10 @@ let auth: Auth;
 let storage: FirebaseStorage;
 
 if (!getApps().length) {
+  // Log the config only in development and if it's the first initialization
+  if (process.env.NODE_ENV === 'development') {
+    console.log("Initializing Firebase with config:", firebaseConfig);
+  }
   app = initializeApp(firebaseConfig);
 } else {
   app = getApps()[0]!;

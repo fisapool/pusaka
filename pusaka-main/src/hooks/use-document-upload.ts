@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { storage } from 'src/lib/firebase';
+import { storage } from '../lib/firebase';
 import { ref, uploadBytes, deleteObject } from 'firebase/storage';
 
 export interface UploadedFileState {

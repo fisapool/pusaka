@@ -19,7 +19,10 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "ai/*": ["./pusaka-main/src/ai/*"],
+      "lib/*": ["./pusaka-main/src/lib/*"],
+      "components/*": ["./pusaka-main/src/components/*"],
+      "hooks/*": ["./pusaka-main/src/hooks/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

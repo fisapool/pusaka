@@ -46,14 +46,14 @@ export function LegalGuidesClient({ topics: initialTopics }: LegalGuidesClientPr
 
   return (
     <Card className="shadow-lg">
-      <CardHeader>
+      <CardHeader className="p-4"> {/* Adjusted padding */}
         <CardTitle>Explore Legal Topics</CardTitle>
         <CardDescription>
           Find information on various aspects of small estate administration. Use the search to quickly find relevant topics.
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <div className="mb-6 relative">
+      <CardContent className="px-4 pb-4 pt-0"> {/* Adjusted padding */}
+        <div className="mb-4 relative"> {/* Adjusted margin */}
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
           <Input
             type="search"

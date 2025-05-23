@@ -6,7 +6,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { SidebarProvider, Sidebar, SidebarInset, SidebarRail } from '@/components/ui/sidebar';
 import { AppSidebarNavigation } from '@/components/layout/app-sidebar-navigation';
 import { AuthProvider } from '@/contexts/auth-context';
-import { ChatbotClient } from '@/components/features/chatbot-client'; // Added ChatbotClient
+import { ChatbotClient } from '@/components/features/chatbot-client';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -42,7 +42,7 @@ export default function RootLayout({
               </main>
             </SidebarInset>
           </SidebarProvider>
-          <ChatbotClient /> {/* Added ChatbotClient here */}
+          <ChatbotClient />
         </AuthProvider>
         <Toaster />
       </body>

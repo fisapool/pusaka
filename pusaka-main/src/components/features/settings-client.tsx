@@ -5,8 +5,7 @@ import * as React from 'react';
 import { useAuth } from '@/contexts/auth-context';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
-import { UserCircle2, Palette, ShieldAlert, Loader2 } from 'lucide-react';
+import { Loader2, UserCircle2, Palette, ShieldAlert, LogOut } from 'lucide-react'; 
 
 export function SettingsClient() {
   const { user, loading, signOut } = useAuth();
@@ -20,34 +19,23 @@ export function SettingsClient() {
             <CardTitle>User Profile</CardTitle>
           </div>
           <CardDescription>
-            View and manage your profile information.
+            View your profile information and manage your account.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          {loading && (
+          {loading ? (
             <div className="flex items-center space-x-2 text-muted-foreground">
               <Loader2 className="h-5 w-5 animate-spin" />
               <span>Loading profile...</span>
             </div>
-          )}
-          {!loading && user && (
+          ) : user ? (
             <>
-              <div>
-                <h3 className="font-medium text-foreground">Display Name</h3>
-                <p className="text-muted-foreground">{user.displayName || 'Not set'}</p>
-              </div>
-              <div>
-                <h3 className="font-medium text-foreground">Email Address</h3>
-                <p className="text-muted-foreground">{user.email}</p>
-              </div>
-              <div>
-                <h3 className="font-medium text-foreground">User ID</h3>
-                <p className="text-xs text-muted-foreground">{user.uid}</p>
-              </div>
+              <p><strong className="text-foreground">Email:</strong> <span className="text-muted-foreground">{user.email || 'N/A'}</span></p>
+              <p><strong className="text-foreground">Name:</strong> <span className="text-muted-foreground">{user.displayName || 'N/A'}</span></p>
+              <p><strong className="text-foreground">UID:</strong> <span className="text-muted-foreground">{user.uid}</span></p>
             </>
-          )}
-          {!loading && !user && (
-            <p className="text-muted-foreground">You are not currently logged in. Please log in to see your profile information.</p>
+          ) : (
+            <p className="text-muted-foreground">You are not logged in. Please log in to view your profile.</p>
           )}
         </CardContent>
       </Card>
@@ -64,7 +52,6 @@ export function SettingsClient() {
         </CardHeader>
         <CardContent>
           <p className="text-muted-foreground">Theme settings (e.g., light/dark mode toggle) will be available here in a future update.</p>
-          {/* Example: <Button variant="outline" disabled>Toggle Dark Mode</Button> */}
         </CardContent>
       </Card>
 
@@ -75,14 +62,23 @@ export function SettingsClient() {
             <CardTitle>Account Management</CardTitle>
           </div>
           <CardDescription>
-            Manage your account settings. (Future Feature)
+            Manage your account settings.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <p className="text-muted-foreground">Options such as deleting your account will be available here.</p>
-          {user && (
-            <Button variant="destructive" disabled>Delete Account (Coming Soon)</Button>
+          {user && !loading ? (
+            <Button variant="destructive" onClick={signOut} disabled={loading}>
+              <LogOut className="mr-2 h-4 w-4" /> Sign Out
+            </Button>
+          ) : loading ? (
+             <Button variant="outline" disabled>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Loading...
+            </Button>
+          ) : (
+            <p className="text-muted-foreground">Log in to manage your account.</p>
           )}
+          {/* Placeholder for delete account button - requires careful backend implementation */}
+          {/* <Button variant="outline" className="mt-2 border-destructive text-destructive hover:bg-destructive/10" disabled>Delete Account</Button> */}
         </CardContent>
       </Card>
     </div>
